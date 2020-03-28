@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>极客商城-用户注册</title>
+    <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
+    <link rel="stylesheet" href="../../common/css/base.css"/>
+    <link rel="stylesheet" href="../../common/css/register.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="../../common/js/jquery.js"></script>
+
+</head>
+<body>
+<div id="main" @keyup.enter="register()">
+    <div id="header">
+    </div>
+    <div class="container">
+        <div class="bgPic"><img src="../../common/image/b2_1.jpg" alt=""/></div>
+        <div class="register">
+            <div class="title">
+                <span>注册</span>
+                <a href="/page/login">去登录</a>
+            </div>
+            <el-form status-icon label-width="100px">
+                <div class="default">
+                    <el-input v-model="registerUser.username" placeholder="用户名"></el-input>
+                </div>
+                <div class="default">
+                    <el-input v-model="registerUser.password" show-password placeholder="密码"></el-input>
+                </div>
+
+                <div class="default">
+                    <el-input v-model="registerUser.checkPassword" show-password placeholder="确认密码"></el-input>
+                </div>
+                <div class="default">
+                    <el-input v-model="registerUser.phone" placeholder="手机号码"></el-input>
+                </div>
+
+
+                <div class="submit">
+                    <span class="notice">点击"注册"代表您同意遵守
+                        <a href="#">用户协议</a>和<a href="#">隐私条款</a>
+                    </span>
+                    <el-button type="primary" @click="register()" plain>注册</el-button>
+                </div>
+            </el-form>
+
+
+            <!--                <form autocomplete="off">-->
+            <!--                    <div class="default">-->
+            <!--                        <p>用户名由3~10个数字和英文字符组成</p>-->
+            <!--                        <input id="uname" name="uname" data-form="uname" type="text" />-->
+            <!--                        <label for="uname">用户名</label>-->
+            <!--                    </div>-->
+            <!--                    <div class="default">-->
+            <!--                        <p>密码由8~10个数字和英文字符组成</p>-->
+            <!--                        <input id="upwd" name="upwd" data-form="upwd" type="password"/>-->
+            <!--                        <label for="upwd">密码</label>-->
+            <!--                    </div>-->
+            <!--                    <div class="default">-->
+            <!--                        <p>请确认两次输入密码一致</p>-->
+            <!--                        <input id="upwd_2" data-form="upwd_2" type="password"/>-->
+            <!--                        <label for="upwd_2">确认密码</label>-->
+            <!--                    </div>-->
+            <!--                    <div class="default">-->
+            <!--                        <p>请输入中国大陆手机号码</p>-->
+            <!--                        <input id="phone" name="phone" data-form="phone" type="text"/>-->
+            <!--                        <label for="phone">手机</label>-->
+            <!--                    </div>-->
+            <!--                    <div class="submit">-->
+            <!--                        <span class="notice">点击"注册"代表您同意遵守-->
+            <!--                            <a href="#">用户协议</a>-->
+            <!--                            和-->
+            <!--                            <a href="#">隐私条款</a>-->
+            <!--                        </span>-->
+            <!--                        <button class="s_hover" data-form="submit">注册</button>-->
+            <!--                    </div>-->
+            <!--                </form>-->
+            <div class="other_login">
+                <div class="log">
+                    <span>第 三 方 登 录 </span>
+                </div>
+                <div class="icon">
+                    <ul>
+                        <li data-log="icon" class="i_hover" style="cursor: pointer">
+                            <img data-icon="wx" src="../../common/image/wx.png" alt=""/>
+                            <span class="prompt">微信登录</span>
+                        </li>
+                        <li data-log="icon" class="i_hover" style="cursor: pointer">
+                            <img data-icon="qq" src="../../common/image/qq.png" alt=""/>
+                            <span class="prompt">QQ登录</span>
+                        </li>
+                        <li data-log="icon" class="i_hover" style="cursor: pointer">
+                            <img data-icon="wb" src="../../common/image/wb.png" alt=""/>
+                            <span class="prompt">微博登录</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+    </div>
+</div>
+
+</body>
+<script>
+
+    var app = new Vue({
+        el: '#main',
+        data: {
+            registerUser: {
+                username: '',
+                password: '',
+                checkPassword: '',
+                phone: '',
+            },
+        },
+        created() {
+
+        },
+        mounted() {
+
+        },
+        methods: {
+            register() {
+                if (this.registerUser.username === '' || this.registerUser.username == null) {
+                    this.$message({
+                        message: '用户名不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (this.registerUser.password === '' || this.registerUser.password == null) {
+                    this.$message({
+                        message: '密码不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                if (this.registerUser.checkPassword === '' || this.registerUser.checkPassword == null) {
+                    this.$message({
+                        message: '确认密码不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (this.registerUser.phone === '' || this.registerUser.phone == null) {
+                    this.$message({
+                        message: '手机号码不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (this.registerUser.username.length < 3 || this.registerUser.username.length > 8) {
+                    this.$message({
+                        message: '用户名长度必须为3~8',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                var passwordRegex = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{8,30}');
+                var phoneRegex = /^[1][3,4,5,7,8][0-9]{9}$/
+                if (!passwordRegex.test(this.registerUser.password)) {
+                    this.$message({
+                        message: '您的密码复杂度太低（密码中必须包含字母、数字且长度大于8位)',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (this.registerUser.password !== this.registerUser.checkPassword) {
+                    this.$message({
+                        message: '两次密码不一样，请重新填写',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (!phoneRegex.test(this.registerUser.phone)) {
+                    this.$message({
+                        message: '手机号码格式不正确！请重新填写！',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                let _this =this;
+                let postData = {
+                    nickName:_this.registerUser.username,
+                    phone:_this.registerUser.phone,
+                    credential:_this.registerUser.password,
+                    loginType:"local"
+                };
+
+                var url = "/user/page/register";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        console.log(res)
+                        if(res.code!=="200"){
+                            _this.$message.error(res.msg);
+                            return;
+                        }
+                        _this.$message({
+                            type: 'success',
+                            message: '注册成功!'
+                        });
+                        _this.registerUser={};
+                    },
+
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+
+            },
+
+        }
+
+
+    })
+</script>
+</html>

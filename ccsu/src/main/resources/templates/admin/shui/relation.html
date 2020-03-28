@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="../../common/js/sccl.js"></script>
+    <script type="text/javascript" src="../../common/js/sccl-util.js"></script>
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入组件库 -->
+    <title>关系管理</title>
+    <style>
+        .add {
+            border: 1px solid #eee;
+            margin: 10px 0;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="table">
+    <div class="add">
+
+        <el-autocomplete
+                v-model="state"
+                :fetch-suggestions="querySearchAsync"
+                placeholder="请输入查询内容(名称)"
+                @select="handleSelect">
+        </el-autocomplete>
+
+
+        <el-select v-model="value" @change="showMessage($event)" @visible-change="s($event)" placeholder="请选择添加类型">
+            <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+            </el-option>
+        </el-select>
+        <el-button
+                type="success"
+                @click="refresh()">刷新
+        </el-button>
+    </div>
+    <template>
+        <el-table
+                :data="newsList"
+                border
+                style="width: 100%">
+            <el-table-column label="前驱节点图片" align="center">
+                <template slot-scope="scope">
+                    <el-image
+                            style="width: 100px; height: 56px"
+                            :src="scope.row.startNamePicture"
+                            :preview-src-list="scope.row.startNamePictures">
+                        >
+                    </el-image>
+                </template>
+
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="startName"
+                    label="前驱节点名"
+                    width="150">
+            </el-table-column>
+
+
+            <el-table-column
+                    align="center"
+                    prop="relationName"
+                    label="关系"
+                    width="220">
+            </el-table-column>
+
+            <el-table-column label="后驱节点图片" align="center">
+                <template slot-scope="scope">
+                    <el-image
+                            style="width: 100px; height: 56px"
+                            :src="scope.row.endNamePicture"
+                            :preview-src-list="scope.row.endNamePictures">
+                        >
+                    </el-image>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="endName"
+                    label="后驱节点名"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="startNameNumber"
+                    label="前驱节点关系数"
+                    width="150">
+
+            </el-table-column>
+
+            <el-table-column
+                    align="center"
+                    prop="endNameNumber"
+                    label="后驱节点关系数"
+                    width="150">
+            </el-table-column>
+
+            <el-table-column
+                    align="center"
+                    prop="type"
+                    label="类型"
+                    width="200">
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="200">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="edit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="deletelist(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
+
+    <!--修改-->
+    <el-dialog title="关系名修改" :visible.sync="dialogFormVisible">
+        <el-form :model="editDetail">
+
+
+            <el-form-item label="前驱节点名" :label-width="formLabelWidth">
+                <el-input v-model="editDetail.startName" :disabled="true" autocomplete="off"></el-input>
+            </el-form-item>
+
+
+            <el-form-item label="关系名称" :label-width="formLabelWidth">
+                <el-input v-model="editDetail.relationName" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="后驱节点名" :label-width="formLabelWidth">
+                <el-input v-model="editDetail.endName" :disabled="true" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="类型" :label-width="formLabelWidth">
+                <el-input :disabled="true" v-model="type" autocomplete="off"></el-input>
+            </el-form-item>
+
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="update()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <div>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pageParams.pageIndex"
+                :page-size="pageParams.pageSize"
+                layout="total,prev, pager, next, jumper"
+                :total="pageParams.totalCount"
+        ></el-pagination>
+    </div>
+    <!--  人物->武器 -->
+    <el-dialog title="人物与武器之间的关系(例如孙悟空的武器是金箍棒 || 一对一) " :visible.sync="adddialogFormVisiblePersonToWeapon">
+        <el-form :model="addDetailPersonToWeapon">
+            <el-form-item label="人物前驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 v-model="addDetailPersonToWeapon.startName"
+                                 :fetch-suggestions="querySearchAsyncPersonToPerson"
+                                 placeholder="请输入人物前驱节点名称"
+                >
+                </el-autocomplete>
+                <!--<el-input   v-model="addDetail.preName"  :disabled="myResult" autocomplete="off" placeholder="请输入前驱节点名称"></el-input>-->
+            </el-form-item>
+
+            <el-form-item label="关系" :label-width="formLabelWidth">
+                <el-input value="拥有" :disabled="true" autocomplete="off" placeholder="请输顺关系名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="武器后驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 v-model="addDetailPersonToWeapon.endName"
+                                 :fetch-suggestions="querySearchAsyncPersonToWeapon"
+                                 placeholder="请输入武器后驱节点名称"
+                >
+                </el-autocomplete>
+
+                <!--<el-input  v-model="addDetail.sufName"  :disabled="myResult" autocomplete="off" placeholder="请输入后驱节点名称" ></el-input>-->
+            </el-form-item>
+        </el-form>
+
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="adddialogFormVisiblePersonToWeapon = false">取 消</el-button>
+            <el-button type="primary" @click="addPersonTOWeapon()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+    <!--人物->人物-->
+    <el-dialog title="人物与人物之间的关系(例如孙悟空是唐僧的徒弟 || 多对多) " :visible.sync="adddialogFormVisiblePersonToPerson">
+        <el-form :model="addDetailPersonToPerson">
+            <el-form-item label="请选择关系类型" :label-width="formLabelWidth">
+                <el-select v-model="value1" @change="changeModel($event)" placeholder="请选择添加类型">
+                    <el-option
+                            v-for="item in options1"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="人物前驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 v-model="addDetailPersonToPerson.startName"
+                                 :fetch-suggestions="querySearchAsyncPersonToPerson"
+                                 :disabled="myResult"
+                                 placeholder="请输入人物前驱节点名称"
+                >
+                </el-autocomplete>
+                <!--<el-input   v-model="addDetail.preName"  :disabled="myResult" autocomplete="off" placeholder="请输入前驱节点名称"></el-input>-->
+            </el-form-item>
+
+            <el-form-item label="顺关系" :label-width="formLabelWidth">
+                <el-input v-model="addDetailPersonToPerson.preRelation" :disabled="myResult" autocomplete="off"
+                          placeholder="请输顺关系名称"></el-input>
+            </el-form-item>
+            <el-form-item label="逆关系" :label-width="formLabelWidth">
+                <el-input v-model="addDetailPersonToPerson.sufRelation" :disabled="sufResult" autocomplete="off"
+                          placeholder="请输入逆关系名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="人物后驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 v-model="addDetailPersonToPerson.endName"
+                                 :fetch-suggestions="querySearchAsyncPersonToPerson"
+                                 :disabled="myResult"
+                                 placeholder="请输入人物后驱节点名称"
+                >
+                </el-autocomplete>
+
+                <!--<el-input  v-model="addDetail.sufName"  :disabled="myResult" autocomplete="off" placeholder="请输入后驱节点名称" ></el-input>-->
+            </el-form-item>
+
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="adddialogFormVisiblePersonToPerson = false">取 消</el-button>
+            <el-button type="primary" @click="addPersonTOPerson()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+    <!--  事件->人物 -->
+    <el-dialog title="事件与人物之间的关系(例如大闹天空有孙悟空、哪吒等 || 一对多)" :visible.sync="adddialogFormVisibleDeedsToPerson">
+        <el-form :model="addDetailDeedsToPerson">
+            <el-form-item label="事件前驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 v-model="addDetailDeedsToPerson.startName"
+                                 :fetch-suggestions="querySearchAsyncDeedsToPerson"
+                                 placeholder="请输入事件前驱节点名称"
+                >
+                </el-autocomplete>
+                <!--<el-input   v-model="addDetail.preName"  :disabled="myResult" autocomplete="off" placeholder="请输入前驱节点名称"></el-input>-->
+            </el-form-item>
+
+            <el-form-item label="关系" :label-width="formLabelWidth">
+                <el-input value="含有" :disabled="true" autocomplete="off" placeholder="请输顺关系名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="人物后驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 multiple
+                                 v-model="addDetailDeedsToPerson.endName"
+                                 :fetch-suggestions="querySearchAsyncPersonToPerson"
+                                 placeholder="请输入人物后驱节点名称"
+                >
+                </el-autocomplete>
+
+
+                <!--<el-input  v-model="addDetail.sufName"  :disabled="myResult" autocomplete="off" placeholder="请输入后驱节点名称" ></el-input>-->
+            </el-form-item>
+        </el-form>
+
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="adddialogFormVisibleDeedsToPerson = false">取 消</el-button>
+            <el-button type="primary" @click="addDeedsToPerson()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <!--  事件->地址 -->
+    <el-dialog title="事件与地点之间的关系(例如大闹天空在南天门等 || 一对一)" :visible.sync="adddialogFormVisibleDeedsToPlace">
+        <el-form :model="addDetailDeedsToPlace">
+            <el-form-item label="事件前驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 v-model="addDetailDeedsToPlace.startName"
+                                 :fetch-suggestions="querySearchAsyncDeedsToPerson"
+                                 placeholder="请输入事件前驱节点名称"
+                >
+                </el-autocomplete>
+                <!--<el-input   v-model="addDetail.preName"  :disabled="myResult" autocomplete="off" placeholder="请输入前驱节点名称"></el-input>-->
+            </el-form-item>
+
+            <el-form-item label="关系" :label-width="formLabelWidth">
+                <el-input value="属于" :disabled="true" autocomplete="off" placeholder="请输顺关系名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="地点后驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 multiple
+                                 v-model="addDetailDeedsToPlace.endName"
+                                 :fetch-suggestions="querySearchAsyncDeedsToPlace"
+                                 placeholder="请输入地点后驱节点名称"
+                >
+                </el-autocomplete>
+
+
+                <!--<el-input  v-model="addDetail.sufName"  :disabled="myResult" autocomplete="off" placeholder="请输入后驱节点名称" ></el-input>-->
+            </el-form-item>
+        </el-form>
+
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="adddialogFormVisibleDeedsToPlace = false">取 消</el-button>
+            <el-button type="primary" @click="addDeedsToPlace()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+    <!--  地址->事件 -->
+    <el-dialog title="地点与事件之间的关系(例如天空大殿上发生过很多事等 || 一对多)" :visible.sync="adddialogFormVisiblePlaceToDeeds">
+        <el-form :model="addDetailPlaceToDeeds">
+            <el-form-item label="地点前驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 v-model="addDetailPlaceToDeeds.startName"
+                                 :fetch-suggestions="querySearchAsyncDeedsToPlace"
+                                 placeholder="请输入地点前驱节点名称"
+                >
+                </el-autocomplete>
+                <!--<el-input   v-model="addDetail.preName"  :disabled="myResult" autocomplete="off" placeholder="请输入前驱节点名称"></el-input>-->
+            </el-form-item>
+
+            <el-form-item label="关系" :label-width="formLabelWidth">
+                <el-input value="含有" :disabled="true" autocomplete="off" placeholder="请输顺关系名称"></el-input>
+            </el-form-item>
+
+            <el-form-item label="事件后驱节点名" :label-width="formLabelWidth">
+                <el-autocomplete style="width: 682px;"
+                                 multiple
+                                 v-model="addDetailPlaceToDeeds.endName"
+                                 :fetch-suggestions="querySearchAsyncDeedsToPerson"
+                                 placeholder="请输入事件后驱节点名称"
+                >
+                </el-autocomplete>
+
+
+                <!--<el-input  v-model="addDetail.sufName"  :disabled="myResult" autocomplete="off" placeholder="请输入后驱节点名称" ></el-input>-->
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="adddialogFormVisiblePlaceToDeeds = false">取 消</el-button>
+            <el-button type="primary" @click="addPlaceToDeeds()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#table',
+        data: {
+            timeout: null,
+            state: '',
+            restaurants: [],
+            restaurantsPersonToPerson: [],
+            restaurantsPersonToWeapon: [],
+            restaurantsDeedsToPerson: [],
+            restaurantsDeedsToPlace: [],
+            options: [{
+                value: '人物->人物',
+                label: '人物->人物'
+            }, {
+                value: '人物->武器',
+                label: '人物->武器'
+            }, {
+                value: '事件->人物',
+                label: '事件->人物'
+            }, {
+                value: '事件->地点',
+                label: '事件->地点'
+            }, {
+                value: '地点->事件',
+                label: '地点->事件'
+            }],
+
+            options1: [{
+                value: '单向关系',
+                label: '单向关系'
+            }, {
+                value: '双向关系',
+                label: '双向关系'
+            }],
+            formLabelWidth: '120px',
+            type: '水浒传',
+            myResult: true,
+            sufResult: true,
+            value: '',
+            value1: '',
+            addDetailPersonToPerson: {},
+            addDetailPersonToWeapon: {},
+            addDetailDeedsToPerson: {},
+            addDetailDeedsToPlace: {},
+            addDetailPlaceToDeeds: {},
+            adddialogFormVisiblePersonToPerson: false,
+            adddialogFormVisiblePersonToWeapon: false,
+            adddialogFormVisibleDeedsToPerson: false,
+            adddialogFormVisibleDeedsToPlace: false,
+            adddialogFormVisiblePlaceToDeeds: false,
+            dialogFormVisible: false,
+            editDetail: {},
+
+            newsList: [],
+            pageParams: {
+                pageIndex: 1,
+                totalCount: 0,
+                pageSize: 10
+            }
+        },
+        mounted() {
+            this.loadAll();
+        },
+
+        created() {
+            this.getListRelationByPage();
+        },
+        methods: {
+            refresh() {
+                this.getListRelationByPage();
+                this.$message({
+                    type: 'success',
+                    message: '刷新成功!'
+                });
+
+            }
+            ,
+            getListRelationByPage() {
+                let _this = this;
+                let postData = {
+                    pageIndex: this.pageParams.pageIndex,
+                    pageSize: this.pageParams.pageSize,
+                    type: this.type,
+                };
+                var url = "/admin/relation/getBaseRelationshipByPage";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        _this.newsList = res.data.nodeList;
+                        console.log(res.data);
+                        console.log(_this.newsList);
+                        _this.pageParams.totalCount = res.data.totalCount;
+                        for (var i = 0; i < _this.newsList.length; i++) {
+                            _this.newsList[i].type = _this.type;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('查询失败');
+                    }
+                });
+
+            },
+
+            //编辑
+            edit(index, row) {
+                console.log(row);
+                this.editDetail = {
+                    startName: row.startName,
+                    id: row.id,
+                    relationName: row.relationName,
+                    type: row.type,
+                    endName: row.endName,
+                }
+                this.dialogFormVisible = true;
+            },
+            update() {
+                if (this.editDetail.relationName == null || this.editDetail.relationName === '') {
+                    this.$message({
+                        message: '关系名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                let _this = this
+                let postData = {
+                    id: _this.editDetail.id,
+                    name: _this.editDetail.relationName
+                }
+                console.log("111")
+                console.log(postData)
+                var url = "/admin/relation/updateRelationById";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log("1111")
+                        console.log(res)
+                        if (res.code !== "200") {
+                            _this.$message.error('修改失败');
+                            return;
+                        }
+                        _this.dialogFormVisible = false;
+                        _this.getListRelationByPage();
+                        _this.$message({
+                            type: 'success',
+                            message: '修改成功!'
+                        });
+                        _this.editDetail = {};
+                    },
+                    error: function () {
+                        alert("失败..");
+                    }
+                });
+            },
+
+
+            //删除
+            deletelist(index, row) {
+                let postData = {
+                    id: row.id,
+                };
+                this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let _this = this;
+                    var url = "/admin/relation/deleteRelationshipById";
+                    $.ajax({
+                        type: "delete",
+                        url: url,
+                        data: postData,
+                        success: function (res) {
+                            _this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            if (_this.pageParams.totalCount % _this.pageParams.pageSize === 1 && _this.pageParams.pageIndex > 1) {
+                                _this.pageParams.pageIndex = _this.pageParams.pageIndex - 1;
+                            }
+                            _this.getListRelationByPage();
+                        },
+                        error: function () {
+                            alert("失败..");
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
+
+            },
+
+            loadAll() {
+                let _this = this;
+                let postData = {
+                    type: this.type,
+                };
+                var url = "/admin/baseNode/findBaseNodeName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+
+                        if (res.code !== "200") {
+                            _this.$message.error('查询失败');
+                            return;
+                        }
+                        _this.restaurants = res.data;
+                    },
+                    error: function () {
+                        _this.$message.error('查询失败');
+                    }
+                });
+            },
+
+            querySearchAsync(queryString, cb) {
+                var restaurants = this.restaurants;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(results);
+                }, 1500 * Math.random());
+            },
+
+            querySearchAsyncPersonToPerson(queryString, cb) {
+                var restaurants = this.restaurantsPersonToPerson;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(results);
+                }, 1000 * Math.random());
+            },
+            querySearchAsyncPersonToWeapon(queryString, cb) {
+                var restaurants = this.restaurantsPersonToWeapon;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(results);
+                }, 1000 * Math.random());
+            },
+
+            querySearchAsyncDeedsToPerson(queryString, cb) {
+                var restaurants = this.restaurantsDeedsToPerson;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(results);
+                }, 1000 * Math.random());
+            },
+
+            querySearchAsyncDeedsToPlace(queryString, cb) {
+                var restaurants = this.restaurantsDeedsToPlace;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(results);
+                }, 1000 * Math.random());
+            },
+
+            createStateFilter(queryString) {
+                return (state) => {
+                    return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+                };
+            },
+            handleSelect(item) {
+                let _this = this;
+                let postData = {
+                    name: item.value,
+                    pageIndex: 1,
+                    pageSize: 10
+                };
+                var url = "/admin/baseNode/findBaseRelationshipByNameByPage";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        if (res.code !== "200") {
+                            _this.$message.error('查询失败!数据为空或者服务器出错 ');
+                            return;
+                        }
+                        _this.newsList = res.data.nodeList;
+                        _this.pageParams.totalCount = res.data.totalCount;
+                        for (var i = 0; i < _this.newsList.length; i++) {
+                            _this.newsList[i].type = _this.type;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('查询失败');
+                    }
+                });
+            },
+            showMessage(e) {
+                if (e === "人物->人物") {
+                    this.adddialogFormVisiblePersonToPerson = true;
+                    this.getPersonName();
+                }
+                if (e === "人物->武器") {
+                    this.adddialogFormVisiblePersonToWeapon = true;
+                    this.getPersonName();
+                    this.getWeaponName();
+                }
+                if (e === "事件->人物") {
+                    this.adddialogFormVisibleDeedsToPerson = true;
+                    this.getDeedsName();
+                    this.getPersonName();
+
+                }
+                if (e === "事件->地点") {
+                    this.adddialogFormVisibleDeedsToPlace = true;
+                    this.getDeedsName();
+                    this.getPlaceName();
+                }
+
+                if (e === "地点->事件") {
+                    this.adddialogFormVisiblePlaceToDeeds = true;
+                    this.getDeedsName();
+                    this.getPlaceName();
+                }
+            },
+            changeModel(e) {
+                if (e === "双向关系") {
+                    this.sufResult = false;
+                }
+                if (e === "单向关系") {
+                    this.sufResult = true;
+                    this.addDetailPersonToPerson.sufRelation = '';
+                }
+                this.myResult = false;
+
+            },
+            s(e) {
+                if (e === true) {
+                    this.value = '';
+                }
+            },
+
+            getPersonName() {
+                let _this = this;
+                let postData = {
+                    nodeType: "personNode",
+                    type: this.type
+                };
+                var url = "/admin/relation/findNodeName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        if (res.code !== "200") {
+                            _this.$message.error('查询失败');
+                        }
+                        _this.restaurantsPersonToPerson = res.data;
+                    },
+                    error: function () {
+                        _this.$message.error('查询失败');
+                    }
+                });
+            },
+
+            getWeaponName() {
+                let _this = this;
+                let postData = {
+                    nodeType: "weaponNode",
+                    type: this.type
+                };
+                var url = "/admin/relation/findNodeName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        if (res.code !== "200") {
+                            _this.$message.error('查询失败');
+                        }
+                        _this.restaurantsPersonToWeapon = res.data;
+                    },
+                    error: function () {
+                        _this.$message.error('查询失败');
+                    }
+                });
+            },
+            getDeedsName() {
+                let _this = this;
+                let postData = {
+                    nodeType: "deedsNode",
+                    type: this.type
+                };
+                var url = "/admin/relation/findNodeName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        if (res.code !== "200") {
+                            _this.$message.error('查询失败');
+                        }
+                        _this.restaurantsDeedsToPerson = res.data;
+                    },
+                    error: function () {
+                        _this.$message.error('查询失败');
+                    }
+                });
+
+            },
+            getPlaceName() {
+                let _this = this;
+                let postData = {
+                    nodeType: "placeNode",
+                    type: this.type
+                };
+                var url = "/admin/relation/findNodeName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        if (res.code !== "200") {
+                            _this.$message.error('查询失败');
+                        }
+                        _this.restaurantsDeedsToPlace = res.data;
+                    },
+                    error: function () {
+                        _this.$message.error('查询失败');
+                    }
+                });
+
+            },
+
+
+            addPersonTOPerson() {
+                let _this = this;
+                if (_this.addDetailPersonToPerson.startName === '' || _this.addDetailPersonToPerson.startName == null) {
+                    this.$message({
+                        message: '前驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (_this.addDetailPersonToPerson.preRelation === '' || _this.addDetailPersonToPerson.preRelation == null) {
+                    this.$message({
+                        message: '顺关系名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (_this.addDetailPersonToPerson.endName === '' || _this.addDetailPersonToPerson.endName == null) {
+                    this.$message({
+                        message: '后驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                if (_this.addDetailPersonToPerson.startName === _this.addDetailPersonToPerson.endName) {
+                    this.$message({
+                        message: '前驱节点名称和后驱节点名称不能相同',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                let postData = {
+                    startName: _this.addDetailPersonToPerson.startName,
+                    preName: _this.addDetailPersonToPerson.preRelation,
+                    sufName: _this.addDetailPersonToPerson.sufRelation,
+                    endName: _this.addDetailPersonToPerson.endName,
+                    type:_this.type,
+                };
+                // 单向关系
+                if (_this.addDetailPersonToPerson.sufRelation === '' || _this.addDetailPersonToPerson.sufRelation == null) {
+                    var url = "/admin/personNode/addPersonNodeRelationship";
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        data: JSON.stringify(postData),
+                        dataType: "json",
+                        contentType: "application/json",
+                        success: function (res) {
+                            if (res.code != "200") {
+                                _this.$message.error('添加失败');
+                                return;
+                            }
+                            _this.$message({
+                                type: 'success',
+                                message: '添加成功!可继续添加'
+                            });
+                            _this.addDetailPersonToPerson = {};
+                        },
+                        error: function () {
+                            _this.$message.error('新增失败');
+                        }
+                    });
+
+                } else {
+                    if (_this.addDetailPersonToPerson.sufRelation === '' || _this.addDetailPersonToPerson.sufRelation == null) {
+                        this.$message({
+                            message: '逆关系名称不能为空',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    if (_this.addDetailPersonToPerson.preRelation === _this.addDetailPersonToPerson.sufRelation) {
+                        this.$message({
+                            message: '顺关系名称和逆关系名称点不能相同',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+
+                    var url = "/admin/personNode/addTwoPersonRelationship";
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        data: JSON.stringify(postData),
+                        dataType: "json",
+                        contentType: "application/json",
+                        success: function (res) {
+                            if (res.code != "200") {
+                                _this.$message.error('添加失败');
+                                return;
+                            }
+                            _this.$message({
+                                type: 'success',
+                                message: '添加成功!可继续添加'
+                            });
+                            _this.addDetailPersonToPerson = {};
+                        },
+                        error: function () {
+                            _this.$message.error('新增失败');
+                        }
+                    });
+
+
+                }
+            },
+
+
+            addPersonTOWeapon() {
+
+                let _this = this;
+                if (_this.addDetailPersonToWeapon.startName === '' || _this.addDetailPersonToWeapon.startName == null) {
+                    this.$message({
+                        message: '人物前驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (_this.addDetailPersonToWeapon.endName === '' || _this.addDetailPersonToWeapon.endName == null) {
+                    this.$message({
+                        message: '武器后驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                let postData = {
+                    startName: _this.addDetailPersonToWeapon.startName,
+                    endName: _this.addDetailPersonToWeapon.endName,
+                    type:_this.type,
+                };
+
+                var url = "/admin/personNode/addPersonNodeWeaponNode";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (res) {
+                        if (res.code != "200") {
+                            _this.$message.error('添加失败');
+                            return;
+                        }
+                        _this.$message({
+                            type: 'success',
+                            message: '添加成功!可继续添加'
+                        });
+                        _this.addDetailPersonToWeapon = {};
+                    },
+                    error: function () {
+                        _this.$message.error('新增失败');
+                    }
+                });
+
+            },
+
+
+            addDeedsToPerson() {
+
+                let _this = this;
+                if (_this.addDetailDeedsToPerson.startName === '' || _this.addDetailDeedsToPerson.startName == null) {
+                    this.$message({
+                        message: '事件前驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                if (_this.addDetailDeedsToPerson.endName === '' || _this.addDetailDeedsToPerson.endName == null) {
+                    this.$message({
+                        message: '人物后驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                let postData = {
+                    startName: _this.addDetailDeedsToPerson.startName,
+                    names: [_this.addDetailDeedsToPerson.endName],
+                    type:_this.type,
+                };
+                var url = "/admin/deedsNode/addDeedsPersonRelationship";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (res) {
+                        if (res.code != "200") {
+                            _this.$message.error('添加失败');
+                            return;
+                        }
+                        _this.$message({
+                            type: 'success',
+                            message: '添加成功!可继续添加'
+                        });
+                        _this.addDetailDeedsToPerson.endName = '';
+                    },
+                    error: function () {
+                        _this.$message.error('新增失败');
+                    }
+                });
+
+
+            },
+
+            addDeedsToPlace() {
+
+                let _this = this;
+                if (_this.addDetailDeedsToPlace.startName === '' || _this.addDetailDeedsToPlace.startName == null) {
+                    this.$message({
+                        message: '事件前驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                if (_this.addDetailDeedsToPlace.endName === '' || _this.addDetailDeedsToPlace.endName == null) {
+                    this.$message({
+                        message: '地点后驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                let postData = {
+                    startName: _this.addDetailDeedsToPlace.startName,
+                    names: [_this.addDetailDeedsToPlace.endName],
+                    type:_this.type,
+                };
+                var url = "/admin/deedsNode/addDeedsPlaceRelationship";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (res) {
+                        if (res.code != "200") {
+                            _this.$message.error('添加失败');
+                            return;
+                        }
+                        _this.$message({
+                            type: 'success',
+                            message: '添加成功!可继续添加'
+                        });
+                        _this.addDetailDeedsToPlace = {};
+                    },
+                    error: function () {
+                        _this.$message.error('新增失败');
+                    }
+                });
+
+
+            },
+
+            addPlaceToDeeds() {
+                let _this = this;
+                if (_this.addDetailPlaceToDeeds.startName === '' || _this.addDetailPlaceToDeeds.startName == null) {
+                    this.$message({
+                        message: '地点前驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                if (_this.addDetailPlaceToDeeds.endName === '' || _this.addDetailPlaceToDeeds.endName == null) {
+                    this.$message({
+                        message: '事件后驱节点名称不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                let postData = {
+                    startName: _this.addDetailPlaceToDeeds.startName,
+                    names: [_this.addDetailPlaceToDeeds.endName],
+                    type:_this.type,
+                };
+                var url = "/admin/place/addPlaceNodeDeedsNodeRelationship";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (res) {
+                        if (res.code != "200") {
+                            _this.$message.error('添加失败');
+                            return;
+                        }
+                        _this.$message({
+                            type: 'success',
+                            message: '添加成功!可继续添加'
+                        });
+                        _this.addDetailPlaceToDeeds = {};
+                    },
+                    error: function () {
+                        _this.$message.error('新增失败');
+                    }
+                });
+            },
+            //分页   开始
+            handleSizeChange(val) {
+                console.log(val)
+                this.pageParams.pageSize = val;
+                this.getListRelationByPage();
+
+            },
+            handleCurrentChange(val) {
+                this.pageParams.pageIndex = val;
+                this.getListRelationByPage();
+            },
+
+
+        }
+    })
+
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <div id="title">
+    <title>图</title></div>
+    <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/navperson.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/css/person.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="../../common/js/person.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+</head>
+
+<style>
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+
+    .nav .login {
+        padding-top: 25px;
+        float: right;
+    }
+    .nav .login a {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;
+    }
+
+    .nav .login a:nth-child(1) {
+        padding-left: 30px;
+    }
+
+    .nav .login a:nth-child(2) {
+        background: #FD8A08;
+        border-radius: 4px;
+        color: #fff;
+        margin-right: 10px;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0;
+        text-align: center;
+    }
+
+    .head_img {
+        height: 50px;
+    }
+
+    .head_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        position: absolute;
+        left: 990px;
+        top: 16px;
+    }
+
+
+    circle {
+        fill: #ccc;
+        stroke: #333;
+        stroke-width: 1.5px;
+    }
+
+    text {
+        font: 10px Microsoft YaHei;
+        pointer-events: none;
+        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+    .el-icon-plus:before {
+        position: absolute;
+        top: 25px;
+        font-size: 30px;
+        margin-left: 60px;
+        content: "\e6d9";
+        cursor: pointer;
+    }
+    .el-icon-minus:before {
+        position: absolute;
+        top: 25px;
+        font-size: 30px;
+        margin-left: 140px;
+        content: "\e6d8";
+        cursor: pointer;
+    }
+    #tip1{
+        height:35px;
+        background-color:#fff;
+        padding-left:10px;
+        padding-right:10px;
+        border:1px solid #969696;
+        position:absolute;
+        font-size:12px;
+        right:10px;
+        top:100px;
+        border-radius:3px;
+        line-height:35px;
+    }
+
+    #tip1 input[type='button']{
+        height:22px;
+        line-height:22px;
+        outline:none;
+        text-align:center;
+        padding-left:5px;
+        padding-right:5px;
+        color:#FFF;
+        background-color:#0D9BF2;
+        border:0;
+        border-radius: 3px;
+        margin-top:8px;
+        margin-left:5px;
+        cursor:pointer;
+        margin-right:10px;
+    }
+    .el-icon-star-off:before {
+        font-size: 40px;
+        content: "\e717";
+        cursor: pointer;
+    }
+
+    .el-icon-star-on:before {
+        font-size: 40px;
+        content: "\e797";
+        cursor: pointer;
+    }
+    .el-icon-arrow-down::before {
+        position: absolute;
+        content: "\e6df";
+        top: 20px;
+    }
+    .abc{
+        position: relative;
+        margin: 0 auto 50px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-sizing: border-box;
+        width: 80%;
+    }
+</style>
+
+<body>
+
+<div id="table">
+
+    <!--导航开始-->
+    <div class="nav" style="
+    background-color: #292929;
+">
+        <div id="menu_hover_bg" style="height: 0px; overflow: hidden;"></div>
+        <div class="w1200">
+
+            <div class="menu">
+                <ul>
+                    <li id="men_pro">
+                        <h2><a href="/">首页</a></h2>
+                        <div class="sub_menu">
+                            <div class="h30"></div>
+
+                            <div class="sub_menu_list" style="width: 315px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/fxw.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                分销王
+                                            </h3>
+                                            <p>
+                                                全终端分销平台，PC+手机+微信合一
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/sqws.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                社群微商
+                                            </h3>
+                                            <p>
+                                                热门移动分销软件，快速引分销流量
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="sub_menu_list" style="width: 295px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/erp.png" alt="">
+                                        </div>
+                                        <div class="info">
+
+                                            <p>
+                                                对接43+平台, 订单库存统一管理
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/hdt.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                货店通
+                                            </h3>
+                                            <p>
+                                                多平台一键铺货神器，省时便捷
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/crm.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                会员通
+                                            </h3>
+                                            <p>
+                                                专业电商CRM，更快了解客户
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/taoda.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                淘打
+                                            </h3>
+                                            <p>
+                                                订单批量打印，对接10+主流平台
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ysd.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                云云收订
+                                            </h3>
+                                            <p>
+                                                对接40+主流平台，订单实时获取
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li id="men_sol1">
+                        <h2><a href="#">西游记</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>西游记</h3>
+                                    <div class="list sol_list">
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_fuwu">
+                        <h2 class="men_sol"><a href="#">三国演义</a></h2>
+                        <div class="sub_menu">
+                            <div class="w1200">
+                                <h3>服务市场</h3></div>
+                            <div class="sub_menu_list">
+                                <div class="category">
+                                    <ul>
+                                        <li>热销产品推荐</li>
+                                        <li>店铺模板/二开/插件定制</li>
+                                        <li>营销推广流量</li>
+                                        <li>软件配套服务</li>
+                                    </ul>
+                                </div>
+                                <div class="content">
+                                    <div class="cont_list" style="display: block;">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon1.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon2.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon3.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon4.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon5.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon6.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon7.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon8.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon9.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon10.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon11.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon12.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon13.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon14.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon15.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon16.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon17.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon18.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon19.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><a href="#">水浒传</a></h2>
+                    </li>
+                    <li>
+                        <h2><a href="#">红楼梦</a></h2>
+                    </li>
+                    <li id="men_sol">
+                        <h2><a href="#">关于作者</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 1250px;">
+                                    <h3></h3>作者介绍</h3>
+                                    <div class="list sol_list">
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E5%90%B4%E6%89%BF%E6%81%A9/18713182#4">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    西游记
+                                                </h3>
+                                                <p>
+                                                    吴承恩（约1500—1583<br> 明代小说家，淮安府山阳县河下人（现江苏省淮安市淮安区）
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E7%BD%97%E8%B4%AF%E4%B8%AD/172206">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国演义
+                                                </h3>
+                                                <p>
+                                                    罗贯中（约1330年－约1400年）<br> 名本，字贯中，号湖海散人，元末明初小说家
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%96%BD%E8%80%90%E5%BA%B5">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    水浒传
+                                                </h3>
+                                                <p>
+                                                    施耐庵（约1296年—约1370年）<br> 江苏兴化人，原名彦端，字肇瑞，号子安，别号耐庵
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%9B%B9%E9%9B%AA%E8%8A%B9/14919">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    红楼梦
+                                                </h3>
+                                                <p>曹雪芹（约1715年5月—约1763年2月）<br> 名沾，字梦阮，号雪芹，又号芹溪、芹圃；出生于江宁（今南京）
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <i title="放大"  @click="zoomMax()" class="el-icon-plus"></i>
+
+                    <i title="缩小"  @click="zoomMin()" class="el-icon-minus"></i>
+                </ul>
+            </div>
+
+
+            <div id="123" v-if="userInfo.flag">
+                <div class="login">
+                    <a href="/page/login">
+                        <div class="head_img">
+                            <img :src="originPicture"/>
+                        </div>
+                        <span style="position: absolute;left: 1055px;top: 25px;"> 登陆 </span>
+                    </a>
+                    <a href="/page/register">免费注册</a>
+                </div>
+            </div>
+            <div v-else>
+                <div class="login">
+                    <div class="head_img">
+                        <img :src="userInfo.picture"/>
+                    </div>
+                    <el-dialog v-loading="loading"
+                               element-loading-text="拼命上传中"
+                               element-loading-spinner="el-icon-loading"
+                               element-loading-background="rgba(0, 0, 0, 0.8)"
+
+                               title="修改头像" :visible.sync="dialogFormVisible">
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/admin/file/ftpUploadImg"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccessEdit"
+                                :before-upload="beforeAvatarUploadEdit">
+                            <img v-if="imgTemp" :src="imgTemp" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="update()">确 定</el-button>
+                        </div>
+                    </el-dialog>
+
+
+
+
+
+                    <span style="position: absolute;left: 1055px;top: 25px;height: 30px;
+        cursor: pointer;width: 200px">  <el-dropdown trigger="click" @command="handleCommand">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+     {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
+    <el-dropdown-item>个人收藏</el-dropdown-item>
+      <el-dropdown-item command="loginOut">退出</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+                    <span style="position: absolute;left: 1195px;top: 25px;height: 30px;
+        cursor: pointer;width: 100px">  <el-dropdown trigger="click" @command="handleCollect">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+
+      <i  v-if="collectFlag"  title="添加收藏"  class="el-icon-star-off"></i>
+      <i  v-if="!collectFlag" title="取消收藏" class="el-icon-star-on"></i>
+          <i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item  v-if="collectFlag" command="add">添加收藏</el-dropdown-item>
+       <el-dropdown-item  v-if="!collectFlag" command="cancel">已收藏(取消收藏)</el-dropdown-item>
+      <el-dropdown-item command="share">分享</el-dropdown-item>
+
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--导航结束-->
+    <!--轮播开始-->
+    <div class="overall">
+        <div>
+            <img    class="drag" id="img" :src="img" alt @mousewheel="rollImg(this)" ref="bigImage"
+                 style="width: 400px; height:500px;position: fixed;left: 300px;top: 60px;
+                 cursor: pointer ;" v-drag="flag"  >
+        </div>
+
+    </div>
+
+    <div id="tip1" v-if="type=='三国鼎立' || type=='大唐疆域'">
+        <input type="button" value="简洁" @click="pmt()"/>
+        <input type="button" value="标准" @click="bzt()"/>
+        <input type="button" value="地形" @click="zst()"/>
+    </div>
+
+    <!-- 分享到 -->
+    <el-dialog class="abc" title="分享到" :visible.sync="dialogFormVisibleShare">
+        <div style="height: 50px;width: 50px; cursor: pointer"  @click="shareToQzone()">
+            <img style="width: 50px; height: 50px;" src="../../common/image/QQkong.png"/>
+            <span style="position: absolute;left: 20px;margin-top: 60px">QQ空间</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 150px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/pyquan.png"/>
+            <span style="position: absolute;left: 20px; width: 60px; margin-top: 60px">朋友圈</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 300px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/weibo.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">微博</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 450px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/qunzu.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">QQ好友</span>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShare=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+
+
+</body>
+
+<script>
+    Vue.directive('drag',{
+
+        inserted:function(el,binding){
+            el.onmousedown=function(e){
+                e.stopPropagation();
+                let disx = e.pageX - el.offsetLeft;
+                let disy = e.pageY - el.offsetTop;
+                document.onmousemove = function (e){
+                    e.preventDefault();
+                    el.style.left = e.pageX - disx+'px';
+                    el.style.top = e.pageY - disy+'px';
+                }
+                document.onmouseup = function(){
+                    document.onmousemove = document.onmouseup = null;
+                    //binding 传参，可忽略
+                    if(binding && binding.value){
+                        binding.value.clientX=parseInt(el.style.left);
+                        binding.value.clientY=parseInt(el.style.top);
+                    }
+
+                }
+            }
+        },
+    });
+
+    var app = new Vue({
+        el: "#table",
+        data: {
+            originPicture: '../../common/statics/images/login_i.png',
+            userInfo: {
+                flag: true,
+                id: '',
+                nickName: '',
+                picture: '',
+            },
+            dialogFormVisible: false,
+            loading: 'false',
+            imgTemp: '',
+            personList: [],
+            linksNode:[],
+            personName:'',
+            dialogFormVisibleShowPerson:false,
+            dialogFormVisibleShare:false,
+            formLabelWidth:'120px',
+            showPersonDtail:'',
+            flag:true,
+            input:'',
+            flag:true,
+            type:'',
+            img:'',
+            linkUrl:'',
+            collectFlag:true,
+            _title:'',
+            saveUrl:'',
+
+        },
+        mounted() {
+        },
+        created() {
+            this.getParam();
+            this.selectImg()
+            this.getPageUser();
+            this.selectCollect();
+
+        },
+        methods: {
+
+            getPageUser() {
+                let _this = this;
+                var url = "/user/page/getPageUser";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    async:false,
+                    success: function (res) {
+                        if (res.code === "200") {
+                            console.log(_this.userInfo)
+                            _this.userInfo.id = res.data.id;
+                            _this.userInfo.nickName = _this.strFilter(res.data.nickName);
+                            _this.userInfo.picture = res.data.picture;
+                            _this.userInfo.flag = false;
+                        }
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            strFilter(str) {
+                // 1字符串转化成数组
+                let phoneArr = [...str];
+                let userName = '';
+
+                if (phoneArr.length === 3) {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 0 && index < 2) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                    return userName;
+                }
+
+                if (phoneArr.length === 4) {
+                    phoneArr.map((res, index) => {
+                        if (index > 0 && index < 3) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                } else {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 1 && index < 5) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                }
+
+                return userName;
+            },
+
+
+            handleAvatarSuccessEdit(res, file) {
+                console.log(res);
+                if (res.code !== "200") {
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.loading = false;
+                this.imgTemp = res.data;
+                console.log(this.userInfo.picture)
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+            },
+            beforeAvatarUploadEdit(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 1;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 1MB!');
+                    this.files = null;
+                    return false;
+                }
+                this.loading = true;
+                return true;
+            },
+            update() {
+                let _this = this;
+                console.log(_this.userInfo)
+                let postData = {
+                    id: _this.userInfo.id,
+                    imgUrl: _this.imgTemp,
+
+                };
+                var url = "/user/page/updatePicture";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res)
+                        if (res.code !== "200") {
+                            _this.$message.error(res.data);
+                        }
+                        _this.$message({
+                            message: '修改成功！',
+                            type: 'success'
+                        });
+
+                        _this.dialogFormVisible = false;
+                        _this.userInfo.picture = _this.imgTemp;
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            handleCommand(command) {
+                if (command === 'loginOut') {
+                    let _this = this;
+
+                    let postData = {
+                        id: _this.userInfo.id,
+                    };
+                    var url = "/user/page/loginOut";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        success: function (res) {
+                            console.log(res)
+                            if (res.code === "200") {
+                                _this.$message({
+                                    message: '退出成功！',
+                                    type: 'success'
+                                });
+                                window.location.href = '/';
+                            }
+
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+
+                if (command === 'editUpload') {
+                    this.dialogFormVisible = true;
+                    var s= document.getElementsByClassName("v-modal");
+                    var index=0;
+                    var time= window.setInterval(function () {
+                        if (s.length!==0){
+                            document.body.removeChild(s[0]);
+                            clearInterval(time);
+                        }
+                        if (index===100000){
+                            clearInterval(time);
+                        }
+                        index++;
+                    },10)
+                }
+            },
+
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            rollImg() {
+                /* 获取当前页面的缩放比
+                      若未设置zoom缩放比，则为默认100%，即1，原图大小
+                  */
+                var zoom = parseInt(this.$refs.bigImage.style.zoom) || 100;
+                /* event.wheelDelta 获取滚轮滚动值并将滚动值叠加给缩放比zoom
+                      wheelDelta统一为±120，其中正数表示为向上滚动，负数表示向下滚动
+                  */
+                zoom += event.wheelDelta / 10;
+                /* 最小范围 和 最大范围 的图片缩放尺度 */
+                if (zoom >= 50 && zoom <650) {
+                    this.$refs.bigImage.style.zoom = zoom + "%";
+                }
+                return false;
+            },
+            zoomMax(){
+                var zoom = parseInt(this.$refs.bigImage.style.zoom) || 100;
+               console.log(zoom)
+                zoom+=10;
+                if (zoom >= 50 && zoom <650) {
+                    this.$refs.bigImage.style.zoom = zoom + "%";
+                }
+            },
+            zoomMin(){
+                var zoom = parseInt(this.$refs.bigImage.style.zoom) || 100;
+                console.log(zoom)
+                zoom-=10;
+                if (zoom >= 50 && zoom <650) {
+                    this.$refs.bigImage.style.zoom = zoom + "%";
+                }
+            },
+            getParam() {
+                this.linkUrl= location.href;
+                this.linkUrl= decodeURI(this.linkUrl);
+                let url = location.search; //获取url中"?"符后的字串
+                this.saveUrl = location.pathname+url;
+                this.saveUrl= decodeURI(this.saveUrl);
+                console.log(this.saveUrl);
+                if (url.indexOf("?") != -1) {
+                    let str = url.substr(1);
+                    let strs = str.split("&");
+                    this.type = decodeURIComponent(strs[0].replace("type=", ""));
+
+                }
+            },
+            selectImg(){
+              if (this.type === "三国详图"){
+                  this.img="../../common/image/sanDetail.png";
+              }
+              if (this.type === "三国鼎立"){
+                  this.img="../../common/image/sanDing.jpg";
+              }
+              if (this.type==="大唐疆域"){
+                  this.img="http://img.sdmzh.com.cn/xyj/tc3.jpg";
+              }
+              if(this.type === "起义地图"){
+                  this.img ="http://img.sdmzh.com.cn/108/sjqy.jpg";
+              }
+              if(this.type==="北宋疆域"){
+                  this.img = "http://img.sdmzh.com.cn/108/bs.jpg";
+              }
+              if (this.type==="大观圆图"){
+                  this.img = "http://img.sdmzh.com.cn/hlm/zst.gif";
+              }
+              if (this.type==="贾府平面图"){
+                    this.img = "http://img.sdmzh.com.cn/hlm/jfpm.jpg";
+              }
+              if (this.type==="红花楼人物简图"){
+                  this.img ="../../common/image/hong.jpg";
+              }
+
+
+            },
+            pmt(){
+                if (this.type==="大唐疆域"){
+                    this.img="http://img.sdmzh.com.cn/xyj/tc3.jpg";
+                }
+                if (this.type === "三国鼎立"){
+                    this.img="http://img.sdmzh.com.cn/sgyy/sgdl0.jpg";
+                }
+
+
+            },
+            bzt(){
+
+                if (this.type==="大唐疆域"){
+                    this.img="http://img.sdmzh.com.cn/xyj/tc2.jpg";
+                }
+                if (this.type === "三国鼎立"){
+                    this.img="http://img.sdmzh.com.cn/sgyy/sgdl.jpg";
+                }
+
+            },
+            zst(){
+                if (this.type==="大唐疆域"){
+                    this.img="http://img.sdmzh.com.cn/xyj/tc1.jpg";
+                }
+                if (this.type === "三国鼎立"){
+                    this.img="http://img.sdmzh.com.cn/sgyy/sgdl1.jpg";
+                }
+            },
+
+            collect(){
+                var title ="地图浏览-"+this.type;
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                    title:title,
+                };
+                let _this =this;
+                var url = "/page/collect/add";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                            _this.$message({
+                                message: '添加收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('添加收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+            cancelCollect(){
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/cancel";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = true;
+                            _this.$message({
+                                message: '取消收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('取消收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+
+            },
+            selectCollect(){
+                this.saveUrl= decodeURI(this.saveUrl);
+                console.log(this.userInfo);
+                console.log(this.userInfo.id);
+                console.log(this.saveUrl);
+                if(this.userInfo.id===''){
+                    return;
+                }
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/select";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                        }else {
+                            _this.collectFlag = true;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+            handleCollect(command){
+                if (command==="add"){
+                    this.collect();
+                }
+                if (command==="cancel"){
+                    this.cancelCollect();
+                }
+                if (command==="share"){
+                    this.dialogFormVisibleShare=true;
+                }
+            },
+
+            shareToQzone(){
+                var _shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?';
+                console.log(this.linkUrl);
+                var url = 'www.liaoyunfeng.top'
+                _shareUrl += 'url=' + encodeURIComponent(url || document.location);   //参数url设置分享的内容链接|默认当前页location
+                _shareUrl += '&title=' + encodeURIComponent( this._title || document.title);
+                window.open(_shareUrl);
+            },
+
+        }
+    })
+
+</script>
+<!--轮播结束-->
+
+<script src="../../common/statics/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/swiper.animate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/main.js" type="text/javascript" charset="utf-8"></script>
+</html>

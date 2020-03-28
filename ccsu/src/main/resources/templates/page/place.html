@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>地点浏览</title>
+    <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/navperson.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/css/person.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="../../common/js/person.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+</head>
+
+<style>
+    .el-input.is-disabled .el-input__inner {
+        background-color: #F5F7FA;
+        border-color: #E4E7ED;
+        color: black;
+        cursor: not-allowed;
+    }
+    .el-textarea.is-disabled .el-textarea__inner {
+        background-color: #F5F7FA;
+        border-color: #E4E7ED;
+        color: black;
+        cursor: not-allowed;
+    }
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+
+    .nav .login {
+        padding-top: 25px;
+        float: right;
+    }
+
+    .nav .login a {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;
+    }
+
+    .nav .login a:nth-child(1) {
+        padding-left: 30px;
+    }
+
+    .nav .login a:nth-child(2) {
+        background: #FD8A08;
+        border-radius: 4px;
+        color: #fff;
+        margin-right: 10px;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0;
+        text-align: center;
+    }
+
+    .head_img {
+        height: 50px;
+    }
+
+    .head_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        position: absolute;
+        left: 990px;
+        top: 16px;
+    }
+
+    .link {
+        fill: none;
+        stroke: #666;
+        stroke-width: 1.5px;
+    }
+
+    #licensing {
+        fill: green;
+    }
+
+    .link.licensing {
+        stroke: green;
+    }
+
+    .link.resolved {
+        stroke-dasharray: 0, 21;
+    }
+    circle {
+        fill: #ccc;
+        stroke: #333;
+        stroke-width: 1.5px;
+    }
+
+    text {
+        font: 10px Microsoft YaHei;
+        pointer-events: none;
+        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+
+    .linetext {
+        font-size: 12px;
+    }
+
+    .tooltip {
+        position: absolute;
+        width: 120px;
+        height: auto;
+        font-family: simsun;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        background-color: white;
+        border-radius: 5px;
+    }
+    .el-icon-star-off:before {
+        font-size: 40px;
+        content: "\e717";
+        cursor: pointer;
+    }
+
+    .el-icon-star-on:before {
+        font-size: 40px;
+        content: "\e797";
+        cursor: pointer;
+    }
+    .el-icon-arrow-down::before {
+        position: absolute;
+        content: "\e6df";
+        top: 20px;
+    }
+    .abc{
+        position: relative;
+        margin: 0 auto 50px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-sizing: border-box;
+        width: 80%;
+    }
+</style>
+<body>
+<div id="table">
+
+    <!--导航开始-->
+    <div class="nav" style="
+    background-color: #292929;
+">
+        <div id="menu_hover_bg" style="height: 0px; overflow: hidden;"></div>
+        <div class="w1200">
+
+            <div class="menu">
+                <ul>
+                    <li id="men_pro">
+                        <h2><a href="/">首页</a></h2>
+                        <div class="sub_menu">
+                            <div class="h30"></div>
+
+                            <div class="sub_menu_list" style="width: 315px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/fxw.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                分销王
+                                            </h3>
+                                            <p>
+                                                全终端分销平台，PC+手机+微信合一
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/sqws.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                社群微商
+                                            </h3>
+                                            <p>
+                                                热门移动分销软件，快速引分销流量
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="sub_menu_list" style="width: 295px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/erp.png" alt="">
+                                        </div>
+                                        <div class="info">
+
+                                            <p>
+                                                对接43+平台, 订单库存统一管理
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/hdt.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                货店通
+                                            </h3>
+                                            <p>
+                                                多平台一键铺货神器，省时便捷
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/crm.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                会员通
+                                            </h3>
+                                            <p>
+                                                专业电商CRM，更快了解客户
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/taoda.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                淘打
+                                            </h3>
+                                            <p>
+                                                订单批量打印，对接10+主流平台
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ysd.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                云云收订
+                                            </h3>
+                                            <p>
+                                                对接40+主流平台，订单实时获取
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li id="men_sol1">
+                        <h2><a href="#">西游记</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>西游记</h3>
+                                    <div class="list sol_list">
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_fuwu">
+                        <h2 class="men_sol"><a href="#">三国演义</a></h2>
+                        <div class="sub_menu">
+                            <div class="w1200">
+                                <h3>服务市场</h3></div>
+                            <div class="sub_menu_list">
+                                <div class="category">
+                                    <ul>
+                                        <li>热销产品推荐</li>
+                                        <li>店铺模板/二开/插件定制</li>
+                                        <li>营销推广流量</li>
+                                        <li>软件配套服务</li>
+                                    </ul>
+                                </div>
+                                <div class="content">
+                                    <div class="cont_list" style="display: block;">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon1.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon2.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon3.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon4.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon5.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon6.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon7.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon8.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon9.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon10.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon11.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon12.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon13.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon14.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon15.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon16.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon17.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon18.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon19.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><a href="#">水浒传</a></h2>
+                    </li>
+                    <li>
+                        <h2><a href="#">红楼梦</a></h2>
+                    </li>
+                    <li id="men_sol">
+                        <h2><a href="#">关于作者</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 1250px;">
+                                    <h3></h3>作者介绍</h3>
+                                    <div class="list sol_list">
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E5%90%B4%E6%89%BF%E6%81%A9/18713182#4">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    西游记
+                                                </h3>
+                                                <p>
+                                                    吴承恩（约1500—1583<br> 明代小说家，淮安府山阳县河下人（现江苏省淮安市淮安区）
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E7%BD%97%E8%B4%AF%E4%B8%AD/172206">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国演义
+                                                </h3>
+                                                <p>
+                                                    罗贯中（约1330年－约1400年）<br> 名本，字贯中，号湖海散人，元末明初小说家
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%96%BD%E8%80%90%E5%BA%B5">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    水浒传
+                                                </h3>
+                                                <p>
+                                                    施耐庵（约1296年—约1370年）<br> 江苏兴化人，原名彦端，字肇瑞，号子安，别号耐庵
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%9B%B9%E9%9B%AA%E8%8A%B9/14919">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    红楼梦
+                                                </h3>
+                                                <p>曹雪芹（约1715年5月—约1763年2月）<br> 名沾，字梦阮，号雪芹，又号芹溪、芹圃；出生于江宁（今南京）
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+
+                    <li @keyup.enter="selectInputName()">
+                        <el-input style="top: 20px; margin-left: 10px"
+                                  placeholder="请输入人物名称"
+                                  v-model="input"
+                                  clearable>
+                        </el-input>
+                    </li>
+
+                    <li>
+                        <el-button style="position:absolute;top: 20px; margin-left: 20px" type="primary" @click="selectInputName()">查询</el-button>
+                    </li>
+
+                </ul>
+            </div>
+
+
+            <div id="123" v-if="userInfo.flag">
+                <div class="login">
+                    <a href="/page/login">
+                        <div class="head_img">
+                            <img :src="originPicture"/>
+                        </div>
+                        <span style="position: absolute;left: 1055px;top: 25px;"> 登陆 </span>
+                    </a>
+                    <a href="/page/register">免费注册</a>
+                </div>
+            </div>
+            <div v-else>
+                <div class="login">
+                    <div class="head_img">
+                        <img :src="userInfo.picture"/>
+                    </div>
+                    <el-dialog v-loading="loading"
+                               element-loading-text="拼命上传中"
+                               element-loading-spinner="el-icon-loading"
+                               element-loading-background="rgba(0, 0, 0, 0.8)"
+
+                               title="修改头像" :visible.sync="dialogFormVisible">
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/admin/file/ftpUploadImg"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccessEdit"
+                                :before-upload="beforeAvatarUploadEdit">
+                            <img v-if="imgTemp" :src="imgTemp" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="update()">确 定</el-button>
+                        </div>
+                    </el-dialog>
+
+                    <span style="position: absolute;left: 1055px;top: 25px;height: 30px;
+        cursor: pointer;width: 200px">  <el-dropdown trigger="click" @command="handleCommand">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+     {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
+    <el-dropdown-item>个人收藏</el-dropdown-item>
+      <el-dropdown-item command="loginOut">退出</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+
+
+                    <span style="position: absolute;left: 1195px;top: 25px;height: 30px;
+        cursor: pointer;width: 100px">  <el-dropdown trigger="click" @command="handleCollect">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+
+      <i  v-if="collectFlag"  title="添加收藏"  class="el-icon-star-off"></i>
+      <i  v-if="!collectFlag" title="取消收藏" class="el-icon-star-on"></i>
+          <i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item  v-if="collectFlag" command="add">添加收藏</el-dropdown-item>
+       <el-dropdown-item  v-if="!collectFlag" command="cancel">已收藏(取消收藏)</el-dropdown-item>
+      <el-dropdown-item command="share">分享</el-dropdown-item>
+
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!--导航结束-->
+    <!--轮播开始-->
+    <div>
+        <div class="s-side" style="
+    position: absolute;
+    top: 80px;">
+            <ul>
+                <!--这部分是导航栏信息。-->
+                <li class="s-firstItem first">
+                    <a href="#">
+                        <i class="fa fa-home"></i>
+                        <span>{{type}} 地点展示</span>
+                    </a>
+                </li>
+                <li class="first">
+                    <div class="d-firstNav s-firstNav clearfix">
+                        <i class="fa fa-bars"></i>
+                        <span>地点浏览</span>
+                        <i class="fa fa-caret-right fr "></i>
+                    </div>
+                    <ul class="d-firstDrop s-firstDrop">
+                        <li style="overflow: scroll;height: 450px;
+">
+                            <div v-for="(item,i) in personList">
+                                <div class="s-secondNav swiper-slide" @click="getPersonNodeByName(item)">
+                                    <span >{{item}}</span>
+                                </div>
+
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+
+    </div>
+
+    <!--         修改-->
+    <el-dialog :title="personName" :visible.sync="dialogFormVisibleShowPerson">
+        <el-form :model="showPersonDtail">
+            <el-form-item label="相片" :label-width="formLabelWidth">
+                <template slot-scope="scope">
+                    <el-image
+                            style="width: 130px; height: 130px"
+                            :src="showPersonDtail.picture"
+                            :preview-src-list="showPersonDtail.pictures">
+                        >
+                    </el-image>
+                </template>
+            </el-form-item>
+
+            <el-form-item label="名字" :label-width="formLabelWidth">
+                <el-input   :disabled="flag" v-model="showPersonDtail.name" autocomplete="off" style="color: black"></el-input>
+            </el-form-item>
+
+
+            <el-form-item label="地点简介" :label-width="formLabelWidth">
+                <el-input style="color: black" :disabled="flag" v-model="showPersonDtail.content"  type="textarea" autocomplete="off"></el-input>
+            </el-form-item>
+
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShowPerson=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog class="abc" title="分享到" :visible.sync="dialogFormVisibleShare">
+        <div style="height: 50px;width: 50px; cursor: pointer"  @click="shareToQzone()">
+            <img style="width: 50px; height: 50px;" src="../../common/image/QQkong.png"/>
+            <span style="position: absolute;left: 20px;margin-top: 60px">QQ空间</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 150px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/pyquan.png"/>
+            <span style="position: absolute;left: 20px; width: 60px; margin-top: 60px">朋友圈</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 300px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/weibo.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">微博</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 450px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/qunzu.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">QQ好友</span>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShare=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+<a type="button" id="fullscreen" class="btn btn-default visible-lg visible-md" style="
+    position: absolute;
+    top: 90px;
+     right: 30px;
+    color: black;
+    cursor: pointer;
+"><i class="fa fa-refresh" style="color: black" aria-hidden="true"></i> 切换全屏</a>
+<div id="content">
+    <script>
+        function enterfullscreen() { //进入全屏
+            var docElm = document.getElementById("svg");
+            //W3C
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            }
+            //FireFox
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            }
+            //Chrome等
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+            //IE11
+            else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        $('#fullscreen').on('click', function () {
+            enterfullscreen()
+        })
+
+    </script>
+</div>
+
+</body>
+
+<script>
+    var app = new Vue({
+        el: '#table',
+        data: {
+            originPicture: '../../common/statics/images/login_i.png',
+            userInfo: {
+                flag: true,
+                id: '',
+                nickName: '',
+                picture: '',
+            },
+            dialogFormVisible: false,
+            loading: 'false',
+            imgTemp: '',
+            type: '',
+            personList: [],
+            linksNode:[],
+            personName:'',
+            dialogFormVisibleShowPerson:false,
+            dialogFormVisibleShare:false,
+            formLabelWidth:'120px',
+            showPersonDtail:'',
+            flag:true,
+            input:'',
+            paramName:'',
+            paramLikeName:'',
+            linkUrl:'',
+            collectFlag:true,
+            _title:'',
+            saveUrl:'',
+
+        },
+        mounted() {
+        },
+        created() {
+            this.getParam();
+            this.getListNodeLink();
+            this.getListNode();
+            this.getPersonList();
+            this.getPageUser();
+            this.selectCollect();
+        },
+        methods: {
+            getListNode() {
+                var chaxuntext = $(".chaxuntext").text;
+                // http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
+                var links = this.linksNode;
+                console.log(links)
+                var nodes = {};
+                let _this=this;
+                links.forEach(function (link) {//参考https://stackoverflow.com/questions/23986466/d3-force-layout-linking-nodes-by-name-instead-of-index
+                    //利用source和target名称进行连线以及节点的确认
+                    link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+                    link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+                });
+
+                var width = 1400;
+                var height = 700;
+
+                var force = d3.layout.force()//layout将json格式转化为力学图可用的格式
+                    .nodes(d3.values(nodes))//设定节点数组
+                    .links(links)//设定连线数组
+                    .size([width, height])//大小
+                    .linkDistance(150)//连接线长度
+                    .charge(-1500)//值为+，则相互吸引，绝对值越大吸引力越大。值为-，则相互排斥，绝对值越大排斥力越大
+                    .on("tick", tick)//指时间间隔，隔一段时间刷新一次画面
+                    .start();//开始转换
+
+                var zoom = d3.behavior.zoom()//缩放配置，
+                    .scaleExtent([0, 2])//缩放比例
+                    .on("zoom", zoomed);
+
+                function zoomed() {//缩放函数
+
+                    svg.selectAll("g").attr("transform",//svg下的g标签移动大小
+                        "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                }
+
+                var svg = d3.select("body").append("svg")//添加svg元素进行图形的绘制
+                    .attr("width", "100%")
+                    .attr("height", height)
+                    .attr("id", "svg")
+                    .attr("style", "background-color: #ddd;")
+                    .call(zoom)
+                ;
+                //箭头
+                var marker =//注意SVG规范中明确指出，附加到一个'Marker'元素上的“事件属性和事件的listener”不会被处理
+                    svg.append("marker")//添加一个marker标签来绘制箭头
+                        .attr("id", "resolved")//箭头id，用于其他标记进行引用时的url
+                        .attr("markerUnits", "userSpaceOnUse")//定义标记的坐标系统，userSpaceOnUse表示按照引用的元件来决定，strokeWidth按照用户单位决定
+                        .attr("viewBox", "0 -5 10 10")//坐标系的区域
+                        .attr("refX", 40)//箭头坐标
+                        .attr("refY", 0)
+                        .attr("markerWidth", 12)//标识的大小
+                        .attr("markerHeight", 12)
+                        .attr("orient", "auto")//绘制方向，可设定为：auto（自动确认方向）和 角度值
+                        .attr("stroke-width", 3)//箭头宽度
+                        .append("path")
+                        .attr("d", "M0,-5L10,0L0,5")//绘制箭头，路径为一个三角形，有疑问参考svg的path http://www.runoob.com/svg/svg-path.html
+                        .attr('fill', '#000000');//箭头颜色
+                //设置连接线
+                var edges_line = svg.append("g").selectAll(".edgepath")
+                    .data(force.links())//连线数据
+                    .enter()//当数组中的个数大于元素个数时，由d3创建空元素并与数组中超出的部分进行绑定。
+                    //可以参考http://www.ourd3js.com/wordpress/797/ enter、exit、update的区别
+                    .append("path")//添加path标签
+                    .attr({
+                        'd': function (d) {
+                            return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y
+                        },//变量 d 是由D3.js提供的一个在匿名函数中的可用变量。这个变量是对当前要处理的元素的_data_属性的引用。
+                        'class': 'edgepath',//定义该path标签class为edgepath
+                        'id': function (d, i) {
+                            return 'edgepath' + i;
+                        }
+                    })// i也是d3.js提供的变量，表示当前处理的HTML元素在已选元素选集中的索引值
+                    .style("stroke", "#A254A2")//设置线条颜色
+                    .style("stroke-width", 1)//线条粗细
+                    .attr("marker-end", "url(#resolved)");//根据箭头标记的id号引用箭头
+
+                //连线上的文字
+                var edges_text = svg.append("g").selectAll(".edgelabel")
+                    .data(force.links())
+                    .enter()
+                    .append("text")//添加text标签
+                    .attr({
+                        'class': 'edgelabel',//定义该text标签class为edgelabel
+                        'id': function (d, i) {
+                            return 'edgepath' + i;
+                        },
+                        'dx': 60,//在连线上的坐标
+                        'dy': 0
+                    });
+
+                //设置线条上的文字路径
+                edges_text.append('textPath')
+                    .attr('xlink:href', function (d, i) {
+                        return '#edgepath' + i
+                    })
+                    .style("pointer-events", "none")
+                    .text(function (d) {
+                        return d.relationName;
+                    });
+
+                function drag() {//拖拽函数
+                    return force.drag()
+                        .on("dragstart", function (d) {
+                            d3.event.sourceEvent.stopPropagation(); //取消默认事件
+                            d.fixed = true;    //拖拽开始后设定被拖拽对象为固定
+
+                        });
+                    //.on("drag", dragmove);
+
+                }
+
+                //圆圈的提示文字 根据需要到数据库中进行读取数据
+                var tooltip = d3.select("body")
+                    .append("div")//添加div并设置成透明
+                    .attr("class", "tooltip")
+                    .style("opacity", 0.0)
+                    .style("color", "black");
+
+
+                //圆圈
+                var circle = svg.append("g")
+                    .selectAll("circle")
+                    .data(force.nodes())//表示使用force.nodes数据
+                    .enter().append("circle")
+                    .style("fill", function (node) {
+                        var color;//圆圈背景色
+                        var link = links[node.index];
+                        if (link != undefined) {
+
+                            if (link.source.name == node.name && node.name == chaxuntext) {
+                                color = "#F6E8E9";
+                            } else {
+                                color = "#F9EBF9";
+                            }
+                        }
+                        return color;
+                    })
+                    .style('stroke', function (node) { //
+                        var color;//圆圈边框的颜色
+                        var link = links[node.index];//
+                        if (link != undefined) {
+                            if (node.name == link.source.name && node.name == chaxuntext) {
+                                color = "#B43232";
+                            } else {
+                                color = "#A254A2";
+                            }
+                        }
+                        return color;
+                    })
+                    .attr("r", 38)//设置圆圈半径
+                    .on("click", function (node) {
+                        //单击时让连接线加粗
+                        edges_line.style("stroke-width", function (line) {
+
+                            if (line.source.name == node.name || line.target.name == node.name) {//当与连接点连接时变粗
+                                return 4;
+
+                            } else {
+                                return 1;
+                            }
+                        });
+                        circle.style('stroke-width', 1);//所有的圆圈边框
+                        d3.select(this).style('stroke-width', 4);//被选中的圆圈边框
+                    })
+                    .on("dblclick", function (d) {
+                        //双击节点时节点恢复拖拽
+                        d.fixed = false;
+                        _this.showPerson(d.name);
+                    })
+                    .on("mouseover", function (d) {
+                        tooltip.html("双击查看人物详情")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px")
+                            .style("opacity", 1.0);
+
+                    })
+                    .on("mousemove", function (d) {
+                        tooltip.style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+
+                    })
+                    .on("mouseout", function (d) {
+                        tooltip.style("opacity", 0.0);
+
+                    })
+                    .call(drag());//使顶点可以被拖动
+
+
+                svg.selectAll("g").call(drag());//为svg下的所有g标签添加拖拽事件
+                //svg.selectAll("circle").call(drag());
+                //svg.selectAll("path").call(drag());
+                svg.on("dblclick.zoom", null);//取消svg和圆圈的双击放大事件（d3中默认开启7个事件，关闭防止与上面的双击事件冲突）
+                circle.on("dblclick.zoom", null);
+
+
+                var text = svg.append("g").selectAll("text")
+                    .data(force.nodes())
+                    //返回缺失元素的占位对象（placeholder），指向绑定的数据中比选定元素集多出的一部分元素。
+                    .enter()
+                    .append("text")//添加text标签
+                    .attr("dy", ".35em") //将文字下移
+                    .attr("text-anchor", "middle")//在圆圈中加上数据
+                    .style('fill', function (node) {
+                        var color;//文字颜色
+                        var link = links[node.index];
+                        if (link != undefined) {
+
+                            if (node.name == link.source.name && node.name == chaxuntext) {
+                                color = "#B43232";
+                            } else {
+                                color = "#A254A2";
+                            }
+                        }
+                        return color;
+                    }).attr('x', function (d) {
+                        // console.log(d.name+"---"+ d.name.length);
+                        var re_en = /[a-zA-Z]+/g;
+                        //如果是全英文，不换行
+                        if (d.name.match(re_en)) {
+                            d3.select(this).append('tspan')//添加tspan用来方便时使用绝对或相对坐标来调整文本
+                                .attr('x', 0)
+                                .attr('y', 2)
+                                .text(function () {
+                                    return d.name;
+                                });
+                        }
+                        //如果小于8个字符，不换行
+                        else if (d.name.length <= 8) {
+                            d3.select(this).append('tspan')
+                                .attr('x', 0)
+                                .attr('y', 2)
+                                .text(function () {
+                                    return d.name;
+                                });
+                        } else if (d.name.length >= 16) {//大于16个字符时，将14个字后的内容显示为。。。
+                            var top = d.name.substring(0, 8);
+                            var bot = d.name.substring(8, 14) + "...";
+
+                            d3.select(this).text(function () {
+                                return '';
+                            });
+
+                            d3.select(this).append('tspan')//前n个字
+                                .attr('x', 0)
+                                .attr('y', -7)
+                                .text(function () {
+                                    return top;
+                                });
+
+                            d3.select(this).append('tspan')//后n个字
+                                .attr('x', 0)
+                                .attr('y', 10)
+                                .text(function () {
+                                    return bot;
+                                });
+
+                        }
+                        else {//8-16字符分两行显示
+                            var top = d.name.substring(0, 8);
+                            var bot = d.name.substring(8, d.name.length);
+
+                            d3.select(this).text(function () {
+                                return '';
+                            });
+
+                            d3.select(this).append('tspan')
+                                .attr('x', 0)
+                                .attr('y', -7)
+                                .text(function () {
+                                    return top;
+                                });
+
+                            d3.select(this).append('tspan')
+                                .attr('x', 0)
+                                .attr('y', 10)
+                                .text(function () {
+                                    return bot;
+                                });
+                        }
+
+                    });
+
+
+                function tick() {//刷新页面函数
+                    circle.attr("transform", transform1);//圆圈
+                    text.attr("transform", transform1);//顶点文字
+                    edges_line.attr('d', function (d) { //连接线
+                        var path = 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y;
+                        return path;
+                    });
+
+                    edges_text.attr('transform', function (d, i) {//连线上的文字
+                        if (d.target.x < d.source.x) {//判断起点和终点的位置，来让文字一直显示在线的上方且一直是正对用户
+                            bbox = this.getBBox();//获取矩形空间,并且调整翻转中心。（因为svg与css中的翻转不同，具体区别可看http://www.zhangxinxu.com/wordpress/2015/10/understand-svg-transform/）
+                            rx = bbox.x + bbox.width / 2;
+                            ry = bbox.y + bbox.height / 2;
+                            return 'rotate(180 ' + rx + ' ' + ry + ')';
+                        }
+                        else {
+                            return 'rotate(0)';
+                        }
+                    })
+                        .attr('dx', function (d, i) {
+                            return Math.sqrt(Math.pow(d.target.x - d.source.x, 2) + Math.pow(d.target.y - d.source.y, 2)) / 2 - 20;
+                            //设置文字一直显示在线的中间
+
+                        })
+                    ;
+                }
+
+                //设置圆圈和文字的坐标
+                function transform1(d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                }
+            },
+            getPageUser() {
+                let _this = this;
+                var url = "/user/page/getPageUser";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    // data: ,
+                    async:false,
+                    success: function (res) {
+                        if (res.code === "200") {
+                            console.log(_this.userInfo)
+                            _this.userInfo.id = res.data.id;
+                            _this.userInfo.nickName = _this.strFilter(res.data.nickName);
+                            _this.userInfo.picture = res.data.picture;
+                            _this.userInfo.flag = false;
+                        }
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            strFilter(str) {
+                // 1字符串转化成数组
+                let phoneArr = [...str];
+                let userName = '';
+
+                if (phoneArr.length === 3) {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 0 && index < 2) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                    return userName;
+                }
+
+                if (phoneArr.length === 4) {
+                    phoneArr.map((res, index) => {
+                        if (index > 0 && index < 3) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                } else {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 1 && index < 5) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                }
+
+                return userName;
+            },
+
+
+            handleAvatarSuccessEdit(res, file) {
+                console.log(res);
+                if (res.code !== "200") {
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.loading = false;
+                this.imgTemp = res.data;
+                console.log(this.userInfo.picture)
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+            },
+            beforeAvatarUploadEdit(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 1;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 1MB!');
+                    this.files = null;
+                    return false;
+                }
+                this.loading = true;
+                return true;
+            },
+            update() {
+                let _this = this;
+                console.log(_this.userInfo)
+                let postData = {
+                    id: _this.userInfo.id,
+                    imgUrl: _this.imgTemp,
+
+                };
+                var url = "/user/page/updatePicture";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res)
+                        if (res.code !== "200") {
+                            _this.$message.error(res.data);
+                        }
+                        _this.$message({
+                            message: '修改成功！',
+                            type: 'success'
+                        });
+
+                        _this.dialogFormVisible = false;
+                        _this.userInfo.picture = _this.imgTemp;
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            handleCommand(command) {
+                if (command === 'loginOut') {
+                    let _this = this;
+
+                    let postData = {
+                        id: _this.userInfo.id,
+                    };
+                    var url = "/user/page/loginOut";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        success: function (res) {
+                            console.log(res)
+                            if (res.code === "200") {
+                                _this.$message({
+                                    message: '退出成功！',
+                                    type: 'success'
+                                });
+                                window.location.href = '/';
+                            }
+
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+
+                if (command === 'editUpload') {
+                    this.dialogFormVisible = true;
+                    var s= document.getElementsByClassName("v-modal");
+                    var index=0;
+                    var time= window.setInterval(function () {
+                        if (s.length!==0){
+                            document.body.removeChild(s[0]);
+                            clearInterval(time);
+                        }
+                        if (index===100000){
+                            clearInterval(time);
+                        }
+                        index++;
+                    },10)
+                }
+            },
+            getParam() {
+                let url = location.search; //获取url中"?"符后的字串
+                this.saveUrl = location.pathname+location.search;
+                this.saveUrl= decodeURI(this.saveUrl);
+
+                this.linkUrl= location.href;
+                this.linkUrl= decodeURI(this.linkUrl);
+                if (url.indexOf("?") != -1) {
+                    let str = url.substr(1);
+                    let strs = str.split("&");
+                    this.type = decodeURIComponent(strs[0].replace("type=", ""));
+                    this.paramName= decodeURIComponent(strs[1].replace("paramName=", ""));
+                    this.paramLikeName=  decodeURIComponent(strs[2].replace("paramLikeName=", ""));
+                    console.log(this.type);
+                    console.log("==="+location.pathname);
+                }
+            },
+            getPersonList() {
+                let _this = this;
+                let postData = {
+                    type: _this.type,
+                }
+                var url = "/page/place/getPlaceNodeByType";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === '200') {
+                            _this.personList = res.data;
+                        }
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+
+            },
+            getListNodeLink() {
+                if (this.paramName === ''&&this.paramLikeName===''){
+                    let _this = this;
+                    let postData = {
+                        type: _this.type,
+                    }
+                    var url = "/page/place/getPlaceNodRelationByType";
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: postData,
+                        async: false,
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === '200') {
+                                _this.linksNode = res.data;
+                                return;
+                            }
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+
+                if(this.paramName !== ''){
+                    let _this = this;
+                    let postData = {
+                        name: this.paramName,
+                    }
+                    console.log(postData);
+                    var url = "/page/place/getPlaceNodRelationByName";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        async: false,
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === '200') {
+                                _this.linksNode=res.data;
+                                return;
+                            }
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+                if (this.paramLikeName!==''){
+                    let _this = this;
+                    let postData = {
+                        name: _this.paramLikeName,
+                        relationType:_this.type,
+                    }
+                    var url = "/page/place/getPlaceNodeLikeByName";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        async:false,
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code === '200') {
+                                _this.linksNode=res.data;
+                                return;
+                            }
+
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+            },
+
+
+
+            getPersonNodeByName(name){
+                let _this = this;
+                let postData = {
+                    name: name,
+                }
+                console.log(postData);
+                var url = "/page/place/getPlaceNodRelationByName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === '200') {
+                            _this.paramName=name;
+                            console.log(" _this.paramName"+ _this.paramName);
+                            _this.paramLikeName='';
+                            _this.linksNode=res.data;
+                            let svg = document.getElementById("svg");
+                            if (svg != null || svg !=undefined){
+                                document.body.removeChild(svg);
+                            }
+                            _this.getListNode();
+                            _this.collectUrl();
+                            _this.selectCollect();
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            showPerson(name){
+                this.personName=name;
+                this.dialogFormVisibleShowPerson=true;
+                let _this = this;
+                let postData = {
+                    name: name,
+                }
+                var url = "/page/base/findBaseNodeByName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async:false,
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === '200') {
+                            _this.showPersonDtail=res.data;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+                console.log(this.dialogFormVisibleShowPerson)
+                var s= document.getElementsByClassName("v-modal");
+                var index=0;
+                var time= window.setInterval(function () {
+                    if (s.length!==0){
+                        document.body.removeChild(s[0]);
+                        clearInterval(time);
+                    }
+                    if (index===100000){
+                        clearInterval(time);
+                    }
+                    index++;
+                },10)
+            },
+
+            selectInputName(){
+
+                let _this = this;
+                let postData = {
+                    name: _this.input,
+                    relationType:_this.type,
+                }
+                var url = "/page/place/getPlaceNodeLikeByName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async:false,
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code !== '200') {
+                            let svg = document.getElementById("svg");
+                            if (svg != null || svg !=undefined){
+                                document.body.removeChild(svg);
+                            }
+                            _this.$message.error(res.msg);
+                            return;
+                        }
+                        _this.paramName='';
+                        _this.paramLikeName= _this.input;
+                        _this.linksNode=res.data;
+                        let svg = document.getElementById("svg");
+                        if (svg != null || svg !=undefined){
+                            document.body.removeChild(svg);
+                        }
+                        _this.getListNode();
+                        _this.$message({
+                            message: '查询成功！',
+                            type: 'success'
+                        });
+                        _this.collectUrl();
+                        _this.selectCollect();
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+
+            collectUrl(){
+                var url =this.linkUrl;
+                if (url.indexOf("?") !== -1) {
+                    let str = '';
+                    str+="?";
+                    str+="type="+this.type;
+                    str+="&paramName="+this.paramName;
+                    str+="&paramLikeName="+this.paramLikeName;
+                    this.saveUrl = location.pathname+str;
+                    console.log(this.saveUrl);
+                }
+            },
+            collect(){
+                var title = this.type+"-地点浏览";
+                if(this.paramName!==''){
+                    title+=': '+this.paramName;
+                }
+                if(this.paramLikeName!==''){
+                    title+=': '+this.paramLikeName;
+                }
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                    title:title,
+                };
+                let _this =this;
+                var url = "/page/collect/add";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                            _this.$message({
+                                message: '添加收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('添加收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+            cancelCollect(){
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/cancel";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = true;
+                            _this.$message({
+                                message: '取消收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('取消收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+
+            },
+            selectCollect(){
+                this.saveUrl= decodeURI(this.saveUrl);
+                console.log(this.userInfo);
+                console.log(this.userInfo.id);
+                console.log(this.saveUrl);
+                if(this.userInfo.id===''){
+                    return;
+                }
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/select";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                        }else {
+                            _this.collectFlag = true;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+
+            handleCollect(command){
+                if (command==="add"){
+                    this.collect();
+                }
+                if (command==="cancel"){
+                    this.cancelCollect();
+                }
+                if (command==="share"){
+                    this.dialogFormVisibleShare=true;
+                }
+            },
+
+            shareToQzone(){
+                var _shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?';
+                console.log(this.linkUrl);
+                var url = 'www.liaoyunfeng.top'
+                _shareUrl += 'url=' + encodeURIComponent(url || document.location);   //参数url设置分享的内容链接|默认当前页location
+                _shareUrl += '&title=' + encodeURIComponent( this._title || document.title);
+                window.open(_shareUrl);
+            }
+
+        },
+
+    })
+
+</script>
+<!--轮播结束-->
+
+<script src="../../common/statics/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/swiper.animate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/main.js" type="text/javascript" charset="utf-8"></script>
+</html>

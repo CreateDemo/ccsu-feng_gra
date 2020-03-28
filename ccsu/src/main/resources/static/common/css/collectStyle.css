@@ -1,0 +1,199 @@
+/* 公共样式表css */
+html,body {
+    color: #333;
+    margin: 0;
+    height: 100%;
+    font-family: "Myriad Set Pro","Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: normal;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+img {
+    border: 0;
+}
+
+body {
+    background: #fff;
+    color: #666;
+}
+
+html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #08acee;
+}
+
+button {
+    outline: 0;
+}
+
+img {
+    border: 0;
+}
+
+button,input,optgroup,select,textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    outline: none;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: #666;
+}
+
+a:hover {
+    color: #eee;
+}
+
+.clearfix::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.clearfix {
+}
+
+/* 必要布局样式css */
+.block-content {
+    visibility: visible;
+    animation-duration: 1.2s;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-name: fadeInUp;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    top: 85px;
+}
+
+.block-content-box {
+    visibility: visible;
+    animation-duration: 0.4s;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    position: relative;
+}
+
+.block-content-box-list {
+    display: table;
+    width: 100%;
+    padding: 0;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.block-list-item {
+    width: 33.333333333333333%;
+    display: inline-block;
+    vertical-align: top;
+    float:left;
+}
+
+.block-list-item-box {
+    border-left: 1px solid #eee;
+    border-top: 1px solid #eee;
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all .5s;
+    transition: all .5s;
+}
+
+.block-list-item-box:hover {
+    -webkit-box-shadow: rgba(0,0,0,.2) 0px 0px 30px;
+    -moz-box-shadow: rgba(0,0,0,.2) 0px 0px 30px;
+    box-shadow: rgba(0,0,0,.2) 0px 0px 30px;
+}
+
+.block-list-item-mask {
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.block-list-item-image {
+    padding-top: 80px!important;
+    position: relative;
+}
+
+.block-list-item-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.block-list-item-middle {
+    display: table;
+    table-layout: fixed;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    width: 80px;
+    margin: auto;
+    border-radius: 100%;
+}
+
+.block-list-item-middle img {
+    position: relative;
+    vertical-align: middle;
+    cursor: initial!important;
+    width: 80%;
+}
+
+.block-list-item-text {
+    margin: 0.9em 0 0;
+    z-index: 3;
+    display: block;
+}
+
+.block-list-item-body {
+    display: table;
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
+    margin-top: 0;
+    text-align: center;
+}
+
+.block-list-item-body-title {
+    margin-bottom: 8px;
+}
+
+.block-list-item-body-title p strong {
+    font-size: 14px;
+    font-family: "Microsoft YaHei", 微软雅黑, MicrosoftJhengHei, 华文细黑, STHeiti, MingLiu;
+}
+
+.block-list-item-body-text p {
+    color: rgb(153, 153, 153);
+    font-size: 12px;
+    font-family: "Microsoft YaHei", 微软雅黑, MicrosoftJhengHei, 华文细黑, STHeiti, MingLiu;
+}

@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>四大名著知识图谱</title>
+    <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/nav.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/slider.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/swiper.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/animate.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/style.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+
+</head>
+
+<style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+    .nav .login {
+        padding-top: 25px;
+        float: right;
+    }
+
+    .nav .login a {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;
+    }
+
+    .nav .login a:nth-child(1) {
+        padding-left: 30px;
+    }
+
+    .nav .login a:nth-child(2) {
+        background: #FD8A08;
+        border-radius: 4px;
+        color: #fff;
+        margin-right: 10px;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0;
+        text-align: center;
+    }
+
+    .head_img {
+        height: 50px;
+    }
+
+    .head_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        position: absolute;
+        left: 990px;
+        top: 16px;
+    }
+</style>
+<body>
+<div id="table">
+
+    <!--导航开始-->
+    <div class="nav">
+        <div id="menu_hover_bg" style="height: 0px; overflow: hidden;"></div>
+        <div class="w1200">
+            <div class="logo">
+                <a href="#"><img src="../../common/image/logo.png"/></a>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li id="men_pro">
+                        <h2><a href="/">首页</a></h2>
+                        <div class="sub_menu">
+                            <div class="h30"></div>
+                            <div class="sub_menu_list" style="width: 590px;">
+                                <h3>开店零售直营系统</h3>
+                                <div class="list">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/wsc.png" alt="">
+                                        </div>
+
+                                        <div class="info">
+                                            <h3>
+                                                云微商城<span class="pa" style="left:75px;"><img
+                                                    src="../../common/statics/images/hot.png" alt=""></span>
+                                            </h3>
+                                            <p>
+                                                28+业务场景，百种营销玩法
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/weshop.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                微选<span class="pa" style="left:35px;"><img
+                                                    src="../../common/statics/images/new.png" alt=""></span>
+                                            </h3>
+                                            <p>
+                                                专注微信电商生态构建，引领电商创新
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ecshop.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                ECShop3.6<span class="pa" style="left:75px;"><img
+                                                    src="../../common/statics/images/hot.png" alt=""></span>
+                                            </h3>
+                                            <p>
+                                                10年开源网店系统，自定义搭建商城
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/shouyin.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                门店收银
+                                            </h3>
+                                            <p>
+                                                新零售＋新门店，消费体验无缝衔接
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ecshop_app.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                ECShop App<span class="pa" style="left:92px;"><img
+                                                    src="../../common/statics/images/hot.png" alt=""></span>
+                                            </h3>
+                                            <p>
+                                                原生商城app，揽超强用户粘性
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/xcx.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                云小程序
+                                            </h3>
+                                            <p>
+                                                最热移动小程序，5步快速生成
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/shopex.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                Shopex4.9
+                                            </h3>
+                                            <p>
+                                                经典PC+微信商城，百套模版随心切换
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ecstore.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                Ecstore<span class="pa" style="left:55px;"><img
+                                                    src="../../common/statics/images/hot.png" alt=""></span>
+                                            </h3>
+                                            <p>
+                                                独立部署商城系统，O2O无缝引流
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ecmall.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                Ecmall<span class="pa" style="left:55px;"><img
+                                                    src="../../common/statics/images/hot.png" alt=""></span>
+                                            </h3>
+                                            <p>
+                                                开源多用户商城，获多种盈利方式
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/b2b2c.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                B2B2C
+                                            </h3>
+                                            <p>
+                                                独立部署多用户商城，拥多种业务模式
+                                            </p>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <div class="sub_menu_list" style="width: 315px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/fxw.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                分销王
+                                            </h3>
+                                            <p>
+                                                全终端分销平台，PC+手机+微信合一
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/sqws.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                社群微商
+                                            </h3>
+                                            <p>
+                                                热门移动分销软件，快速引分销流量
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="sub_menu_list" style="width: 295px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/erp.png" alt="">
+                                        </div>
+                                        <div class="info">
+
+                                            <p>
+                                                对接43+平台, 订单库存统一管理
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/hdt.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                货店通
+                                            </h3>
+                                            <p>
+                                                多平台一键铺货神器，省时便捷
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/crm.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                会员通
+                                            </h3>
+                                            <p>
+                                                专业电商CRM，更快了解客户
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/taoda.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                淘打
+                                            </h3>
+                                            <p>
+                                                订单批量打印，对接10+主流平台
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ysd.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                云云收订
+                                            </h3>
+                                            <p>
+                                                对接40+主流平台，订单实时获取
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li id="men_sol1">
+                        <h2><a href="#">西游记</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>西游记</h3>
+                                    <div class="list sol_list">
+                                        <a href="/page/person/西游记">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/大唐疆域">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    大唐疆域
+                                                </h3>
+                                                <p>
+                                                    大唐盛世尽显眼中<br> 图中心中有，眼中尽开来
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/weapon/西游记">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                武器查看
+                                                </h3>
+                                                <p>
+                                                    武器是代表人的灵魂<br>
+                                                </p>
+                                            </div>
+                                        </a>
+
+                                        <a href="/page/xi/deeds/西游记">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                九九八十一难
+                                                </h3>
+                                                <p>
+                                                    穷孑一身，只为修成正果<br>
+                                                </p>
+                                            </div>
+                                        </a>
+
+                                        <a href="/page/place/西游记">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                地点浏览
+                                                </h3>
+                                                <p>
+                                                    回望一看，地理已然悠久<br>
+                                                </p>
+                                            </div>
+                                        </a>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_sol2">
+                        <h2><a href="#">三国演义</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>三国演义</h3>
+                                    <div class="list sol_list">
+                                        <a href="/page/person/三国演义">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/三国详图">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国详图
+                                                </h3>
+                                                <p>
+                                                    地图总结<br>地势复杂
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/三国鼎立">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国鼎立图
+                                                </h3>
+                                                <p>
+                                                    成三国<br> 展雄风
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_sol3">
+                        <h2><a href="#">水浒传</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>水浒传</h3>
+                                    <div class="list sol_list">
+                                        <a href="/page/person/水浒传">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/起义地图">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    起义地图
+                                                </h3>
+                                                <p>
+                                                    为了自由，为了生活<br>
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/北宋疆域">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    北宋疆域
+                                                </h3>
+                                                <p>
+                                                    地域辽阔<br>
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_sol4">
+                        <h2><a href="#">红楼梦</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>红楼梦</h3>
+                                    <div class="list sol_list">
+                                        <a href="/page/person/红楼梦">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/大观圆图">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    大观圆图
+                                                </h3>
+                                                <p>
+                                                    府邸地形复杂<br> 俯视尽观其景
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/贾府平面图">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    贾府平面图
+                                                </h3>
+                                                <p>
+                                                    繁华的贾府 <br>
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="/page/san/withPicture/红花楼人物简图">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系简图
+                                                </h3>
+                                                <p>
+                                                    红楼繁梦，人物鲜明<br>
+                                                </p>
+                                            </div>
+                                        </a>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_sol">
+                        <h2><a href="#">关于作者</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 1250px;">
+                                    <h3></h3>作者介绍</h3>
+                                    <div class="list sol_list">
+                                        <a target="_blank" href="https://baike.baidu.com/item/%E5%90%B4%E6%89%BF%E6%81%A9/18713182#4">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    西游记
+                                                </h3>
+                                                <p>
+                                                    吴承恩（约1500—1583<br> 明代小说家，淮安府山阳县河下人（现江苏省淮安市淮安区）
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank" href="https://baike.baidu.com/item/%E7%BD%97%E8%B4%AF%E4%B8%AD/172206">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国演义
+                                                </h3>
+                                                <p>
+                                                    罗贯中（约1330年－约1400年）<br> 名本，字贯中，号湖海散人，元末明初小说家
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank" href="https://baike.baidu.com/item/%E6%96%BD%E8%80%90%E5%BA%B5">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    水浒传
+                                                </h3>
+                                                <p>
+                                                    施耐庵（约1296年—约1370年）<br> 江苏兴化人，原名彦端，字肇瑞，号子安，别号耐庵
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank" href="https://baike.baidu.com/item/%E6%9B%B9%E9%9B%AA%E8%8A%B9/14919">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    红楼梦
+                                                </h3>
+                                                <p>曹雪芹（约1715年5月—约1763年2月）<br> 名沾，字梦阮，号雪芹，又号芹溪、芹圃；出生于江宁（今南京）
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="123" v-if="userInfo.flag">
+                <div class="login">
+                    <a href="/page/login">
+                        <div class="head_img">
+                            <img :src="originPicture"/>
+                        </div>
+                        <span style="position: absolute;left: 1055px;top: 25px;"> 登陆 </span>
+                    </a>
+                    <a href="/page/register">免费注册</a>
+                </div>
+            </div>
+            <div v-else>
+                <div class="login">
+                    <div class="head_img">
+                        <img :src="userInfo.picture"/>
+                    </div>
+                    <el-dialog v-loading="loading"
+                               element-loading-text="拼命上传中"
+                               element-loading-spinner="el-icon-loading"
+                               element-loading-background="rgba(0, 0, 0, 0.8)"
+
+                               title="修改头像" :visible.sync="dialogFormVisible">
+                                <el-upload
+                                        class="avatar-uploader"
+                                        action="/admin/file/ftpUploadImg"
+                                        :show-file-list="false"
+                                        :on-success="handleAvatarSuccessEdit"
+                                        :before-upload="beforeAvatarUploadEdit">
+                                    <img v-if="imgTemp" :src="imgTemp" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="update()">确 定</el-button>
+                        </div>
+                    </el-dialog>
+
+
+
+
+                    <span style="position: absolute;left: 1055px;top: 25px;height: 30px;
+        cursor: pointer;width: 200px">  <el-dropdown trigger="click"  @command="handleCommand">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+     {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
+    <el-dropdown-item    command="toCollect">个人收藏</el-dropdown-item>
+      <el-dropdown-item command="loginOut">退出</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--导航结束-->
+    <!--轮播开始-->
+    <div class="swiper-banner swiper-container">
+        <div class="swiper-wrapper">
+            <a href="#" class="swiper-slide slide3">
+                <div class="wrapper">
+                    <div class="text" data-text="四大名著">四大名著</div>
+                </div>
+            </a>
+            <a href="#" class="swiper-slide slide2">
+                <div class="w1200">
+                    <div class="ani pa sl-left1" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.5s">
+                        《西游记》是中国古代第一部浪漫主义章回体长篇神魔小说。现存明刊百回本《西游记》均无作者署名。清代学者吴玉搢等首先提出《西游记》作者是明代吴承恩。
+                        这部小说以“唐僧取经”这一历史事件为蓝本，通过作者的艺术加工，深刻地描绘了当时的社会现实。全书主要描写了孙悟空出世及大闹天宫后，遇见了唐僧、猪八戒、沙僧和白龙马，西行取经，一路降妖伏魔，经历了九九八十一难，终于到达西天见到如来佛祖，最终五圣成真的故事。
+                        《西游记》是中国神魔小说的经典之作，达到了古代长篇浪漫主义小说的巅峰，与《三国演义》《水浒传》《红楼梦》并称为中国古典四大名著。《西游记》自问世以来在民间广为流传，各式各样的版本层出不穷，明代刊本有六种，清代刊本、抄本也有七种，典籍所记已佚版本十三种。鸦片战争以后，大量中国古典文学作品被译为西文，《西游记》渐渐传入欧美，被译为英、法、德、意、西、手语、世（世界语）、斯（斯瓦西里语）、俄、捷、罗、波、日、朝、越等语言。
+                    </div>
+                    <div class="img1 ani pa" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.5s">
+                        <img src="../../common/statics/images/banner/13.png" alt="">
+                    </div>
+                </div>
+            </a>
+
+            <a class="swiper-slide slide1" href="#">
+                <div class="w1200">
+                    <div class="ani pa sl-left">
+                        《三国演义》（全名为《三国志通俗演义》，又称《三国志演义》）是元末明初小说家罗贯中创作的长篇章回体历史演义小说。该作品成书后有嘉靖壬午本等多个版本传于世，到了明末清初，毛宗岗对《三国演义》整顿回目、修正文辞、改换诗文。
+                        《三国演义》描写了从东汉末年到西晋初年之间近百年的历史风云，以描写战争为主，诉说了东汉末年的群雄割据混战和魏、蜀、吴三国之间的政治和军事斗争，最终司马炎一统三国，建立晋朝的故事。反映了三国时代各类社会斗争与矛盾的转化，并概括了这一时代的历史巨变，塑造了一群叱咤风云的三国英雄人物。
+                        全书可大致分为黄巾起义、董卓之乱、群雄逐鹿、三国鼎立、三国归晋五大部分。在广阔的历史舞台上，表现了一幕幕气势磅礴的战争场面。作者罗贯中将兵法三十六计融于字里行间，既有情节，也有兵法韬略。
+                        《三国演义》是中国文学史上第一部章回小说，是历史演义小说的开山之作，也是第一部文人长篇小说,中国古典四大名著之一。
+                    </div>
+                    <div class="img2 ani pa">
+                        <img src="../../common/statics/images/banner/12.png" alt="">
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" target="_blank" class="swiper-slide slide5">
+                <div class="w1200">
+                    <div class="ani pa sl-left1" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.5s">
+                        《水浒传》是元末明初施耐庵（现存刊本署名大多有施耐庵、罗贯中两人中的一人，或两人皆有）编著的章回体长篇小说。
+                        全书通过描写梁山好汉反抗欺压、水泊梁山壮大和受宋朝招安，以及受招安后为宋朝征战，最终消亡的宏大故事，艺术地反映了中国历史上宋江起义从发生、发展直至失败的全过程，深刻揭示了起义的社会根源，满腔热情地歌颂了起义英雄的反抗斗争和他们的社会理想，也具体揭示了起义失败的内在历史原因。
+                        《水浒传》是中国古典四大名著之一，问世后，在社会上产生了巨大的影响，成了后世中国小说创作的典范。《水浒传》是中国历史上最早用白话文写成的章回小说之一，流传极广，脍炙人口；同时也是汉语文学中具备史诗特征的作品之一，对中国乃至东亚的叙事文学都有极其深远的影响。
+                    </div>
+                    <div class="img3 ani pa" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.5s">
+                        <img src="../../common/statics/images/banner/14.png" alt="">
+                    </div>
+                </div>
+            </a>
+
+
+            <a class="swiper-slide slide1" href="#">
+                <div class="w1200">
+                    <div class="ani pa sl-left">
+                        《红楼梦》，中国古代章回体长篇小说，又名《石头记》等，中国古典四大名著之一，一般认为是清代作家曹雪芹所著。小说以贾、史、王、薛四大家族的兴衰为背景，以富贵公子贾宝玉为视角，以贾宝玉与林黛玉、薛宝钗的爱情婚姻悲剧为主线，描绘了一批举止见识出于须眉之上的闺阁佳人的人生百态，展现了真正的人性美和悲剧美，可以说是一部从各个角度展现女性美以及中国古代社会世态百相的史诗性著作。
+                        《红楼梦》版本可分为120回“程本”和80回“脂本”两大系统。程本为程伟元排印的印刷本，脂本为脂砚斋在不同时期抄评的早期手抄本。脂本是程本的底本。
+                        《红楼梦》是一部具有世界影响力的人情小说，举世公认的中国古典小说巅峰之作，中国封建社会的百科全书，传统文化的集大成者。小说以“大旨谈情，实录其事”自勉，只按自己的事体情理，按迹循踪，摆脱旧套，新鲜别致，取得了非凡的艺术成就。“真事隐去，假语村言”的特殊笔法更是令后世读者脑洞大开，揣测之说久而遂多。二十世纪以来，学术界因《红楼梦》异常出色的艺术成就和丰富深刻的思想底蕴而产生了以《红楼梦》为研究对象的专门学问——红学。
+                    </div>
+                    <div class="img2 ani pa">
+                        <img src="../../common/statics/images/banner/15.png" alt="">
+                    </div>
+                </div>
+
+            </a>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination swiper-pagination-white"></div>
+        <div class="swiper-nav pa">
+            <ul class="w1200 clearfix">
+                <li id="g1" class="active">
+                    <div class="icon">
+                        <img src="../../common/statics/images/banner/icon3.png" alt="">
+                    </div>
+                    <div class="info">
+                        <div>首页</div>
+                        <p>四大名著知识图谱</p>
+                    </div>
+                </li>
+                <li id="g2">
+                    <div class="icon">
+                        <img src="../../common/statics/images/banner/icon4.png" alt="">
+                    </div>
+                    <div class="info">
+                        <div>西游记</div>
+                        <p>通向西方精神世界途中的坎坷波折</p>
+                    </div>
+                </li>
+                <li id="g3">
+                    <div class="icon">
+                        <img src="../../common/statics/images/banner/icon4.png" alt="">
+                    </div>
+                    <div class="info">
+                        <div>三国演义</div>
+                        <p>鞠躬尽瘁，死而后已</p>
+                    </div>
+                </li>
+                <li id="g4">
+                    <div class="icon">
+                        <img src="../../common/statics/images/banner/icon4.png" alt="">
+                    </div>
+                    <div class="info">
+                        <div>水浒传</div>
+                        <p>齐聚水泊山上贼，尽显中华英雄泪</p>
+                    </div>
+                </li>
+                <li id="g5">
+                    <div class="icon">
+                        <img src="../../common/statics/images/banner/icon4.png" alt="">
+                    </div>
+                    <div class="info">
+                        <div>红楼梦</div>
+                        <p>红楼一梦醒时空，枉然金钗各有命</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+    var app = new Vue({
+        el: '#table',
+        data: {
+            originPicture:'../../common/statics/images/login_i.png',
+            userInfo: {
+                flag:true,
+                id:'',
+                nickName:'',
+                picture:'',
+            },
+            dialogFormVisible:false,
+            loading:'false',
+            imgTemp:'',
+
+        },
+        mounted() {
+
+        },
+        created() {
+            this.getPageUser();
+        },
+        methods: {
+            getPageUser(){
+                let _this =this;
+                var url = "/user/page/getPageUser";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    // data: ,
+                    success: function (res){
+                        if (res.code==="200"){
+                            console.log(_this.userInfo)
+                            _this.userInfo.id=res.data.id;
+                            _this.userInfo.nickName=_this.strFilter(res.data.nickName);
+                            _this.userInfo.picture=res.data.picture;
+                            _this.userInfo.flag=false;
+                        }
+
+                    },
+
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            strFilter(str) {
+                // 1字符串转化成数组
+                let phoneArr = [...str];
+
+               let userName='';
+
+                if (phoneArr.length === 3) {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 0 && index < 2) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                    return userName;
+                }
+
+                if (phoneArr.length === 4) {
+                    phoneArr.map((res, index) => {
+                        if (index > 0 && index < 3) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                } else {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 1 && index < 5) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                }
+
+                return userName;
+            },
+
+
+            handleAvatarSuccessEdit(res, file) {
+                console.log(res);
+                if(res.code!=="200"){
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.loading=false;
+                this.imgTemp=res.data;
+                console.log( this.userInfo.picture)
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+            },
+            beforeAvatarUploadEdit(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 1;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 1MB!');
+                    this.files = null;
+                    return false;
+                }
+                this.loading=true;
+                return  true;
+            },
+            update(){
+
+                let _this =this;
+                console.log(_this.userInfo)
+                let postData = {
+                    id:_this.userInfo.id,
+                    imgUrl: _this.imgTemp,
+
+                };
+                var url = "/user/page/updatePicture";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res){
+                        console.log(res)
+                        if (res.code!=="200"){
+                            _this.$message.error(res.data);
+                        }
+                        _this.$message({
+                            message: '修改成功！',
+                            type: 'success'
+                        });
+
+                        _this.dialogFormVisible=false;
+                        _this.userInfo.picture=_this.imgTemp;
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            handleCommand(command) {
+                if (command==='loginOut'){
+                    let _this =this;
+
+                    let postData = {
+                        id: _this.userInfo.id,
+                    };
+                    var url = "/user/page/loginOut";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        success: function (res){
+                            console.log(res)
+                           if (res.code==="200"){
+                               _this.$message({
+                                   message: '退出成功！',
+                                   type: 'success'
+                               });
+                               window.location.href='/';
+                           }
+
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+
+                if(command==='editUpload'){
+                    this.dialogFormVisible=true;
+                    var s= document.getElementsByClassName("v-modal");
+                    var index=0;
+                    var time= window.setInterval(function () {
+                        if (s.length!==0){
+                            document.body.removeChild(s[0]);
+                            clearInterval(time);
+                        }
+                        if (index===100000){
+                            clearInterval(time);
+                        }
+                        index++;
+                    },10)
+                }
+                if (command==='toCollect'){
+                    window.open("/page/collect");
+                }
+            },
+
+
+        }
+    })
+
+</script>
+<!--轮播结束-->
+
+<script src="../../common/statics/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/swiper.animate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/main.js" type="text/javascript" charset="utf-8"></script>
+</html>

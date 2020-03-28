@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="../../common/js/sccl.js"></script>
+    <script type="text/javascript" src="../../common/js/sccl-util.js"></script>
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入组件库 -->
+    <title>form</title>
+    <style type="text/css">
+        #table table {
+            width: 100%;
+            font-size: 14px;
+            border: 1px solid #eee
+        }
+
+        #table {
+            padding: 0 10px;
+        }
+
+        table thead th {
+            background: #f5f5f5;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table tbody td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            border-right: 1px solid #eee;
+        }
+
+        table tbody td span {
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .delete {
+            color: red;
+        }
+
+        .edit {
+            color: black;
+        }
+
+        .add {
+            border: 1px solid #eee;
+            margin: 10px 0;
+            padding: 15px;
+        }
+
+        .add_color {
+            color: blue;
+        }
+
+        input {
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 3px;
+            margin-right: 15px;
+        }
+
+        button {
+            background: #008cd5;
+            border: 0;
+            padding: 4px 15px;
+            border-radius: 3px;
+            color: #fff;
+        }
+
+        #mask {
+            background: rgba(0, 0, 0, .5);
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 4;
+            top: 0;
+            left: 0;
+        }
+
+        .mask {
+            width: 300px;
+            height: 250px;
+            background: rgba(255, 255, 255, 1);
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            z-index: 47;
+            border-radius: 5px;
+        }
+
+        .title {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .title span {
+            float: right;
+            cursor: pointer;
+        }
+
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+
+        .content {
+            padding: 10px;
+        }
+
+        .content input {
+            width: 270px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="table">
+    <div class="add">
+        <input type="text" v-model="selectByNamen" name="title" value="" placeholder="名称"/>
+        <button @click="selectByName()" style="cursor: pointer" >查询</button>
+        <el-button
+                size="mini"
+                type="success"
+                @click="add()">新增
+        </el-button>
+
+    </div>
+    <template>
+        <el-table
+                :data="newsList"
+                border
+                style="width: 100%">
+            <el-table-column label="图片" align="center">
+                <template slot-scope="scope">
+                    <el-image
+                            style="width: 100px; height: 56px"
+                            :src="scope.row.picture"
+                            :preview-src-list="scope.row.pictures">
+                        >
+                    </el-image>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="name"
+                    label="名称"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="content"
+                    label="地点简介"
+                    width="500">
+            </el-table-column>
+            <el-table-column
+                    align="center"
+                    prop="type"
+                    label="类型"
+                    width="100">
+            </el-table-column>
+            <el-table-column align="center" label="操作" width="300">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="edit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="deletelist(scope.$index, scope.row)">删除
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="success"
+                            @click="add()">新增
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
+
+
+    <!--            新增-->
+    <el-dialog title="新增人物" :visible.sync="adddialogFormVisible">
+        <el-form :model="editDetail">
+            <el-form-item label="图片" :label-width="formLabelWidth">
+                <el-upload
+                        class="avatar-uploader"
+                        action="/admin/file/ftpUploadImg"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+
+            </el-form-item>
+
+            <el-form-item label="名称" :label-width="formLabelWidth">
+                <el-input v-model="addDetail.name" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="地点简介" :label-width="formLabelWidth">
+                <el-input v-model="addDetail.content" type="textarea" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="类型" :label-width="formLabelWidth">
+                <el-input :disabled="true" v-model="type" autocomplete="off"></el-input>
+            </el-form-item>
+
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="adddialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="adddetail()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+    <!--         修改-->
+    <el-dialog title="修改" :visible.sync="dialogFormVisible">
+        <el-form :model="editDetail">
+            <el-form-item label="图片" :label-width="formLabelWidth">
+                <el-upload
+                        class="avatar-uploader"
+                        action="/admin/file/ftpUploadImg"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccessEdit"
+                        :before-upload="beforeAvatarUploadEdit">
+                    <img v-if="editDetail.picture" :src="editDetail.picture" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+
+
+            </el-form-item>
+
+            <el-form-item label="名称" :label-width="formLabelWidth">
+                <el-input v-model="editDetail.name" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="地点简介" :label-width="formLabelWidth">
+                <el-input v-model="editDetail.content" type="textarea" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="类型" :label-width="formLabelWidth">
+                <el-input :disabled="true" v-model="type" autocomplete="off"></el-input>
+            </el-form-item>
+
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="update()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+    <div>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pageParams.pageIndex"
+                :page-size="pageParams.pageSize"
+                layout="total,prev, pager, next, jumper"
+                :total="pageParams.totalCount"
+        ></el-pagination>
+    </div>
+</div>
+
+
+<script>
+
+
+    var app = new Vue({
+        el: '#table',
+        data: {
+            selectByNamen: '',
+            dialogFormVisible: false,
+            formLabelWidth: '120px',
+            dialogImageUrl: '',
+            dialogVisible: false,
+            adddialogFormVisible: false,
+            imageUrl: '',
+            type: '西游记',
+            addDetail: {},
+            editlist: false,
+            editDetail: {},
+            newsList: [],
+            editid: '',
+            pageParams: {
+                pageIndex: 1,
+                totalCount: 0,
+                pageSize: 10
+            }
+        },
+        mounted() {
+
+        },
+
+        created() {
+            this.getNode();
+
+        },
+        methods: {
+
+            getNode() {
+                let _this = this;
+                let postData = {
+                    pageIndex: this.pageParams.pageIndex,
+                    pageSize: this.pageParams.pageSize,
+                    type:this.type,
+                };
+                console.log(this.pageParams.pageIndex);
+                var url = "/admin/place/getPlaceNodeByPage";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        _this.newsList = res.data.nodeList;
+                        console.log(res.data);
+                        console.log(_this.newsList);
+                        _this.pageParams.totalCount = res.data.totalCount;
+                    },
+                    error: function () {
+                        alert("失败..");
+                    }
+                });
+            },
+            //新增
+            add() {
+                this.adddialogFormVisible = true;
+            },
+            adddetail() {
+                if (this.addDetail.name == null) {
+                    this.$message({
+                        message: '名字不能为空',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                let postData = {
+                    picture: this.imageUrl,
+                    name: this.addDetail.name,
+                    alias: this.addDetail.alias,
+                    character: this.addDetail.character,
+                    content: this.addDetail.content,
+                    type:this.type,
+                };
+
+                let _this = this;
+                var url = "/admin/place/addPlaceNode";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (res) {
+                        if (res.code != "200") {
+                            _this.$message.error('新增失败！服务器错误或者名字重复');
+                        }
+                        _this.adddialogFormVisible = false;
+                        _this.getNode();
+                        _this.$message({
+                            type: 'success',
+                            message: '新增成功!'
+                        });
+                        _this.addDetail = {};
+                    },
+                    error: function () {
+                        _this.$message.error('新增失败');
+                    }
+                });
+            },
+
+
+            //删除
+            deletelist(index, row) {
+                let postData = {
+                    id: row.id,
+                };
+                this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let _this = this;
+                    var url = "/admin/place/deletePlaceNodeById";
+                    $.ajax({
+                        type: "delete",
+                        url: url,
+                        data: postData,
+                        success: function (res) {
+                            _this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            if (_this.pageParams.totalCount % _this.pageParams.pageSize === 1 && _this.pageParams.pageIndex > 1) {
+                                _this.pageParams.pageIndex = _this.pageParams.pageIndex - 1;
+                            }
+                            _this.getNode();
+                        },
+                        error: function () {
+                            alert("失败..");
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
+
+            },
+            //编辑
+            edit(index, row) {
+                console.log(row)
+                this.editDetail = {
+                    picture: row.picture,
+                    id: row.id,
+                    name: row.name,
+                    alias: row.alias,
+                    character: row.character,
+                    content: row.content,
+                    type:this.type,
+                }
+                this.dialogFormVisible = true;
+
+
+            },
+            //确认更新
+            update() {
+                let _this = this
+                var url = "/admin/place/addPlaceNode";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(_this.editDetail),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (res) {
+                        if (res.code != "200") {
+                            _this.$message.error('修改失败！！服务器错误或者名字重复');
+                        }
+                        _this.dialogFormVisible = false;
+                        _this.getNode();
+                        _this.$message({
+                            type: 'success',
+                            message: '修改成功!'
+                        });
+                        _this.editDetail = {};
+                    },
+                    error: function () {
+                        alert("失败..");
+                    }
+                });
+            },
+            selectByName() {
+                let _this = this;
+                let postData = {
+                    name: _this.selectByNamen,
+                    pageIndex: 1,
+                    pageSize: 10,
+                    type:this.type,
+                };
+                var url = "/admin/place/getListPlaceNodeByPageAndName";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    async: false,
+                    success: function (res) {
+                        if (res.code !== "200") {
+                            _this.$message.error('查询失败');
+                        }
+                        _this.newsList = res.data.nodeList;
+                        _this.pageParams.totalCount = res.data.totalCount;
+                        _this.$message({
+                            type: 'success',
+                            message: '查询成功!'
+                        });
+                    },
+                    error: function () {
+                        alert("失败..");
+                    }
+                });
+            },
+
+
+            handleAvatarSuccess(res, file) {
+                console.log(res.code);
+                if (res.code !== "200") {
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+                this.imageUrl = res.data;
+                console.log(this.imageUrl)
+            },
+            beforeAvatarUpload(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                console.log(file);
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 3;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 3MB!');
+                    this.files = null;
+                    return false;
+                }
+                return true;
+            },
+
+            handleAvatarSuccessEdit(res, file) {
+                console.log(res.code);
+                if (res.code !== "200") {
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+                this.editDetail.picture = res.data;
+                console.log(this.editDetail.picture)
+            },
+            beforeAvatarUploadEdit(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                console.log(file);
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 3;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 3MB!');
+                    this.files = null;
+                    return false;
+                }
+                return true;
+            },
+
+
+            //图片上传
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePictureCardPreview(file) {
+                this.dialogImageUrl = file.url;
+                this.dialogVisible = true;
+            },
+
+            //分页   开始
+            handleSizeChange(val) {
+                console.log(val)
+                this.pageParams.pageSize = val;
+                this.getNode();
+            },
+            handleCurrentChange(val) {
+                this.pageParams.pageIndex = val;
+                this.getNode();
+            },
+
+        }
+    })
+</script>
+</body>
+
+</html>
