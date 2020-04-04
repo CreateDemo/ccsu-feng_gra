@@ -87,10 +87,10 @@ $(function() {
 
     $('#men_sol3').on('mouseenter', function() {
         $('#menu_hover_bg').stop().animate({
-            height: '340px'
+            height: '440px'
         }, 500);
         $('#men_sol3 .sub_menu').stop().animate({
-            height: '340px'
+            height: '440px'
         }, 600);
     })
     $('#men_sol3').on('mouseleave', function() {

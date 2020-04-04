@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>地点浏览</title>
+    <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/navperson.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/css/person.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="../../common/js/person.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+    <link rel="dns-prefetch" href="//apps.bdimg.com">
+    <link rel="dns-prefetch" href="//hm.baidu.com">
+    <link rel="dns-prefetch" href="//changyan.sohu.com">
+    <link rel="dns-prefetch" href="//changyan.itc.cn">
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css" type="text/css" media="all">
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/fontawesome/4.4.0/css/font-awesome.min.css" type="text/css" media="all">
+    <link rel="stylesheet" href="//www.sdmz.net/skin/v2/css/common.css" type="text/css" media="all">
+    <script type="text/javascript" src="//apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script async="" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--[if lt IE 9]><script src="//apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script><![endif]-->
+    <script src="//www.sdmz.net/e/data/js/ajax.js"></script>
+    <script src="//www.sdmz.net/skin/v2/js/content.js"></script>
+
+    <link href="//www.sdmz.net/skin/v2/leaflet/leaflet.css" rel="stylesheet">
+    <script src="//www.sdmz.net/skin/v2/leaflet/leaflet.js"></script>
+    <script src="//www.sdmz.net/skin/v2/leaflet/leaflet.ChineseTmsProviders.js"></script>
+
+</head>
+
+<style>
+    #mappan {height:500px;}
+    /*
+    1px  solid
+    */
+
+    #result {float:left;height:610px;overflow-y:scroll;}
+    #result a{font-size:12px;}
+
+    /*
+    .Popupinfo{text-indent:10px}
+    */
+
+    .Popupinfo p{text-indent:0}
+    .Popupinfo p,.Popupinfo h3{margin:0;padding:0;}
+    .Popupinfo a:link,.Popupinfo a:visited {color:#333;text-decoration:none}
+    .Popupinfo a:hover,.Popupinfo a:active {color:#333;text-decoration:underline}
+    .el-input.is-disabled .el-input__inner {
+        background-color: #F5F7FA;
+        border-color: #E4E7ED;
+        color: black;
+        cursor: not-allowed;
+    }
+    .el-textarea.is-disabled .el-textarea__inner {
+        background-color: #F5F7FA;
+        border-color: #E4E7ED;
+        color: black;
+        cursor: not-allowed;
+    }
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .Popupinfo{
+        color: black;
+    }
+    .leaflet-popup-content{
+        color: black;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+
+    .nav .login {
+        padding-top: 25px;
+        float: right;
+    }
+
+    .nav .login a {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;
+    }
+
+    .nav .login a:nth-child(1) {
+        padding-left: 30px;
+    }
+
+    .nav .login a:nth-child(2) {
+        background: #FD8A08;
+        border-radius: 4px;
+        color: #fff;
+        margin-right: 10px;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0;
+        text-align: center;
+    }
+
+    .head_img {
+        height: 50px;
+    }
+
+    .head_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        position: absolute;
+        left: 990px;
+        top: 16px;
+    }
+
+    .link {
+        fill: none;
+        stroke: #666;
+        stroke-width: 1.5px;
+    }
+
+    #licensing {
+        fill: green;
+    }
+
+    .link.licensing {
+        stroke: green;
+    }
+
+    .link.resolved {
+        stroke-dasharray: 0, 21;
+    }
+    circle {
+        fill: #ccc;
+        stroke: #333;
+        stroke-width: 1.5px;
+    }
+
+    text {
+        font: 10px Microsoft YaHei;
+        pointer-events: none;
+        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+
+    .linetext {
+        font-size: 12px;
+    }
+
+    .tooltip {
+        position: absolute;
+        width: 120px;
+        height: auto;
+        font-family: simsun;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        background-color: white;
+        border-radius: 5px;
+    }
+    .el-icon-star-off:before {
+        font-size: 40px;
+        content: "\e717";
+        cursor: pointer;
+    }
+
+    .el-icon-star-on:before {
+        font-size: 40px;
+        content: "\e797";
+        cursor: pointer;
+    }
+    .el-icon-arrow-down::before {
+        position: absolute;
+        content: "\e6df";
+        top: 20px;
+    }
+    .abc{
+        position: relative;
+        margin: 0 auto 50px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-sizing: border-box;
+        width: 80%;
+    }
+</style>
+<body  style="background-color: #ddd;">
+<div id="table">
+
+    <!--导航开始-->
+    <div class="nav" style="
+    background-color: #292929;
+">
+        <div id="menu_hover_bg" style="height: 0px; overflow: hidden;"></div>
+        <div class="w1200">
+
+            <div class="menu">
+                <ul>
+                    <li id="men_pro">
+                        <h2><a href="/">首页</a></h2>
+                        <div class="sub_menu">
+                            <div class="h30"></div>
+
+                            <div class="sub_menu_list" style="width: 315px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/fxw.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                分销王
+                                            </h3>
+                                            <p>
+                                                全终端分销平台，PC+手机+微信合一
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/sqws.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                社群微商
+                                            </h3>
+                                            <p>
+                                                热门移动分销软件，快速引分销流量
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="sub_menu_list" style="width: 295px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/erp.png" alt="">
+                                        </div>
+                                        <div class="info">
+
+                                            <p>
+                                                对接43+平台, 订单库存统一管理
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/hdt.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                货店通
+                                            </h3>
+                                            <p>
+                                                多平台一键铺货神器，省时便捷
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/crm.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                会员通
+                                            </h3>
+                                            <p>
+                                                专业电商CRM，更快了解客户
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/taoda.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                淘打
+                                            </h3>
+                                            <p>
+                                                订单批量打印，对接10+主流平台
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ysd.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                云云收订
+                                            </h3>
+                                            <p>
+                                                对接40+主流平台，订单实时获取
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li id="men_sol1">
+                        <h2><a href="#">西游记</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>西游记</h3>
+                                    <div class="list sol_list">
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_fuwu">
+                        <h2 class="men_sol"><a href="#">三国演义</a></h2>
+                        <div class="sub_menu">
+                            <div class="w1200">
+                                <h3>服务市场</h3></div>
+                            <div class="sub_menu_list">
+                                <div class="category">
+                                    <ul>
+                                        <li>热销产品推荐</li>
+                                        <li>店铺模板/二开/插件定制</li>
+                                        <li>营销推广流量</li>
+                                        <li>软件配套服务</li>
+                                    </ul>
+                                </div>
+                                <div class="content">
+                                    <div class="cont_list" style="display: block;">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon1.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon2.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon3.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon4.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon5.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon6.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon7.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon8.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon9.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon10.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon11.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon12.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon13.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon14.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon15.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon16.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon17.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon18.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon19.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><a href="#">水浒传</a></h2>
+                    </li>
+                    <li>
+                        <h2><a href="#">红楼梦</a></h2>
+                    </li>
+                    <li id="men_sol">
+                        <h2><a href="#">关于作者</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 1250px;">
+                                    <h3></h3>作者介绍</h3>
+                                    <div class="list sol_list">
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E5%90%B4%E6%89%BF%E6%81%A9/18713182#4">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    西游记
+                                                </h3>
+                                                <p>
+                                                    吴承恩（约1500—1583<br> 明代小说家，淮安府山阳县河下人（现江苏省淮安市淮安区）
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E7%BD%97%E8%B4%AF%E4%B8%AD/172206">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国演义
+                                                </h3>
+                                                <p>
+                                                    罗贯中（约1330年－约1400年）<br> 名本，字贯中，号湖海散人，元末明初小说家
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%96%BD%E8%80%90%E5%BA%B5">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    水浒传
+                                                </h3>
+                                                <p>
+                                                    施耐庵（约1296年—约1370年）<br> 江苏兴化人，原名彦端，字肇瑞，号子安，别号耐庵
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%9B%B9%E9%9B%AA%E8%8A%B9/14919">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    红楼梦
+                                                </h3>
+                                                <p>曹雪芹（约1715年5月—约1763年2月）<br> 名沾，字梦阮，号雪芹，又号芹溪、芹圃；出生于江宁（今南京）
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+
+
+                </ul>
+            </div>
+            <div id="123" v-if="userInfo.flag">
+                <div class="login">
+                    <a href="/page/login">
+                        <div class="head_img">
+                            <img :src="originPicture"/>
+                        </div>
+                        <span style="position: absolute;left: 1055px;top: 25px;"> 登陆 </span>
+                    </a>
+                    <a href="/page/register">免费注册</a>
+                </div>
+            </div>
+            <div v-else>
+                <div class="login">
+                    <div class="head_img">
+                        <img :src="userInfo.picture"/>
+                    </div>
+                    <el-dialog v-loading="loading"
+                               element-loading-text="拼命上传中"
+                               element-loading-spinner="el-icon-loading"
+                               element-loading-background="rgba(0, 0, 0, 0.8)"
+
+                               title="修改头像" :visible.sync="dialogFormVisible">
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/admin/file/ftpUploadImg"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccessEdit"
+                                :before-upload="beforeAvatarUploadEdit">
+                            <img v-if="imgTemp" :src="imgTemp" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="update()">确 定</el-button>
+                        </div>
+                    </el-dialog>
+
+                    <span style="position: absolute;left: 1055px;top: 25px;height: 30px;
+        cursor: pointer;width: 200px">  <el-dropdown trigger="click" @command="handleCommand">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+     {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
+    <el-dropdown-item>个人收藏</el-dropdown-item>
+      <el-dropdown-item command="loginOut">退出</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+
+
+                    <span style="position: absolute;left: 1195px;top: 25px;height: 30px;
+        cursor: pointer;width: 100px">  <el-dropdown trigger="click" @command="handleCollect">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+
+      <i  v-if="collectFlag"  title="添加收藏"  class="el-icon-star-off"></i>
+      <i  v-if="!collectFlag" title="取消收藏" class="el-icon-star-on"></i>
+          <i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item  v-if="collectFlag" command="add">添加收藏</el-dropdown-item>
+       <el-dropdown-item  v-if="!collectFlag" command="cancel">已收藏(取消收藏)</el-dropdown-item>
+      <el-dropdown-item command="share">分享</el-dropdown-item>
+
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!--导航结束-->
+    <!--轮播开始-->
+
+
+
+
+    <!--         修改-->
+    <el-dialog :title="personName" :visible.sync="dialogFormVisibleShowPerson">
+        <el-form :model="showPersonDtail">
+            <el-form-item label="相片" :label-width="formLabelWidth">
+                <template slot-scope="scope">
+                    <el-image
+                            style="width: 130px; height: 130px"
+                            :src="showPersonDtail.picture"
+                            :preview-src-list="showPersonDtail.pictures">
+                        >
+                    </el-image>
+                </template>
+            </el-form-item>
+
+            <el-form-item label="名字" :label-width="formLabelWidth">
+                <el-input   :disabled="flag" v-model="showPersonDtail.name" autocomplete="off" style="color: black"></el-input>
+            </el-form-item>
+
+
+            <el-form-item label="地点简介" :label-width="formLabelWidth">
+                <el-input style="color: black" :disabled="flag" v-model="showPersonDtail.content"  type="textarea" autocomplete="off"></el-input>
+            </el-form-item>
+
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShowPerson=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog class="abc" title="分享到" :visible.sync="dialogFormVisibleShare">
+        <div style="height: 50px;width: 50px; cursor: pointer"  @click="shareToQzone()">
+            <img style="width: 50px; height: 50px;" src="../../common/image/QQkong.png"/>
+            <span style="position: absolute;left: 20px;margin-top: 60px">QQ空间</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 150px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/pyquan.png"/>
+            <span style="position: absolute;left: 20px; width: 60px; margin-top: 60px">朋友圈</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 300px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/weibo.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">微博</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 450px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/qunzu.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">QQ好友</span>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShare=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+
+<section class="container container-page">
+    <div class="pageside" style="margin-top: 100px;">
+        <div class="pagemenus">
+            <ul class="pagemenu" id="result">
+                <li onclick="getmap(1);"><a href="javacript:void(0);">1.洛阳  司隶─河南尹</a></li>
+                <li onclick="getmap(2);"><a href="javacript:void(0);">2.许昌  豫州─颖川郡</a></li>
+                <li onclick="getmap(3);"><a href="javacript:void(0);">3.建业  扬州─丹阳郡</a></li>
+                <li onclick="getmap(4);"><a href="javacript:void(0);">4.成都  益州─蜀郡─州治</a></li>
+                <li onclick="getmap(5);"><a href="javacript:void(0);">5.长安  雍州─京兆尹─州治</a></li>
+                <li onclick="getmap(6);"><a href="javacript:void(0);">6.北平  幽州—右北平郡</a></li>
+                <li onclick="getmap(7);"><a href="javacript:void(0);">7.涿县  幽州─范阳郡</a></li>
+                <li onclick="getmap(8);"><a href="javacript:void(0);">8.真定  冀州─常山郡</a></li>
+                <li onclick="getmap(9);"><a href="javacript:void(0);">9.邺  冀州─魏郡</a></li>
+                <li onclick="getmap(10);"><a href="javacript:void(0);">10.平原  冀州─平原郡</a></li>
+                <li onclick="getmap(11);"><a href="javacript:void(0);">11.南皮  冀州─渤海郡</a></li>
+                <li onclick="getmap(12);"><a href="javacript:void(0);">12.弘农  司隶─弘农郡</a></li>
+                <li onclick="getmap(13);"><a href="javacript:void(0);">13.子午谷  雍州─京兆尹</a></li>
+                <li onclick="getmap(14);"><a href="javacript:void(0);">14.陈仓  雍州─扶风郡</a></li>
+                <li onclick="getmap(15);"><a href="javacript:void(0);">15.街亭  雍州─天水郡</a></li>
+                <li onclick="getmap(16);"><a href="javacript:void(0);">16.武威─姑臧  凉州─武威郡</a></li>
+                <li onclick="getmap(17);"><a href="javacript:void(0);">17.濮阳  兖州─东郡</a></li>
+                <li onclick="getmap(18);"><a href="javacript:void(0);">18.白马  兖州─东郡</a></li>
+                <li onclick="getmap(19);"><a href="javacript:void(0);">19.乌巢  兖州─陈留国</a></li>
+                <li onclick="getmap(20);"><a href="javacript:void(0);">20.官渡  兖州─陈留国</a></li>
+                <li onclick="getmap(21);"><a href="javacript:void(0);">21.陈留  兖州─陈留国</a></li>
+                <li onclick="getmap(22);"><a href="javacript:void(0);">22.下邳  徐州─州治</a></li>
+                <li onclick="getmap(23);"><a href="javacript:void(0);">23.淮阴  徐州─广陵郡</a></li>
+                <li onclick="getmap(24);"><a href="javacript:void(0);">24.睢阳  豫州─梁国</a></li>
+                <li onclick="getmap(25);"><a href="javacript:void(0);">25.汝南  豫州─汝南郡─州治</a></li>
+                <li onclick="getmap(26);"><a href="javacript:void(0);">26.寿春  扬州─州治</a></li>
+                <li onclick="getmap(27);"><a href="javacript:void(0);">27.新野  荆州─南阳郡</a></li>
+                <li onclick="getmap(28);"><a href="javacript:void(0);">28.皖城  扬州─庐江郡─州治</a></li>
+                <li onclick="getmap(29);"><a href="javacript:void(0);">29.柴桑  荆州─江夏郡</a></li>
+                <li onclick="getmap(30);"><a href="javacript:void(0);">30.襄阳  荆州─襄阳郡</a></li>
+                <li onclick="getmap(31);"><a href="javacript:void(0);">31.夷陵  荆州─新城县</a></li>
+                <li onclick="getmap(32);"><a href="javacript:void(0);">32.江陵  荆州─南郡</a></li>
+                <li onclick="getmap(33);"><a href="javacript:void(0);">33.公安  荆州─南郡</a></li>
+                <li onclick="getmap(34);"><a href="javacript:void(0);">34.上庸  益州─上庸郡</a></li>
+                <li onclick="getmap(35);"><a href="javacript:void(0);">35.永安  益州─巴东郡</a></li>
+                <li onclick="getmap(36);"><a href="javacript:void(0);">36.南郑  益州─汉中郡</a></li>
+                <li onclick="getmap(37);"><a href="javacript:void(0);">37.梓潼  益州─梓潼郡</a></li>
+                <li onclick="getmap(38);"><a href="javacript:void(0);">38.涪城  益州─梓橦郡</a></li>
+                <li onclick="getmap(39);"><a href="javacript:void(0);">39.雒县  益州─广汉郡</a></li>
+                <li onclick="getmap(40);"><a href="javacript:void(0);">40.合肥  扬州─淮南郡</a></li>
+                <li onclick="getmap(41);"><a href="javacript:void(0);">41.带方  幽州─带方郡</a></li>
+                <li onclick="getmap(42);"><a href="javacript:void(0);">42.朝鲜  幽州─乐浪郡</a></li>
+                <li onclick="getmap(43);"><a href="javacript:void(0);">43.高句丽  幽州─玄菟郡</a></li>
+                <li onclick="getmap(44);"><a href="javacript:void(0);">44.襄平  幽州─辽东郡</a></li>
+                <li onclick="getmap(45);"><a href="javacript:void(0);">45.昌黎  幽州─昌黎郡</a></li>
+                <li onclick="getmap(46);"><a href="javacript:void(0);">46.阳乐  幽州─辽西郡</a></li>
+                <li onclick="getmap(47);"><a href="javacript:void(0);">47.土垠  幽州─右北平郡</a></li>
+                <li onclick="getmap(48);"><a href="javacript:void(0);">48.蓟  幽州─燕国蓟县</a></li>
+                <li onclick="getmap(49);"><a href="javacript:void(0);">49.渔阳  幽州─渔阳郡</a></li>
+                <li onclick="getmap(50);"><a href="javacript:void(0);">50.居庸  幽州─上古郡</a></li>
+                <li onclick="getmap(51);"><a href="javacript:void(0);">51.代县  幽州─代郡</a></li>
+                <li onclick="getmap(52);"><a href="javacript:void(0);">52.雁门  并州─雁门郡</a></li>
+                <li onclick="getmap(53);"><a href="javacript:void(0);">53.九原  并州─新兴郡</a></li>
+                <li onclick="getmap(54);"><a href="javacript:void(0);">54.晋阳  并州─太原郡─州治</a></li>
+                <li onclick="getmap(55);"><a href="javacript:void(0);">55.离石  并州─西河郡</a></li>
+                <li onclick="getmap(56);"><a href="javacript:void(0);">56.居延  凉州─西海郡</a></li>
+                <li onclick="getmap(57);"><a href="javacript:void(0);">57.昌邑  兖州─山阳郡</a></li>
+                <li onclick="getmap(58);"><a href="javacript:void(0);">58.彭城  徐州─彭城国</a></li>
+                <li onclick="getmap(59);"><a href="javacript:void(0);">59.沛县  豫州─沛国</a></li>
+                <li onclick="getmap(60);"><a href="javacript:void(0);">60.毗陵  扬州─毗陵典农校尉</a></li>
+                <li onclick="getmap(61);"><a href="javacript:void(0);">61.建安  扬州─建安郡</a></li>
+                <li onclick="getmap(62);"><a href="javacript:void(0);">62.南昌  扬州─豫章郡</a></li>
+                <li onclick="getmap(63);"><a href="javacript:void(0);">63.江夏  荆州─江夏郡</a></li>
+                <li onclick="getmap(64);"><a href="javacript:void(0);">64.番禺  交州─南海郡</a></li>
+                <li onclick="getmap(65);"><a href="javacript:void(0);">65.交趾郡  交州─龙编</a></li>
+                <li onclick="getmap(66);"><a href="javacript:void(0);">66.朱吾  交州─日南郡</a></li>
+                <li onclick="getmap(67);"><a href="javacript:void(0);">67.武阳  益州─腱为郡</a></li>
+                <li onclick="getmap(68);"><a href="javacript:void(0);">68.涪陵  益州─涪陵郡</a></li>
+                <li onclick="getmap(69);"><a href="javacript:void(0);">69.沾县  并州─乐平郡</a></li>
+                <li onclick="getmap(70);"><a href="javacript:void(0);">70.怀  司隶─河内郡</a></li>
+                <li onclick="getmap(71);"><a href="javacript:void(0);">71.阳武  司隶─河南尹</a></li>
+                <li onclick="getmap(72);"><a href="javacript:void(0);">72.平阳  司隶─平阳郡</a></li>
+                <li onclick="getmap(73);"><a href="javacript:void(0);">73.安邑  司隶─河东郡</a></li>
+                <li onclick="getmap(74);"><a href="javacript:void(0);">74.汜水关  </a></li>
+                <li onclick="getmap(75);"><a href="javacript:void(0);">75.函谷关  </a></li>
+                <li onclick="getmap(76);"><a href="javacript:void(0);">76.散关  </a></li>
+                <li onclick="getmap(77);"><a href="javacript:void(0);">77.潼关  </a></li>
+                <li onclick="getmap(78);"><a href="javacript:void(0);">78.武关  </a></li>
+                <li onclick="getmap(79);"><a href="javacript:void(0);">79.阳平关  </a></li>
+                <li onclick="getmap(80);"><a href="javacript:void(0);">80.葭萌关  </a></li>
+                <li onclick="getmap(81);"><a href="javacript:void(0);">81.剑阁  </a></li>
+                <li onclick="getmap(82);"><a href="javacript:void(0);">82.绵竹关  </a></li>
+                <li onclick="getmap(83);"><a href="javacript:void(0);">83.壶关  并州─上党郡</a></li>
+                <li onclick="getmap(84);"><a href="javacript:void(0);">84.临晋  雍州─冯翊郡</a></li>
+                <li onclick="getmap(85);"><a href="javacript:void(0);">85.禄福  凉州─酒泉郡</a></li>
+                <li onclick="getmap(86);"><a href="javacript:void(0);">86.敦煌  凉州─敦煌郡</a></li>
+                <li onclick="getmap(87);"><a href="javacript:void(0);">87.海头  西域长史府─州治</a></li>
+                <li onclick="getmap(88);"><a href="javacript:void(0);">88.高昌  西域长史府─戊己校尉</a></li>
+                <li onclick="getmap(89);"><a href="javacript:void(0);">89.奉高  兖州─泰山郡</a></li>
+                <li onclick="getmap(90);"><a href="javacript:void(0);">90.无盐  兖州─东平国</a></li>
+                <li onclick="getmap(91);"><a href="javacript:void(0);">91.郡丘  兖州─州治</a></li>
+                <li onclick="getmap(92);"><a href="javacript:void(0);">92.延津  兖州─陈留国</a></li>
+                <li onclick="getmap(93);"><a href="javacript:void(0);">93.定陶、卢县  兖州─济阳郡、济北国</a></li>
+                <li onclick="getmap(94);"><a href="javacript:void(0);">94.任城  兖州─任城郡</a></li>
+                <li onclick="getmap(95);"><a href="javacript:void(0);">95.东平陵  青州─济南国</a></li>
+                <li onclick="getmap(96);"><a href="javacript:void(0);">96.高苑  青州─乐安郡</a></li>
+                <li onclick="getmap(97);"><a href="javacript:void(0);">97.临淄  青州─州治</a></li>
+                <li onclick="getmap(98);"><a href="javacript:void(0);">98.平寿  青州─北海国</a></li>
+                <li onclick="getmap(99);"><a href="javacript:void(0);">99.黄县  青州─东莱郡</a></li>
+                <li onclick="getmap(100);"><a href="javacript:void(0);">100.东武  青州─城阳郡</a></li>
+                <li onclick="getmap(101);"><a href="javacript:void(0);">101.开阳  徐州─琅琊国</a></li>
+                <li onclick="getmap(102);"><a href="javacript:void(0);">102.郯县  徐州─东海国</a></li>
+                <li onclick="getmap(103);"><a href="javacript:void(0);">103.阳翟  豫州─颖川郡</a></li>
+                <li onclick="getmap(104);"><a href="javacript:void(0);">104.陈县  豫州─陈郡</a></li>
+                <li onclick="getmap(105);"><a href="javacript:void(0);">105.安城  豫州─汝南郡─州治</a></li>
+                <li onclick="getmap(106);"><a href="javacript:void(0);">106.谯县  豫州─谯郡</a></li>
+                <li onclick="getmap(107);"><a href="javacript:void(0);">107.安风  豫州─安丰郡</a></li>
+                <li onclick="getmap(108);"><a href="javacript:void(0);">108.宛县  豫州─南阳郡</a></li>
+                <li onclick="getmap(109);"><a href="javacript:void(0);">109.弋阳  豫州─弋阳郡</a></li>
+                <li onclick="getmap(110);"><a href="javacript:void(0);">110.鲁县  豫州─鲁郡</a></li>
+                <li onclick="getmap(111);"><a href="javacript:void(0);">111.六安  扬州─卢江郡</a></li>
+                <li onclick="getmap(112);"><a href="javacript:void(0);">112.吴县  扬州─吴郡</a></li>
+                <li onclick="getmap(113);"><a href="javacript:void(0);">113.山阴  扬州─会稽郡</a></li>
+                <li onclick="getmap(114);"><a href="javacript:void(0);">114.始新  扬州─新都郡</a></li>
+                <li onclick="getmap(115);"><a href="javacript:void(0);">115.章安  扬州─临海郡</a></li>
+                <li onclick="getmap(116);"><a href="javacript:void(0);">116.南城  扬州─临川郡</a></li>
+                <li onclick="getmap(117);"><a href="javacript:void(0);">117.高昌  扬州─卢陵郡</a></li>
+                <li onclick="getmap(118);"><a href="javacript:void(0);">118.鄱阳  扬州─鄱阳郡</a></li>
+                <li onclick="getmap(119);"><a href="javacript:void(0);">119.皖县  扬州─庐江郡</a></li>
+                <li onclick="getmap(120);"><a href="javacript:void(0);">120.蕲春  扬州─蕲春郡</a></li>
+                <li onclick="getmap(121);"><a href="javacript:void(0);">121.夷道  荆州─宜都郡</a></li>
+                <li onclick="getmap(122);"><a href="javacript:void(0);">122.临湘  荆州─长沙郡</a></li>
+                <li onclick="getmap(123);"><a href="javacript:void(0);">123.临浣  荆州─武陵郡</a></li>
+                <li onclick="getmap(124);"><a href="javacript:void(0);">124.郴县  荆州─桂阳郡</a></li>
+                <li onclick="getmap(125);"><a href="javacript:void(0);">125.泉陵  荆州─零陵郡</a></li>
+                <li onclick="getmap(126);"><a href="javacript:void(0);">126.湘东  荆州─湘东郡</a></li>
+                <li onclick="getmap(127);"><a href="javacript:void(0);">127.临贺  荆州─临贺郡</a></li>
+                <li onclick="getmap(128);"><a href="javacript:void(0);">128.湘南  荆州─衡阳郡</a></li>
+                <li onclick="getmap(129);"><a href="javacript:void(0);">129.巫县  荆州─建平郡</a></li>
+                <li onclick="getmap(130);"><a href="javacript:void(0);">130.恩平  交州─高凉郡</a></li>
+                <li onclick="getmap(131);"><a href="javacript:void(0);">131.广信  交州─苍梧郡</a></li>
+                <li onclick="getmap(132);"><a href="javacript:void(0);">132.布山  交州─郁林郡</a></li>
+                <li onclick="getmap(133);"><a href="javacript:void(0);">133.合浦  交州─合浦郡</a></li>
+                <li onclick="getmap(134);"><a href="javacript:void(0);">134.徐闻  交州─朱崖郡</a></li>
+                <li onclick="getmap(135);"><a href="javacript:void(0);">135.胥浦  交州─九真郡</a></li>
+                <li onclick="getmap(136);"><a href="javacript:void(0);">136.下办  益州─武都郡</a></li>
+                <li onclick="getmap(137);"><a href="javacript:void(0);">137.阴平  益州─阴平郡</a></li>
+                <li onclick="getmap(138);"><a href="javacript:void(0);">138.谠口  益州─褒中县</a></li>
+                <li onclick="getmap(139);"><a href="javacript:void(0);">139.褒中  益州─褒中县</a></li>
+                <li onclick="getmap(140);"><a href="javacript:void(0);">140.阆中  益州─巴西郡</a></li>
+                <li onclick="getmap(141);"><a href="javacript:void(0);">141.锦虎  益州─汶山郡</a></li>
+                <li onclick="getmap(142);"><a href="javacript:void(0);">142.汉嘉  益州─汉嘉郡</a></li>
+                <li onclick="getmap(143);"><a href="javacript:void(0);">143.江州  益州─巴郡</a></li>
+                <li onclick="getmap(144);"><a href="javacript:void(0);">144.江阳  益州─江阳郡</a></li>
+                <li onclick="getmap(145);"><a href="javacript:void(0);">145.邛都  益州─越隽郡</a></li>
+                <li onclick="getmap(146);"><a href="javacript:void(0);">146.朱提  益州─朱提郡</a></li>
+                <li onclick="getmap(147);"><a href="javacript:void(0);">147.且兰  益州─徉柯郡</a></li>
+                <li onclick="getmap(148);"><a href="javacript:void(0);">148.味县  益州─建宁郡</a></li>
+                <li onclick="getmap(149);"><a href="javacript:void(0);">149.云南  益州─云南郡</a></li>
+                <li onclick="getmap(150);"><a href="javacript:void(0);">150.雲南  益州─云南郡</a></li>
+                <li onclick="getmap(151);"><a href="javacript:void(0);">151.永昌  益州─永昌郡</a></li>
+                <li onclick="getmap(152);"><a href="javacript:void(0);">152.宛温  益州─兴古郡</a></li>
+                <li onclick="getmap(153);"><a href="javacript:void(0);">153.信都  冀州─安平郡─州治</a></li>
+                <li onclick="getmap(154);"><a href="javacript:void(0);">154.房子  冀州─赵国</a></li>
+                <li onclick="getmap(155);"><a href="javacript:void(0);">155.廮陶  冀州─巨鹿郡</a></li>
+                <li onclick="getmap(156);"><a href="javacript:void(0);">156.曲梁  冀州─广平郡</a></li>
+                <li onclick="getmap(157);"><a href="javacript:void(0);">157.黎阳  冀州─魏郡</a></li>
+                <li onclick="getmap(158);"><a href="javacript:void(0);">158.馆陶  冀州─阳平郡</a></li>
+                <li onclick="getmap(159);"><a href="javacript:void(0);">159.清河  冀州─清河郡</a></li>
+                <li onclick="getmap(160);"><a href="javacript:void(0);">160.庆次  冀州─乐陵国</a></li>
+                <li onclick="getmap(161);"><a href="javacript:void(0);">161.乐成  冀州─河间郡</a></li>
+                <li onclick="getmap(162);"><a href="javacript:void(0);">162.卢奴  冀州─中山郡</a></li>
+                <li onclick="getmap(163);"><a href="javacript:void(0);">163.耀县  雍州─北地郡</a></li>
+                <li onclick="getmap(164);"><a href="javacript:void(0);">164.杜陵  雍州─京兆尹</a></li>
+                <li onclick="getmap(165);"><a href="javacript:void(0);">165.槐里  雍州─扶风郡</a></li>
+                <li onclick="getmap(166);"><a href="javacript:void(0);">166.骆口  雍州─扶风郡</a></li>
+                <li onclick="getmap(167);"><a href="javacript:void(0);">167.漆县  雍州─新平郡</a></li>
+                <li onclick="getmap(168);"><a href="javacript:void(0);">168.临泾  雍州─安定郡</a></li>
+                <li onclick="getmap(169);"><a href="javacript:void(0);">169.郿县  雍州─扶风郡</a></li>
+                <li onclick="getmap(170);"><a href="javacript:void(0);">170.临渭  雍州─广魏郡</a></li>
+                <li onclick="getmap(171);"><a href="javacript:void(0);">171.冀县  雍州─天水郡</a></li>
+                <li onclick="getmap(172);"><a href="javacript:void(0);">172.襄武  雍州─陇西郡</a></li>
+                <li onclick="getmap(173);"><a href="javacript:void(0);">173.榆中  凉州─金城郡</a></li>
+                <li onclick="getmap(174);"><a href="javacript:void(0);">174.西都  凉州─西平郡</a></li>
+                <li onclick="getmap(175);"><a href="javacript:void(0);">175.角乐得  凉州─张掖郡</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content" style="margin-top: 100px;">
+        <header class="article-header">
+            <h1 class="article-title"><a href="#">三国古城池</a></h1>
+        </header>
+        <!--内容开始-->
+        <article class="article-content">
+            <div id="mappan" class="leaflet-container leaflet-retina leaflet-fade-anim" tabindex="0" style="position: relative;"><div class="leaflet-map-pane" style="transform: translate3d(2px, -138px, 0px);"><div class="leaflet-tile-pane"><div class="leaflet-layer" style="z-index: 1;"><div class="leaflet-tile-container" style=""></div><div class="leaflet-tile-container leaflet-zoom-animated" style=""><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=26&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 318px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=26&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 318px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded leaflet-drag-target" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=25&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 62px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=27&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 574px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=26&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 318px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=25&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 62px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=27&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 574px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=25&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 62px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=27&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 574px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=24&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: -194px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=28&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 830px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=24&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: -194px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=28&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 830px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=24&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: -194px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=28&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 830px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=26&amp;y=14&amp;z=5" style="height: 256px; width: 256px; left: 318px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=25&amp;y=14&amp;z=5" style="height: 256px; width: 256px; left: 62px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=27&amp;y=14&amp;z=5" style="height: 256px; width: 256px; left: 574px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=24&amp;y=14&amp;z=5" style="height: 256px; width: 256px; left: -194px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=28&amp;y=14&amp;z=5" style="height: 256px; width: 256px; left: 830px; top: 612px;"></div></div><div class="leaflet-layer"><div class="leaflet-tile-container leaflet-zoom-animated" style=""></div><div class="leaflet-tile-container leaflet-zoom-animated" style=""><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/5/26/12.png" style="height: 256px; width: 256px; left: 318px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/5/26/11.png" style="height: 256px; width: 256px; left: 318px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/5/25/12.png" style="height: 256px; width: 256px; left: 62px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/5/27/12.png" style="height: 256px; width: 256px; left: 574px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/5/26/13.png" style="height: 256px; width: 256px; left: 318px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/5/25/11.png" style="height: 256px; width: 256px; left: 62px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/5/27/11.png" style="height: 256px; width: 256px; left: 574px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/5/25/13.png" style="height: 256px; width: 256px; left: 62px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/5/27/13.png" style="height: 256px; width: 256px; left: 574px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/5/24/12.png" style="height: 256px; width: 256px; left: -194px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/5/28/12.png" style="height: 256px; width: 256px; left: 830px; top: 100px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/5/24/11.png" style="height: 256px; width: 256px; left: -194px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/5/28/11.png" style="height: 256px; width: 256px; left: 830px; top: -156px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/5/24/13.png" style="height: 256px; width: 256px; left: -194px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/5/28/13.png" style="height: 256px; width: 256px; left: 830px; top: 356px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/5/26/14.png" style="height: 256px; width: 256px; left: 318px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/5/25/14.png" style="height: 256px; width: 256px; left: 62px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/5/27/14.png" style="height: 256px; width: 256px; left: 574px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/5/24/14.png" style="height: 256px; width: 256px; left: -194px; top: 612px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/5/28/14.png" style="height: 256px; width: 256px; left: 830px; top: 612px;"></div></div></div><div class="leaflet-objects-pane"><div class="leaflet-shadow-pane"></div><div class="leaflet-overlay-pane"></div><div class="leaflet-marker-pane"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(317px, 283px, 0px); z-index: 283;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(348px, 300px, 0px); z-index: 300;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(461px, 355px, 0px); z-index: 355;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(126px, 393px, 0px); z-index: 393;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(237px, 291px, 0px); z-index: 291;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(475px, 92px, 0px); z-index: 92;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(397px, 144px, 0px); z-index: 144;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(364px, 185px, 0px); z-index: 185;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(363px, 228px, 0px); z-index: 228;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(408px, 211px, 0px); z-index: 211;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(414px, 186px, 0px); z-index: 186;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(282px, 286px, 0px); z-index: 286;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(235px, 299px, 0px); z-index: 299;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(198px, 290px, 0px); z-index: 290;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(162px, 277px, 0px); z-index: 277;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(93px, 190px, 0px); z-index: 190;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(376px, 254px, 0px); z-index: 254;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(364px, 256px, 0px); z-index: 256;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(360px, 271px, 0px); z-index: 271;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(354px, 280px, 0px); z-index: 280;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(364px, 282px, 0px); z-index: 282;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(444px, 302px, 0px); z-index: 302;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(467px, 313px, 0px); z-index: 313;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(390px, 288px, 0px); z-index: 288;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(358px, 320px, 0px); z-index: 320;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(416px, 339px, 0px); z-index: 339;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(315px, 340px, 0px); z-index: 340;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(417px, 388px, 0px); z-index: 388;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(398px, 415px, 0px); z-index: 415;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(310px, 353px, 0px); z-index: 353;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(291px, 387px, 0px); z-index: 387;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(311px, 398px, 0px); z-index: 398;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(312px, 406px, 0px); z-index: 406;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(267px, 348px, 0px); z-index: 348;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(249px, 381px, 0px); z-index: 381;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(194px, 326px, 0px); z-index: 326;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(152px, 364px, 0px); z-index: 364;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(141px, 369px, 0px); z-index: 369;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(131px, 382px, 0px); z-index: 382;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(426px, 360px, 0px); z-index: 360;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(620px, 173px, 0px); z-index: 173;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(620px, 158px, 0px); z-index: 158;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(567px, 74px, 0px); z-index: 74;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(561px, 91px, 0px); z-index: 91;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(517px, 83px, 0px); z-index: 83;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(463px, 133px, 0px); z-index: 133;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(447px, 134px, 0px); z-index: 134;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(429px, 128px, 0px); z-index: 128;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(417px, 118px, 0px); z-index: 118;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(387px, 117px, 0px); z-index: 117;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(366px, 134px, 0px); z-index: 134;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(329px, 157px, 0px); z-index: 157;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(324px, 175px, 0px); z-index: 175;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(319px, 191px, 0px); z-index: 191;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(287px, 202px, 0px); z-index: 202;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(58px, 70px, 0px); z-index: 70;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(405px, 271px, 0px); z-index: 271;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(424px, 294px, 0px); z-index: 294;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(419px, 280px, 0px); z-index: 280;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(487px, 364px, 0px); z-index: 364;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(450px, 485px, 0px); z-index: 485;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(394px, 442px, 0px); z-index: 442;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(347px, 381px, 0px); z-index: 381;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(338px, 587px, 0px); z-index: 587;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(166px, 635px, 0px); z-index: 635;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(183px, 719px, 0px); z-index: 719;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(122px, 402px, 0px); z-index: 402;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(220px, 426px, 0px); z-index: 426;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(345px, 199px, 0px); z-index: 199;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(339px, 270px, 0px); z-index: 270;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(352px, 271px, 0px); z-index: 271;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(296px, 242px, 0px); z-index: 242;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(289px, 269px, 0px); z-index: 269;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(334px, 277px, 0px); z-index: 277;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(282px, 283px, 0px); z-index: 283;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(193px, 293px, 0px); z-index: 293;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(268px, 282px, 0px); z-index: 282;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(269px, 309px, 0px); z-index: 309;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(185px, 323px, 0px); z-index: 323;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(169px, 346px, 0px); z-index: 346;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(159px, 346px, 0px); z-index: 346;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(130px, 372px, 0px); z-index: 372;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(332px, 239px, 0px); z-index: 239;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(260px, 278px, 0px); z-index: 278;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(-1px, 137px, 0px); z-index: 137;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(-87px, 124px, 0px); z-index: 124;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(-169px, 112px, 0px); z-index: 112;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(-213px, 40px, 0px); z-index: 40;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(422px, 238px, 0px); z-index: 238;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(408px, 246px, 0px); z-index: 246;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(397px, 256px, 0px); z-index: 256;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(357px, 269px, 0px); z-index: 269;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(386px, 268px, 0px); z-index: 268;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(411px, 261px, 0px); z-index: 261;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(432px, 225px, 0px); z-index: 225;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(438px, 220px, 0px); z-index: 220;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(451px, 221px, 0px); z-index: 221;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(470px, 224px, 0px); z-index: 224;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(500px, 198px, 0px); z-index: 198;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(476px, 245px, 0px); z-index: 245;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(450px, 271px, 0px); z-index: 271;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(452px, 284px, 0px); z-index: 284;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(341px, 297px, 0px); z-index: 297;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(372px, 308px, 0px); z-index: 308;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(360px, 328px, 0px); z-index: 328;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(393px, 304px, 0px); z-index: 304;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(404px, 345px, 0px); z-index: 345;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(319px, 328px, 0px); z-index: 328;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(376px, 351px, 0px); z-index: 351;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(420px, 257px, 0px); z-index: 257;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(409px, 362px, 0px); z-index: 362;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(503px, 373px, 0px); z-index: 373;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(502px, 408px, 0px); z-index: 408;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(467px, 418px, 0px); z-index: 418;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(521px, 443px, 0px); z-index: 443;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(412px, 471px, 0px); z-index: 471;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(375px, 483px, 0px); z-index: 483;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(413px, 434px, 0px); z-index: 434;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(410px, 392px, 0px); z-index: 392;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(385px, 402px, 0px); z-index: 402;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(293px, 398px, 0px); z-index: 398;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(340px, 422px, 0px); z-index: 422;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(300px, 433px, 0px); z-index: 433;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(323px, 517px, 0px); z-index: 517;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(298px, 505px, 0px); z-index: 505;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(320px, 489px, 0px); z-index: 489;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(297px, 551px, 0px); z-index: 551;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(328px, 465px, 0px); z-index: 465;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(258px, 379px, 0px); z-index: 379;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(314px, 606px, 0px); z-index: 606;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(291px, 575px, 0px); z-index: 575;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(263px, 576px, 0px); z-index: 576;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(244px, 618px, 0px); z-index: 618;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(265px, 651px, 0px); z-index: 651;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(166px, 664px, 0px); z-index: 664;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(165px, 308px, 0px); z-index: 308;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(140px, 329px, 0px); z-index: 329;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(212px, 320px, 0px); z-index: 320;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(193px, 326px, 0px); z-index: 326;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(170px, 367px, 0px); z-index: 367;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(115px, 369px, 0px); z-index: 369;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(102px, 409px, 0px); z-index: 409;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(183px, 420px, 0px); z-index: 420;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(158px, 438px, 0px); z-index: 438;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(85px, 463px, 0px); z-index: 463;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(118px, 477px, 0px); z-index: 477;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(205px, 504px, 0px); z-index: 504;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(120px, 524px, 0px); z-index: 524;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(62px, 524px, 0px); z-index: 524;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(98px, 539px, 0px); z-index: 539;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(14px, 533px, 0px); z-index: 533;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(132px, 571px, 0px); z-index: 571;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(388px, 201px, 0px); z-index: 201;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(366px, 199px, 0px); z-index: 199;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(373px, 198px, 0px); z-index: 198;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(372px, 219px, 0px); z-index: 219;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(365px, 254px, 0px); z-index: 254;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(382px, 230px, 0px); z-index: 230;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(391px, 221px, 0px); z-index: 221;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(433px, 202px, 0px); z-index: 202;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(401px, 182px, 0px); z-index: 182;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(375px, 173px, 0px); z-index: 173;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(238px, 276px, 0px); z-index: 276;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(239px, 296px, 0px); z-index: 296;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(232px, 291px, 0px); z-index: 291;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(220px, 296px, 0px); z-index: 296;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(218px, 272px, 0px); z-index: 272;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(201px, 263px, 0px); z-index: 263;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(210px, 293px, 0px); z-index: 293;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(173px, 280px, 0px); z-index: 280;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(164px, 285px, 0px); z-index: 285;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(139px, 273px, 0px); z-index: 273;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(121px, 243px, 0px); z-index: 243;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(74px, 228px, 0px); z-index: 228;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(44px, 165px, 0px); z-index: 165;"><img src="http://www.sdmz.net/d/map/sg/chengchi.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -30px; margin-top: -27px; width: 30px; height: 27px; transform: translate3d(237px, 291px, 0px); z-index: 291;"></div><div class="leaflet-popup-pane"><div class="leaflet-popup  leaflet-zoom-animated" style="opacity: 1; transform: translate3d(237px, 291px, 0px); bottom: 33px; left: -121px;"><a class="leaflet-popup-close-button" href="#close">×</a><div class="leaflet-popup-content-wrapper"><div class="leaflet-popup-content" style="width: 192px;"><div class="Popupinfo"><h3><font color="#00a6ac">5. 长安</font></h3><p>所属州郡：雍州─京兆尹─州治</p><p>现在地址：陕西省西安市 西北</p><a href="http://www.sdmz.net" target="_blank">更多信息</a></div></div></div><div class="leaflet-popup-tip-container"><div class="leaflet-popup-tip"></div></div></div></div></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="放大">+</a><a class="leaflet-control-zoom-out" href="#" title="缩小">-</a></div></div><div class="leaflet-top leaflet-right"><div class="leaflet-control-layers leaflet-control" aria-haspopup="true"><a class="leaflet-control-layers-toggle" href="#" title="Layers"></a><form class="leaflet-control-layers-list"><div class="leaflet-control-layers-base"><label><input type="radio" class="leaflet-control-layers-selector" name="leaflet-base-layers" checked="checked"><span> 高德地图</span></label><label><input type="radio" class="leaflet-control-layers-selector" name="leaflet-base-layers"><span> 高德影像</span></label></div><div class="leaflet-control-layers-separator" style="display: none;"></div><div class="leaflet-control-layers-overlays"></div></form></div></div>
+        </article>
+
+        <script language="javascript">
+            /*** 高德地图*/
+            var Gaode = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {maxZoom: 18,minZoom: 5});
+            var Gaodimgem = L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {maxZoom: 18,minZoom: 5});
+            var Gaodimga = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion', {maxZoom: 18,minZoom: 5});
+            var Gaodimage = L.layerGroup([Gaodimgem, Gaodimga]);
+
+            var baseLayers = {
+                "高德地图": Gaode,
+                "高德影像": Gaodimage
+            }
+
+
+
+            var map = L.map("mappan", {
+                center: [35.74874, 116.05408],
+                zoom: 5,
+                layers: [Gaode],
+                zoomControl: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.sdmz.net/map/">sdmz.net</a>'}).addTo(map);
+
+            L.control.layers(baseLayers, null).addTo(map);
+            L.control.zoom({
+                zoomInTitle: '放大',
+                zoomOutTitle: '缩小'
+            }).addTo(map);
+
+
+            // 使用用户自己的图标
+
+            var greenIcon = L.icon({
+                iconUrl: 'http://www.sdmz.net/d/map/sg/chengchi.png',
+                iconSize:     [30,27],    // size of the icon
+                iconAnchor:   [30,27], // point of the icon which will correspond to marker's location
+                popupAnchor:  [-5, -40] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+
+            //  L.marker([31.52587, 106.83655], {icon: greenIcon}).addTo(map);
+
+
+
+            /*默认：[1,2] */
+            var list = [
+
+                [1,'洛阳',[34.6366, 112.46292],'http://www.sdmz.net/d/map/sg/sggcc/1.jpg','<p>所属州郡：司隶─河南尹</p><p>现在地址：河南省洛阳市</p>','http://www.sdmz.net'],
+                [2,'许昌',[34.03104, 113.82797],'http://www.sdmz.net/d/map/sg/sggcc/2.jpg','<p>所属州郡：豫州─颖川郡</p><p>现在地址：河南省许昌市</p>','http://www.sdmz.net'],
+                [3,'建业',[31.99876, 118.79517],'http://www.sdmz.net/d/map/sg/sggcc/3.jpg','<p>所属州郡：扬州─丹阳郡</p><p>现在地址：江苏省南京市</p>','http://www.sdmz.net'],
+                [4,'成都',[30.57645, 104.07349],'http://www.sdmz.net/d/map/sg/sggcc/4.jpg','<p>所属州郡：益州─蜀郡─州治</p><p>现在地址：四川省成都市</p>','http://www.sdmz.net'],
+                [5,'长安',[34.34996, 108.94009],'http://www.sdmz.net/d/map/sg/sggcc/5.jpg','<p>所属州郡：雍州─京兆尹─州治</p><p>现在地址：陕西省西安市 西北</p>','http://www.sdmz.net'],
+                [6,'北平',[41.24271, 119.41589],'http://www.sdmz.net/d/map/sg/sggcc/6.jpg','<p>所属州郡：幽州&mdash;右北平郡</p><p>现在地址：辽宁省朝阳市凌源市</p>','http://www.sdmz.net'],
+                [7,'涿县',[39.49132, 115.98267],'http://www.sdmz.net/d/map/sg/sggcc/7.jpg','<p>所属州郡：幽州─范阳郡</p><p>现在地址：河北省保定市涿州市</p>','http://www.sdmz.net'],
+                [8,'真定',[38.08917, 114.51324],'http://www.sdmz.net/d/map/sg/sggcc/8.jpg','<p>所属州郡：冀州─常山郡</p><p>现在地址：河北省石家庄市 北</p>','http://www.sdmz.net'],
+                [9,'邺',[36.59348, 114.49402],'http://www.sdmz.net/d/map/sg/sggcc/9.jpg','<p>所属州郡：冀州─魏郡</p><p>现在地址：河北省邯郸县临漳县 西南</p>','http://www.sdmz.net'],
+                [10,'平原',[37.18439, 116.44135],'http://www.sdmz.net/d/map/sg/sggcc/10.jpg','<p>	所属州郡：冀州─平原郡</p><p>现在地址：山东省德州市平原县 南</p>','http://www.sdmz.net'],
+                [11,'南皮',[38.05674, 116.70502],'http://www.sdmz.net/d/map/sg/sggcc/11.jpg','<p>	所属州郡：冀州─渤海郡</p><p>现在地址：河北省沧州市南皮县 北</p>','http://www.sdmz.net'],
+                [12,'弘农',[34.52466, 110.89874],'http://www.sdmz.net/d/map/sg/sggcc/12.jpg','<p>	所属州郡：司隶─弘农郡</p><p>现在地址：河南省三门峡市灵宝市 北</p>','http://www.sdmz.net'],
+                [13,'子午谷',[34.0666, 108.83778],'http://www.sdmz.net/d/map/sg/sggcc/13.jpg','<p>所属州郡：雍州─京兆尹</p><p>现在地址：长安区子午镇</p>','http://www.sdmz.net'],
+                [14,'陈仓',[34.36639, 107.23721],'http://www.sdmz.net/d/map/sg/sggcc/14.jpg','<p>	所属州郡：雍州─扶风郡</p><p>现在地址：陕西省宝鸡市金台区代家湾村 西南</p>','http://www.sdmz.net'],
+                [15,'街亭',[34.8634, 105.66101],'http://www.sdmz.net/d/map/sg/sggcc/15.jpg','<p>所属州郡：雍州─天水郡</p><p>现在地址：甘肃省天水市秦安县 东 陇城镇</p>','http://www.sdmz.net'],
+                [16,'武威─姑臧',[37.93662, 102.62466],'http://www.sdmz.net/d/map/sg/sggcc/16.jpg','<p>所属州郡：凉州─武威郡</p><p>现在地址：甘肃省武威市，姑臧 为匈奴用语。</p>','http://www.sdmz.net'],
+                [17,'濮阳',[35.69299, 115.02686],'http://www.sdmz.net/d/map/sg/sggcc/17.jpg','<p>	所属州郡：兖州─东郡</p><p>现在地址：河南省濮阳市 南</p>','http://www.sdmz.net'],
+                [18,'白马',[35.59479, 114.52698],'http://www.sdmz.net/d/map/sg/sggcc/18.jpg','','http://www.sdmz.net'],
+                [19,'乌巢',[35.05473, 114.36218],'http://www.sdmz.net/d/map/sg/sggcc/19.jpg','<p>	所属州郡：兖州─陈留国</p><p>现在地址：河南省新乡县封丘县 西，官渡之战─袁绍屯粮之处</p>','http://www.sdmz.net'],
+                [20,'官渡',[34.73823, 114.08752],'http://www.sdmz.net/d/map/sg/sggcc/20.jpg','<p>	所属州郡：兖州─陈留国</p><p>现在地址：河南省郑州市中牟县官渡镇</p>','http://www.sdmz.net'],
+                [21,'陈留',[34.67388, 114.53522],'http://www.sdmz.net/d/map/sg/sggcc/21.jpg','<p>	所属州郡：兖州─陈留国</p><p>现在地址：河南省开封县陈留镇 东南</p>','http://www.sdmz.net'],
+                [22,'下邳',[33.94336, 118.02612],'http://www.sdmz.net/d/map/sg/sggcc/22.jpg','<p>	所属州郡：徐州─州治</p><p>现在地址：江苏省徐州睢宁县 南</p>','http://www.sdmz.net'],
+                [23,'淮阴',[33.53224, 119.03687],'http://www.sdmz.net/d/map/sg/sggcc/23.jpg','<p>	所属州郡：徐州─广陵郡</p><p>	现在地址：江苏省淮安市 西南</p>','http://www.sdmz.net'],
+                [24,'睢阳',[34.44769, 115.65445],'http://www.sdmz.net/d/map/sg/sggcc/24.jpg','<p>	所属州郡：豫州─梁国</p><p>现在地址：河南省商丘市 南</p>','http://www.sdmz.net'],
+                [25,'汝南',[33.27658, 114.26605],'http://www.sdmz.net/d/map/sg/sggcc/25.jpg','<p>	所属州郡：豫州─汝南郡─州治</p><p>现在地址：河南省驻马店市上蔡县</p>','http://www.sdmz.net'],
+                [26,'寿春',[32.58038, 116.79291],'http://www.sdmz.net/d/map/sg/sggcc/26.jpg','<p>	所属州郡：扬州─州治</p><p>现在地址：安徽省裕安区寿县</p>','http://www.sdmz.net'],
+                [27,'新野',[32.53176, 112.36679],'http://www.sdmz.net/d/map/sg/sggcc/27.jpg','<p>	所属州郡：荆州─南阳郡</p><p>现在地址：河南省南阳市新野县</p>','http://www.sdmz.net'],
+                [28,'皖城',[30.73593, 116.83685],'http://www.sdmz.net/d/map/sg/sggcc/28.jpg','<p>	所属州郡：扬州─庐江郡─州治</p><p>现在地址：安徽省安庆市怀宁县</p>','http://www.sdmz.net'],
+                [29,'柴桑',[29.70833, 116.0211],'http://www.sdmz.net/d/map/sg/sggcc/29.jpg','<p>所属州郡：荆州─江夏郡</p><p>现在地址：江西省九江市</p>','http://www.sdmz.net'],
+                [30,'襄阳',[32.05464, 112.13882],'http://www.sdmz.net/d/map/sg/sggcc/30.jpg','<p>	所属州郡：荆州─襄阳郡</p><p>现在地址：湖北省襄阳市</p>','http://www.sdmz.net'],
+                [31,'夷陵',[30.77016, 111.32446],'http://www.sdmz.net/d/map/sg/sggcc/31.jpg','<p>	所属州郡：荆州─新城县</p><p>现在地址：湖北省宜昌市夷陵区</p>','http://www.sdmz.net'],
+                [32,'江陵',[30.36103, 112.18964],'http://www.sdmz.net/d/map/sg/sggcc/32.jpg','<p>	所属州郡：荆州─南郡</p><p>现在地址：湖北省荆州区，即『南郡』</p>','http://www.sdmz.net'],
+                [33,'公安',[30.0584, 112.22672],'http://www.sdmz.net/d/map/sg/sggcc/33.jpg','<p>所属州郡：荆州─南郡</p><p>现在地址：湖北省荆州区公安县</p>','http://www.sdmz.net'],
+                [34,'上庸',[32.23836, 110.2533],'http://www.sdmz.net/d/map/sg/sggcc/34.jpg','<p>所属州郡：益州─上庸郡</p><p>现在地址：湖北省十堰市竹山县 西北，襄樊战后，孟达降魏，改『新城郡』</p>','http://www.sdmz.net'],
+                [35,'永安',[31.0191, 109.47464],'http://www.sdmz.net/d/map/sg/sggcc/35.jpg','<p>所属州郡：益州─巴东郡</p><p>现在地址：重庆市奉节县</p>','http://www.sdmz.net'],
+                [36,'南郑',[33.07773, 107.02881],'http://www.sdmz.net/d/map/sg/sggcc/36.jpg','<p>	所属州郡：益州─汉中郡</p><p>现在地址：陕西省汉中市</p>','http://www.sdmz.net'],
+                [37,'梓潼',[31.64403, 105.18311],'http://www.sdmz.net/d/map/sg/sggcc/37.jpg','<p>	所属州郡：益州─梓潼郡</p><p>现在地址：四川省绵阳市梓潼县</p>','http://www.sdmz.net'],
+                [38,'涪城',[31.46381, 104.74365],'http://www.sdmz.net/d/map/sg/sggcc/38.jpg','<p>	所属州郡：益州─梓橦郡</p><p>现在地址：四川省绵阳市</p>','http://www.sdmz.net'],
+                [39,'雒县',[30.98938, 104.28772],'http://www.sdmz.net/d/map/sg/sggcc/39.jpg','<p>	所属州郡：益州─广汉郡</p><p>现在地址：四川省德阳市广汉市 北</p>','http://www.sdmz.net'],
+                [40,'合肥',[31.82156, 117.22961],'http://www.sdmz.net/d/map/sg/sggcc/40.jpg','<p>	所属州郡：扬州─淮南郡</p><p>现在地址：安徽省合肥 西北</p>','http://www.sdmz.net'],
+                [41,'带方',[38.51809, 125.75226],'http://www.sdmz.net/d/map/sg/sggcc/41.jpg','<p>	所属州郡：幽州─带方郡</p><p>现在地址：朝鲜沙里院市</p>','http://www.sdmz.net'],
+                [42,'朝鲜',[39.02559, 125.76324],'http://www.sdmz.net/d/map/sg/sggcc/42.jpg','<p>	所属州郡：幽州─乐浪郡</p><p>现在地址：北韩平壤直辖市 南</p>','http://www.sdmz.net'],
+                [43,'高句丽',[41.82864, 123.43689],'http://www.sdmz.net/d/map/sg/sggcc/43.jpg','<p>所属州郡：幽州─玄菟郡</p><p>现在地址：辽宁省沈阳市 东</p>','http://www.sdmz.net'],
+                [44,'襄平',[41.26955, 123.17596],'http://www.sdmz.net/d/map/sg/sggcc/44.jpg','<p>	所属州郡：幽州─辽东郡</p><p>现在地址：辽宁省辽阳市</p>','http://www.sdmz.net'],
+                [45,'昌黎',[41.5497, 121.24512],'http://www.sdmz.net/d/map/sg/sggcc/45.jpg','<p>所属州郡：幽州─昌黎郡</p><p>现在地址：辽宁省锦州市义县</p>','http://www.sdmz.net'],
+                [46,'阳乐',[39.89077, 118.89404],'http://www.sdmz.net/d/map/sg/sggcc/46.jpg','<p>	所属州郡：幽州─辽西郡</p><p>现在地址：河北省秦皇岛市卢龙县 东</p>','http://www.sdmz.net'],
+                [47,'土垠',[39.83807, 118.18542],'http://www.sdmz.net/d/map/sg/sggcc/47.jpg','<p>	所属州郡：幽州─右北平郡</p><p>现在地址：河北省唐山市丰润区 东</p>','http://www.sdmz.net'],
+                [48,'蓟',[40.04864, 117.39716],'http://www.sdmz.net/d/map/sg/sggcc/48.jpg','<p>所属州郡：幽州─燕国蓟县</p><p>现在地址：天津蓟县，一说今『北京市』 西南</p>','http://www.sdmz.net'],
+                [49,'渔阳',[40.38421, 116.8396],'http://www.sdmz.net/d/map/sg/sggcc/49.jpg','<p>所属州郡：幽州─渔阳郡</p><p>现在地址：北京密云县 西南</p>','http://www.sdmz.net'],
+                [50,'居庸',[40.42604, 115.52673],'http://www.sdmz.net/d/map/sg/sggcc/50.jpg','<p>	所属州郡：幽州─上古郡</p><p>现在地址：河北省张家口市怀来县 东</p>','http://www.sdmz.net'],
+                [51,'代县',[39.85072, 114.59839],'http://www.sdmz.net/d/map/sg/sggcc/51.jpg','<p>	所属州郡：幽州─代郡</p><p>现在地址：河北省张家口市蔚县 东北</p>','http://www.sdmz.net'],
+                [52,'雁门',[39.06611, 112.97791],'http://www.sdmz.net/d/map/sg/sggcc/52.jpg','<p>	所属州郡：并州─雁门郡</p><p>现在地址：山西省忻州市代县 西南</p>','http://www.sdmz.net'],
+                [53,'九原',[38.43638, 112.74719],'http://www.sdmz.net/d/map/sg/sggcc/53.jpg','<p>	所属州郡：并州─新兴郡</p><p>现在地址：山西省忻州市</p>','http://www.sdmz.net'],
+                [54,'晋阳',[37.90737, 112.56317],'http://www.sdmz.net/d/map/sg/sggcc/54.jpg','<p>	所属州郡：并州─太原郡─州治</p><p>现在地址：山西省太原市</p>','http://www.sdmz.net'],
+                [55,'离石',[37.52715, 111.13495],'http://www.sdmz.net/d/map/sg/sggcc/55.jpg','<p>	所属州郡：并州─西河郡</p><p>现在地址：山西省吕梁市</p>','http://www.sdmz.net'],
+                [56,'居延',[41.97174, 101.06186],'http://www.sdmz.net/d/map/sg/sggcc/56.jpg','<p>所属州郡：凉州─西海郡</p><p>现在地址：内蒙古自治区阿拉善右旗额济纳旗 东南</p>','http://www.sdmz.net'],
+                [57,'昌邑',[35.08058, 116.33011],'http://www.sdmz.net/d/map/sg/sggcc/57.jpg','<p>	所属州郡：兖州─山阳郡</p><p>现在地址：山东省济宁市金乡县 西北</p>','http://www.sdmz.net'],
+                [58,'彭城',[34.23451, 117.16919],'http://www.sdmz.net/d/map/sg/sggcc/58.jpg','<p>	所属州郡：徐州─彭城国</p><p>现在地址：江苏省徐州</p>','http://www.sdmz.net'],
+                [59,'沛县',[34.7371, 116.95633],'http://www.sdmz.net/d/map/sg/sggcc/59.jpg','<p>所属州郡：豫州─沛国</p><p>现在地址：江苏省徐州沛县，即『小沛』</p>','http://www.sdmz.net'],
+                [60,'毗陵',[31.67208, 119.94873],'http://www.sdmz.net/d/map/sg/sggcc/60.jpg','<p>	所属州郡：扬州─毗陵典农校尉</p><p>	现在地址：江苏省常州市</p>','http://www.sdmz.net'],
+                [61,'建安',[27.02457, 118.30593],'http://www.sdmz.net/d/map/sg/sggcc/61.jpg','<p>	所属州郡：扬州─建安郡</p><p>现在地址：福建省南平市建瓯市 南</p>','http://www.sdmz.net'],
+                [62,'南昌',[28.70022, 115.85083],'http://www.sdmz.net/d/map/sg/sggcc/62.jpg','<p>	所属州郡：扬州─豫章郡</p><p>现在地址：江西省南昌县</p>','http://www.sdmz.net'],
+                [63,'江夏',[31.02411, 113.75381],'http://www.sdmz.net/d/map/sg/sggcc/63.jpg','<p>	所属州郡：荆州─江夏郡</p><p>现在地址：湖北省孝感市云梦县</p>','http://www.sdmz.net'],
+                [64,'番禺',[22.93848, 113.38852],'http://www.sdmz.net/d/map/sg/sggcc/64.jpg','<p>	所属州郡：交州─南海郡</p><p>现在地址：广东省广州市番禺区</p>','http://www.sdmz.net'],
+                [65,'交趾郡',[21.01273, 105.82855],'http://www.sdmz.net/d/map/sg/sggcc/65.jpg','<p>所属州郡：交州─龙编</p><p>现在地址：还剑郡河内市 东</p>','http://www.sdmz.net'],
+                [66,'朱吾',[17.52096, 106.57288],'http://www.sdmz.net/d/map/sg/sggcc/66.jpg','<p>	所属州郡：交州─日南郡</p><p>现在地址：同海市</p>','http://www.sdmz.net'],
+                [67,'武阳',[30.20449, 103.87299],'http://www.sdmz.net/d/map/sg/sggcc/67.jpg','<p>	所属州郡：益州─腱为郡</p><p>现在地址：四川省眉山市彭山县 东</p>','http://www.sdmz.net'],
+                [68,'涪陵',[29.30317, 108.18237],'http://www.sdmz.net/d/map/sg/sggcc/68.jpg','<p>	所属州郡：益州─涪陵郡</p><p>现在地址：重庆市彭水苗族土家族自治县</p>','http://www.sdmz.net'],
+                [69,'沾县',[37.61641, 113.703],'http://www.sdmz.net/d/map/sg/sggcc/69.jpg','<p>所属州郡：并州─乐平郡</p><p>现在地址：山西省晋中市昔阳县 西南</p>','http://www.sdmz.net'],
+                [70,'怀',[35.10418, 113.41873],'http://www.sdmz.net/d/map/sg/sggcc/70.jpg','<p>所属州郡：司隶─河内郡</p><p>现在地址：河南省焦作市武陟县 西南</p>','http://www.sdmz.net'],
+                [71,'阳武',[35.06373, 113.97354],'http://www.sdmz.net/d/map/sg/sggcc/71.jpg','<p>	所属州郡：司隶─河南尹</p><p>现在地址：河南省新乡县原阳县 东南</p>','http://www.sdmz.net'],
+                [72,'平阳',[36.10238, 111.52771],'http://www.sdmz.net/d/map/sg/sggcc/72.jpg','<p>	所属州郡：司隶─平阳郡</p><p>现在地址：山西省临汾市 西</p>','http://www.sdmz.net'],
+                [73,'安邑',[35.14911, 111.22696],'http://www.sdmz.net/d/map/sg/sggcc/73.jpg','<p>	所属州郡：司隶─河东郡</p><p>现在地址：山西省运城市夏县 北</p>','http://www.sdmz.net'],
+                [74,'汜水关  ',[34.84649, 113.22098],'http://www.sdmz.net/d/map/sg/sggcc/74.jpg','<p>所属州郡：</p><p>现在地址：河南省郑州市荥阳市汜水镇，『汜水关』即『虎牢关』</p>','http://www.sdmz.net'],
+                [75,'函谷关  ',[34.63773, 110.93307],'http://www.sdmz.net/d/map/sg/sggcc/75.jpg','<p>所属州郡：</p><p>现在地址：河南省三门峡市灵宝市 东北方</p>','http://www.sdmz.net'],
+                [76,'散关',[34.27424, 107.02091],'http://www.sdmz.net/d/map/sg/sggcc/76.jpg','<p>所属州郡：</p><p>现在地址：宝鸡市南郊秦岭北麓，即『大散关』</p>','http://www.sdmz.net'],
+                [77,'潼关',[34.66258, 110.31097],'http://www.sdmz.net/d/map/sg/sggcc/77.jpg','<p>	所属州郡：</p><p>现在地址：陕西省渭南市潼关县 北</p>','http://www.sdmz.net'],
+                [78,'武关',[33.70264, 110.32608],'http://www.sdmz.net/d/map/sg/sggcc/78.jpg','<p>	所属州郡：</p><p>现在地址：陕西省商洛市丹凤县</p>','http://www.sdmz.net'],
+                [79,'阳平关  ',[33.16285, 106.67175],'http://www.sdmz.net/d/map/sg/sggcc/79.jpg','<p>所属州郡：</p><p>现在地址：陕西省汉中市勉县莲水村</p>','http://www.sdmz.net'],
+                [80,'葭萌关  ',[32.33124, 105.97137],'http://www.sdmz.net/d/map/sg/sggcc/80.jpg','<p>所属州郡：</p><p>现在地址：四川省广元市元坝区</p>','http://www.sdmz.net'],
+                [81,'剑阁',[32.30571, 105.52368],'http://www.sdmz.net/d/map/sg/sggcc/81.jpg','<p>所属州郡：</p><p>现在地址：四川省广元市剑阁县，即『剑门关』</p>','http://www.sdmz.net'],
+                [82,'绵竹关  ',[31.35364, 104.22455],'http://www.sdmz.net/d/map/sg/sggcc/82.jpg','<p>所属州郡：</p><p>现在地址：四川省德阳市绵竹市</p>','http://www.sdmz.net'],
+                [83,'壶关',[36.22544, 113.1015],'http://www.sdmz.net/d/map/sg/sggcc/83.jpg','<p>所属州郡：并州─上党郡</p><p>现在地址：山西省长治市壶关县</p>','http://www.sdmz.net'],
+                [84,'临晋',[34.81042, 109.94156],'http://www.sdmz.net/d/map/sg/sggcc/84.jpg','<p>所属州郡：雍州─冯翊郡</p><p>现在地址：陕西省渭南市大荔县</p>','http://www.sdmz.net'],
+                [85,'禄福',[39.73887, 98.49655],'http://www.sdmz.net/d/map/sg/sggcc/85.jpg','<p>所属州郡：凉州─酒泉郡</p><p>现在地址：甘肃省酒泉市</p>','http://www.sdmz.net'],
+                [86,'敦煌',[40.18727, 94.70764],'http://www.sdmz.net/d/map/sg/sggcc/86.jpg','<p>所属州郡：凉州─敦煌郡</p><p>现在地址：甘肃省酒泉市敦煌市 西</p>','http://www.sdmz.net'],
+                [87,'海头',[40.58058, 91.10962],'http://www.sdmz.net/d/map/sg/sggcc/87.jpg','<p>所属州郡：西域长史府─州治</p><p>现在地址：巴音郭楞蒙古自治州若羌县罗布泊 西北</p>','http://www.sdmz.net'],
+                [88,'高昌',[42.94034, 89.18701],'http://www.sdmz.net/d/map/sg/sggcc/88.jpg','<p>所属州郡：西域长史府─戊己校尉</p><p>现在地址：新疆维吾尔自治区吐鲁番地区 东</p>','http://www.sdmz.net'],
+                [89,'奉高',[36.25978, 117.08542],'http://www.sdmz.net/d/map/sg/sggcc/89.jpg','<p>	所属州郡：兖州─泰山郡</p><p>现在地址：山东省泰安市 东</p>','http://www.sdmz.net'],
+                [90,'无盐',[35.94799, 116.47568],'http://www.sdmz.net/d/map/sg/sggcc/90.jpg','<p>	所属州郡：兖州─东平国</p><p>现在地址：山东省泰安市东平县 东</p>','http://www.sdmz.net'],
+                [91,'郡丘',[35.59479, 115.95795],'http://www.sdmz.net/d/map/sg/sggcc/91.jpg','<p>	所属州郡：兖州─州治</p><p>现在地址：山东省菏泽市郓城县 西北</p>','http://www.sdmz.net'],
+                [92,'延津',[35.15248, 114.20563],'http://www.sdmz.net/d/map/sg/sggcc/92.jpg','<p>	所属州郡：兖州─陈留国</p><p>现在地址：河南省新乡县延津县</p>','http://www.sdmz.net'],
+                [93,'定陶、卢县',[35.18279, 115.46631],'http://www.sdmz.net/d/map/sg/sggcc/93.jpg','<p>所属州郡：兖州─济阳郡、济北国</p><p>现在地址：山东省菏泽市定陶县 西北</p>','http://www.sdmz.net'],
+                [94,'任城',[35.42039, 116.59378],'http://www.sdmz.net/d/map/sg/sggcc/94.jpg','<p>	所属州郡：兖州─任城郡</p><p>现在地址：山东省济宁市 东南</p>','http://www.sdmz.net'],
+                [95,'东平陵',[36.68714, 117.53036],'http://www.sdmz.net/d/map/sg/sggcc/95.jpg','<p>所属州郡：青州─济南国</p><p>现在地址：山东省济南市章丘市 西北</p>','http://www.sdmz.net'],
+                [96,'高苑',[36.87303, 117.75833],'http://www.sdmz.net/d/map/sg/sggcc/96.jpg','<p>	所属州郡：青州─乐安郡</p><p>现在地址：山东省滨州市邹平县 东</p>','http://www.sdmz.net'],
+                [97,'临淄',[36.83787, 118.32413],'http://www.sdmz.net/d/map/sg/sggcc/97.jpg','<p>	所属州郡：青州─州治</p><p>现在地址：山东省淄博市临淄区</p>','http://www.sdmz.net'],
+                [98,'平寿',[36.72788, 119.20029],'http://www.sdmz.net/d/map/sg/sggcc/98.jpg','<p>	所属州郡：青州─北海国</p><p>现在地址：山东省潍坊市 南</p>','http://www.sdmz.net'],
+                [99,'黄县',[37.65175, 120.47676],'http://www.sdmz.net/d/map/sg/sggcc/99.jpg','<p>所属州郡：青州─东莱郡</p><p>现在地址：山东省烟台市龙口市 东</p>','http://www.sdmz.net'],
+                [100,'东武',[36.00912, 119.42688],'http://www.sdmz.net/d/map/sg/sggcc/100.jpg','<p>所属州郡：青州─城阳郡</p><p>现在地址：山东省潍坊市诸城市</p>','http://www.sdmz.net'],
+
+
+                [101,'开阳',[35.06148, 118.32275],'http://www.sdmz.net/d/map/sg/sggcc/101.jpg','<p>所属州郡：徐州─琅琊国</p><p>现在地址：山东省临沂市 北</p>','http://www.sdmz.net'],
+                [102,'郯县',[34.60608, 118.39966],'http://www.sdmz.net/d/map/sg/sggcc/102.jpg','<p>所属州郡：徐州─东海国</p><p>现在地址：山东省临沂市郯城县 北</p>','http://www.sdmz.net'],
+                [103,'阳翟',[34.13454, 113.5025],'http://www.sdmz.net/d/map/sg/sggcc/103.jpg','<p>所属州郡：豫州─颖川郡</p><p>现在地址：河南省许昌市禹州市</p>','http://www.sdmz.net'],
+                [104,'陈县',[33.73348, 114.86481],'http://www.sdmz.net/d/map/sg/sggcc/104.jpg','<p>所属州郡：豫州─陈郡</p><p>现在地址：河南省周口市淮阳县</p>','http://www.sdmz.net'],
+                [105,'安城',[32.98793, 114.35944],'http://www.sdmz.net/d/map/sg/sggcc/105.jpg','<p>所属州郡：豫州─汝南郡─州治</p><p>现在地址：河南省驻马店市汝南县 东南</p>','http://www.sdmz.net'],
+                [106,'谯县',[33.85217, 115.77942],'http://www.sdmz.net/d/map/sg/sggcc/106.jpg','<p>所属州郡：豫州─谯郡</p><p>现在地址：安徽省亳州市</p>','http://www.sdmz.net'],
+                [107,'安风',[32.34516, 116.29028],'http://www.sdmz.net/d/map/sg/sggcc/107.jpg','<p>所属州郡：豫州─安丰郡</p><p>现在地址：安徽省裕安区霍邱县 南</p>','http://www.sdmz.net'],
+                [108,'宛县',[32.98102, 112.54395],'http://www.sdmz.net/d/map/sg/sggcc/108.jpg','<p>所属州郡：豫州─南阳郡</p><p>现在地址：河南省南阳市</p>','http://www.sdmz.net'],
+                [109,'弋阳',[32.13376, 115.06531],'http://www.sdmz.net/d/map/sg/sggcc/109.jpg','<p>所属州郡：豫州─弋阳郡</p><p>现在地址：河南省信阳市潢川县 西</p>','http://www.sdmz.net'],
+                [110,'鲁县',[35.56798, 117.00439],'http://www.sdmz.net/d/map/sg/sggcc/110.jpg','<p>所属州郡：豫州─鲁郡</p><p>现在地址：山东省济宁市曲阜市</p>','http://www.sdmz.net'],
+                [111,'六安',[31.73518, 116.51001],'http://www.sdmz.net/d/map/sg/sggcc/111.jpg','<p>所属州郡：扬州─卢江郡</p><p>现在地址：安徽省裕安区 北</p>','http://www.sdmz.net'],
+                [112,'吴县',[31.29967, 120.62164],'http://www.sdmz.net/d/map/sg/sggcc/112.jpg','<p>所属州郡：扬州─吴郡</p><p>现在地址：江苏省苏州</p>','http://www.sdmz.net'],
+                [113,'山阴',[29.99895, 120.58182],'http://www.sdmz.net/d/map/sg/sggcc/113.jpg','<p>所属州郡：扬州─会稽郡</p><p>现在地址：浙江省绍兴市</p>','http://www.sdmz.net'],
+                [114,'始新',[29.61048, 119.05678],'http://www.sdmz.net/d/map/sg/sggcc/114.jpg','<p>所属州郡：扬州─新都郡</p><p>现在地址：浙江省杭州市淳安县 西北</p>','http://www.sdmz.net'],
+                [115,'章安',[28.65806, 121.43875],'http://www.sdmz.net/d/map/sg/sggcc/115.jpg','<p>所属州郡：扬州─临海郡</p><p>现在地址：浙江省台州市 北</p>','http://www.sdmz.net'],
+                [116,'南城',[27.56672, 116.62537],'http://www.sdmz.net/d/map/sg/sggcc/116.jpg','<p>所属州郡：扬州─临川郡</p><p>现在地址：江西省抚州市南城县 东南</p>','http://www.sdmz.net'],
+                [117,'高昌',[27.09336, 114.99115],'http://www.sdmz.net/d/map/sg/sggcc/117.jpg','<p>所属州郡：扬州─卢陵郡</p><p>现在地址：江西省吉安市吉安县 西南</p>','http://www.sdmz.net'],
+                [118,'鄱阳',[29.01294, 116.69403],'http://www.sdmz.net/d/map/sg/sggcc/118.jpg','<p>所属州郡：扬州─鄱阳郡</p><p>现在地址：江西省上饶县鄱阳县</p>','http://www.sdmz.net'],
+                [119,'皖县',[30.619, 116.56219],'http://www.sdmz.net/d/map/sg/sggcc/119.jpg','<p>	所属州郡：扬州─庐江郡</p><p>现在地址：安徽省安庆市潜山县，与 淮宁 相近，确实地点有待查证。</p>','http://www.sdmz.net'],
+                [120,'蕲春',[30.21636, 115.44983],'http://www.sdmz.net/d/map/sg/sggcc/120.jpg','<p>所属州郡：扬州─蕲春郡</p><p>现在地址：湖北省黄冈市蕲春县</p>','http://www.sdmz.net'],
+                [121,'夷道',[30.37288, 111.42059],'http://www.sdmz.net/d/map/sg/sggcc/121.jpg','<p>所属州郡：荆州─宜都郡</p><p>现在地址：湖北省宜昌市宜都市</p>','http://www.sdmz.net'],
+                [122,'临湘',[29.4683, 113.45581],'http://www.sdmz.net/d/map/sg/sggcc/122.jpg','<p>所属州郡：荆州─长沙郡</p><p>现在地址：湖南省岳阳县临湘市</p>','http://www.sdmz.net'],
+                [123,'临浣',[29.02976, 111.6925],'http://www.sdmz.net/d/map/sg/sggcc/123.jpg','<p>所属州郡：荆州─武陵郡</p><p>现在地址：湖南省常德市</p>','http://www.sdmz.net'],
+                [124,'郴县',[25.743, 112.73895],'http://www.sdmz.net/d/map/sg/sggcc/124.jpg','<p>	所属州郡：荆州─桂阳郡</p><p>现在地址：湖南省郴州市桂阳县</p>','http://www.sdmz.net'],
+                [125,'泉陵',[26.22445, 111.63208],'http://www.sdmz.net/d/map/sg/sggcc/125.jpg','<p>所属州郡：荆州─零陵郡</p><p>现在地址：湖南省永州市零陵区</p>','http://www.sdmz.net'],
+                [126,'湘东',[26.88288, 112.60712],'http://www.sdmz.net/d/map/sg/sggcc/126.jpg','<p>所属州郡：荆州─湘东郡</p><p>现在地址：湖南省衡阳市 东</p>','http://www.sdmz.net'],
+                [127,'临贺',[24.39463, 111.55792],'http://www.sdmz.net/d/map/sg/sggcc/127.jpg','<p>所属州郡：荆州─临贺郡</p><p>现在地址：广西壮族自治区贺州市 东南</p>','http://www.sdmz.net'],
+                [128,'湘南',[27.81479, 112.94495],'http://www.sdmz.net/d/map/sg/sggcc/128.jpg','<p>所属州郡：荆州─衡阳郡</p><p>现在地址：湖南省湘潭市 西南</p>','http://www.sdmz.net'],
+                [129,'巫县',[31.08469, 109.88113],'http://www.sdmz.net/d/map/sg/sggcc/129.jpg','<p>所属州郡：荆州─建平郡</p><p>现在地址：重庆市巫山县 北</p>','http://www.sdmz.net'],
+                [130,'恩平',[22.19249, 112.30774],'http://www.sdmz.net/d/map/sg/sggcc/130.jpg','<p>所属州郡：交州─高凉郡</p><p>现在地址：广东省江门市恩平市 北</p>','http://www.sdmz.net'],
+                [131,'广信',[23.45569, 111.29974],'http://www.sdmz.net/d/map/sg/sggcc/131.jpg','<p>所属州郡：交州─苍梧郡</p><p>现在地址：广西壮族自治区梧州市</p>','http://www.sdmz.net'],
+                [132,'布山',[23.38764, 110.08301],'http://www.sdmz.net/d/map/sg/sggcc/132.jpg','<p>所属州郡：交州─郁林郡</p><p>现在地址：广西壮族自治区贵港市桂平市 西南</p>','http://www.sdmz.net'],
+                [133,'合浦',[21.68295, 109.23157],'http://www.sdmz.net/d/map/sg/sggcc/133.jpg','<p>所属州郡：交州─合浦郡</p><p>现在地址：广西壮族自治区北海市合浦县 东北</p>','http://www.sdmz.net'],
+                [134,'徐闻',[20.33175, 110.16266],'http://www.sdmz.net/d/map/sg/sggcc/134.jpg','<p>所属州郡：交州─朱崖郡</p><p>现在地址：广东省湛江市徐闻县 南</p>','http://www.sdmz.net'],
+                [135,'胥浦',[19.81839, 105.80383],'http://www.sdmz.net/d/map/sg/sggcc/135.jpg','<p>所属州郡：交州─九真郡</p><p>现在地址：清化市 西北</p>','http://www.sdmz.net'],
+                [136,'下办',[33.74261, 105.76263],'http://www.sdmz.net/d/map/sg/sggcc/136.jpg','<p>所属州郡：益州─武都郡</p><p>现在地址：甘肃省陇南市成县 西北</p>','http://www.sdmz.net'],
+                [137,'阴平',[32.93954, 104.69147],'http://www.sdmz.net/d/map/sg/sggcc/137.jpg','<p>所属州郡：益州─阴平郡</p><p>现在地址：甘肃省陇南市文县 西北</p>','http://www.sdmz.net'],
+                [138,'谠口',[33.27601, 107.85141],'http://www.sdmz.net/d/map/sg/sggcc/138.jpg','<p>所属州郡：益州─褒中县</p><p>现在地址：陕西省汉中市洋县</p>','http://www.sdmz.net'],
+                [139,'褒中',[33.07543, 107.02606],'http://www.sdmz.net/d/map/sg/sggcc/139.jpg','<p>所属州郡：益州─褒中县</p><p>现在地址：陕西省汉中市汉台区褒城镇，其北即为『褒谷』</p>','http://www.sdmz.net'],
+                [140,'阆中',[31.55747, 105.98236],'http://www.sdmz.net/d/map/sg/sggcc/140.jpg','<p>所属州郡：益州─巴西郡</p><p>现在地址：四川省南充市阆中市</p>','http://www.sdmz.net'],
+                [141,'锦虎',[31.45678, 103.55713],'http://www.sdmz.net/d/map/sg/sggcc/141.jpg','<p>所属州郡：益州─汶山郡</p><p>现在地址：四川省阿坝县汶川县 西南</p>','http://www.sdmz.net'],
+                [142,'汉嘉',[29.96445, 102.99133],'http://www.sdmz.net/d/map/sg/sggcc/142.jpg','<p>所属州郡：益州─汉嘉郡</p><p>现在地址：四川省雅安市 东北</p>','http://www.sdmz.net'],
+                [143,'江州',[29.54957, 106.55365],'http://www.sdmz.net/d/map/sg/sggcc/143.jpg','<p>所属州郡：益州─巴郡</p><p>现在地址：重庆市 江北</p>','http://www.sdmz.net'],
+                [144,'江阳',[28.86151, 105.44678],'http://www.sdmz.net/d/map/sg/sggcc/144.jpg','<p>所属州郡：益州─江阳郡</p><p>现在地址：四川省泸州市</p>','http://www.sdmz.net'],
+                [145,'邛都',[27.87975, 102.26761],'http://www.sdmz.net/d/map/sg/sggcc/145.jpg','<p>所属州郡：益州─越隽郡</p><p>现在地址：四川省凉山彝族自治州西昌市 东，『卭』读音穹</p>','http://www.sdmz.net'],
+                [146,'朱提',[27.31565, 103.72742],'http://www.sdmz.net/d/map/sg/sggcc/146.jpg','<p>所属州郡：益州─朱提郡</p><p>现在地址：云南省昭通市</p>','http://www.sdmz.net'],
+                [147,'且兰',[26.26633, 107.52869],'http://www.sdmz.net/d/map/sg/sggcc/147.jpg','<p>所属州郡：益州─徉柯郡</p><p>现在地址：贵州省黔南布依族苗族自治州都匀市 北</p>','http://www.sdmz.net'],
+                [148,'味县',[25.48543, 103.79883],'http://www.sdmz.net/d/map/sg/sggcc/148.jpg','<p>所属州郡：益州─建宁郡</p><p>现在地址：云南省曲靖市</p>','http://www.sdmz.net'],
+                [149,'云南',[25.48791, 101.25],'http://www.sdmz.net/d/map/sg/sggcc/149.jpg','<p>所属州郡：益州─云南郡</p><p>现在地址：云南省楚雄市姚安县 北，此处为郡治所在</p>','http://www.sdmz.net'],
+                [150,'雲南',[24.88394, 102.83203],'http://www.sdmz.net/d/map/sg/sggcc/150.jpg','<p>所属州郡：益州─云南郡</p><p>现在地址：云南省昆明市</p>','http://www.sdmz.net'],
+                [151,'永昌',[25.10923, 99.16122],'http://www.sdmz.net/d/map/sg/sggcc/151.jpg','<p>所属州郡：益州─永昌郡</p><p>现在地址：云南省保山市 东北</p>','http://www.sdmz.net'],
+                [152,'宛温',[23.61936, 104.32892],'http://www.sdmz.net/d/map/sg/sggcc/152.jpg','<p>所属州郡：益州─兴古郡</p><p>现在地址：云南省文山市砚山县 北</p>','http://www.sdmz.net'],
+                [153,'信都',[37.55547, 115.56793],'http://www.sdmz.net/d/map/sg/sggcc/153.jpg','<p>所属州郡：冀州─安平郡─州治</p><p>现在地址：河北省衡水市冀州市</p>','http://www.sdmz.net'],
+                [154,'房子',[37.61858, 114.62311],'http://www.sdmz.net/d/map/sg/sggcc/154.jpg','<p>所属州郡：冀州─赵国</p><p>现在地址：河北省石家庄市高邑县 西</p>','http://www.sdmz.net'],
+                [155,'廮陶',[37.63381, 114.93073],'http://www.sdmz.net/d/map/sg/sggcc/155.jpg','<p>所属州郡：冀州─巨鹿郡</p><p>现在地址：河北省邢台市宁晋县 西南，廮( 音同&quot;影&quot; )</p>','http://www.sdmz.net'],
+                [156,'曲梁',[36.92355, 114.87305],'http://www.sdmz.net/d/map/sg/sggcc/156.jpg','<p>所属州郡：冀州─广平郡</p><p>现在地址：河北省邯郸县鸡泽县 东南</p>','http://www.sdmz.net'],
+                [157,'黎阳',[35.67069, 114.55994],'http://www.sdmz.net/d/map/sg/sggcc/157.jpg','<p>所属州郡：冀州─魏郡</p><p>现在地址：河南省鹤壁市浚县 东北</p>','http://www.sdmz.net'],
+                [158,'馆陶',[36.54054, 115.30701],'http://www.sdmz.net/d/map/sg/sggcc/158.jpg','<p>所属州郡：冀州─阳平郡</p><p>现在地址：河北省邯郸县馆陶县</p>','http://www.sdmz.net'],
+                [159,'清河',[36.84666, 115.71075],'http://www.sdmz.net/d/map/sg/sggcc/159.jpg','<p>所属州郡：冀州─清河郡</p><p>现在地址：山东省聊城市临清市 北</p>','http://www.sdmz.net'],
+                [160,'庆次',[37.49665, 117.5647],'http://www.sdmz.net/d/map/sg/sggcc/160.jpg','<p>所属州郡：冀州─乐陵国</p><p>现在地址：山东省滨州市惠民县 东北</p>','http://www.sdmz.net'],
+                [161,'乐成',[38.19934, 116.12549],'http://www.sdmz.net/d/map/sg/sggcc/161.jpg','<p>所属州郡：冀州─河间郡</p><p>现在地址：河北省沧州市献县 东南</p>','http://www.sdmz.net'],
+                [162,'卢奴',[38.51594, 115.00488],'http://www.sdmz.net/d/map/sg/sggcc/162.jpg','<p>所属州郡：冀州─中山郡</p><p>现在地址：河北省保定市定州市</p>','http://www.sdmz.net'],
+                [163,'耀县',[34.9017, 108.98438],'http://www.sdmz.net/d/map/sg/sggcc/163.jpg','<p>所属州郡：雍州─北地郡</p><p>现在地址：陕西省铜川市耀州区</p>','http://www.sdmz.net'],
+                [164,'杜陵',[34.155, 109.01459],'http://www.sdmz.net/d/map/sg/sggcc/164.jpg','<p>所属州郡：雍州─京兆尹</p><p>现在地址：陕西省西安市长安区杜陵乡</p>','http://www.sdmz.net'],
+                [165,'槐里',[34.3321, 108.70697],'http://www.sdmz.net/d/map/sg/sggcc/165.jpg','<p>所属州郡：雍州─扶风郡</p><p>现在地址：陕西省咸阳市 西南</p>','http://www.sdmz.net'],
+                [166,'骆口',[34.15841, 108.21259],'http://www.sdmz.net/d/map/sg/sggcc/166.jpg','<p>所属州郡：雍州─扶风郡</p><p>现在地址：陕西省西安市周至县 南</p>','http://www.sdmz.net'],
+                [167,'漆县',[35.04574, 108.08762],'http://www.sdmz.net/d/map/sg/sggcc/167.jpg','<p>所属州郡：雍州─新平郡</p><p>现在地址：陕西省咸阳市彬县</p>','http://www.sdmz.net'],
+                [168,'临泾',[35.33641, 107.36389],'http://www.sdmz.net/d/map/sg/sggcc/168.jpg','<p>所属州郡：雍州─安定郡</p><p>现在地址：甘肃省平凉市泾川县 北，即『安定』</p>','http://www.sdmz.net'],
+                [169,'郿县',[34.27651, 107.74155],'http://www.sdmz.net/d/map/sg/sggcc/169.jpg','<p>所属州郡：雍州─扶风郡</p><p>现在地址：陕西省宝鸡市眉县</p>','http://www.sdmz.net'],
+                [170,'临渭',[34.75741, 106.13892],'http://www.sdmz.net/d/map/sg/sggcc/170.jpg','<p>所属州郡：雍州─广魏郡</p><p>现在地址：甘肃省天水市清水县</p>','http://www.sdmz.net'],
+                [171,'冀县',[34.56538, 105.73242],'http://www.sdmz.net/d/map/sg/sggcc/171.jpg','<p>所属州郡：雍州─天水郡</p><p>现在地址：甘肃省天水市 西北</p>','http://www.sdmz.net'],
+                [172,'襄武',[35.01088, 104.63654],'http://www.sdmz.net/d/map/sg/sggcc/172.jpg','<p>所属州郡：雍州─陇西郡</p><p>现在地址：甘肃省定西市陇西县 南</p>','http://www.sdmz.net'],
+                [173,'榆中',[36.0491, 103.83179],'http://www.sdmz.net/d/map/sg/sggcc/173.jpg','<p>所属州郡：凉州─金城郡</p><p>现在地址：甘肃省兰州市 东</p>','http://www.sdmz.net'],
+                [174,'西都',[36.59789, 101.78284],'http://www.sdmz.net/d/map/sg/sggcc/174.jpg','<p>所属州郡：凉州─西平郡</p><p>现在地址：青海省西宁市</p>','http://www.sdmz.net'],
+                [175,'角乐得',[38.80547, 100.45898],'http://www.sdmz.net/d/map/sg/sggcc/175.jpg','<p>所属州郡：凉州─张掖郡</p><p>现在地址：甘肃省张掖市 西北</p>','http://www.sdmz.net']
+
+            ];
+
+
+
+
+            for ($j=0;$j<list.length;$j++)
+            {
+                // L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3><a  href='"+ list[$j][5] + "'  target=_blank><img style='width:150px;overflow:hidden;float:right;padding:5;'  src=" + list[$j][3] + " /></a>"+ list[$j][4]  + "<a  href='"+ list[$j][5] + "' target=_blank>" +"更多信息"+"</a></div>");
+                L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3>"+ list[$j][4]  + "<a  href='"+ list[$j][5] + "' target=_blank>" +"更多信息"+"</a></div>");
+
+            }
+            function getmap(picid) {
+                $j=picid-1;
+                // L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3><a  href='"+ list[$j][5] + "'  target=_blank><img style='width:150px;overflow:hidden;float:right;padding:5;'  src=" + list[$j][3] + " /></a>"+ list[$j][4]  + "<a  href='"+ list[$j][5] + "'  target=_blank>" +"更多信息"+"</a></div>").openPopup();
+                L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3>"+ list[$j][4]  + "<a  href='"+ list[$j][5] + "'  target=_blank>" +"更多信息"+"</a></div>").openPopup();
+
+            }
+
+
+            /**/
+            var popup = new L.popup();
+            function onMapClick(e) {
+                popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(map);
+            }
+            map.on('click', onMapClick);
+
+            if(top != self){
+                window.top.location.replace(self.location);
+            }
+
+
+
+        </script>
+        <!--内容结束--></div>
+</section>
+<footer class="footer"><div class="container">
+    <p>Copyright © 2020 <a href="#">四大名著</a></p> <span class="tongji"><p>普及四大名著知识，传播四大名著文化，引领四大名著研究。</p></div></footer>
+</body>
+
+<script>
+    var app = new Vue({
+        el: '#table',
+        data: {
+            originPicture: '../../common/statics/images/login_i.png',
+            userInfo: {
+                flag: true,
+                id: '',
+                nickName: '',
+                picture: '',
+            },
+            dialogFormVisible: false,
+            loading: 'false',
+            imgTemp: '',
+            type: '',
+            personList: [],
+            linksNode:[],
+            personName:'',
+            dialogFormVisibleShowPerson:false,
+            dialogFormVisibleShare:false,
+            formLabelWidth:'120px',
+            showPersonDtail:'',
+            flag:true,
+            input:'',
+            paramName:'',
+            paramLikeName:'',
+            linkUrl:'',
+            collectFlag:true,
+            _title:'',
+            saveUrl:'',
+
+        },
+        mounted() {
+        },
+        created() {
+            this.getParam();
+            this.getPageUser();
+            this.selectCollect();
+        },
+        methods: {
+            getPageUser() {
+                let _this = this;
+                var url = "/user/page/getPageUser";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    // data: ,
+                    async:false,
+                    success: function (res) {
+                        if (res.code === "200") {
+                            console.log(_this.userInfo)
+                            _this.userInfo.id = res.data.id;
+                            _this.userInfo.nickName = _this.strFilter(res.data.nickName);
+                            _this.userInfo.picture = res.data.picture;
+                            _this.userInfo.flag = false;
+                        }
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            getParam() {
+                this.saveUrl = location.pathname+location.search;
+                this.saveUrl= decodeURI(this.saveUrl);
+            },
+            strFilter(str) {
+                // 1字符串转化成数组
+                let phoneArr = [...str];
+                let userName = '';
+
+                if (phoneArr.length === 3) {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 0 && index < 2) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                    return userName;
+                }
+
+                if (phoneArr.length === 4) {
+                    phoneArr.map((res, index) => {
+                        if (index > 0 && index < 3) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                } else {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 1 && index < 5) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                }
+
+                return userName;
+            },
+
+
+            handleAvatarSuccessEdit(res, file) {
+                console.log(res);
+                if (res.code !== "200") {
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.loading = false;
+                this.imgTemp = res.data;
+                console.log(this.userInfo.picture)
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+            },
+            beforeAvatarUploadEdit(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 1;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 1MB!');
+                    this.files = null;
+                    return false;
+                }
+                this.loading = true;
+                return true;
+            },
+            update() {
+                let _this = this;
+                console.log(_this.userInfo)
+                let postData = {
+                    id: _this.userInfo.id,
+                    imgUrl: _this.imgTemp,
+
+                };
+                var url = "/user/page/updatePicture";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res)
+                        if (res.code !== "200") {
+                            _this.$message.error(res.data);
+                        }
+                        _this.$message({
+                            message: '修改成功！',
+                            type: 'success'
+                        });
+
+                        _this.dialogFormVisible = false;
+                        _this.userInfo.picture = _this.imgTemp;
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            handleCommand(command) {
+                if (command === 'loginOut') {
+                    let _this = this;
+
+                    let postData = {
+                        id: _this.userInfo.id,
+                    };
+                    var url = "/user/page/loginOut";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        success: function (res) {
+                            console.log(res)
+                            if (res.code === "200") {
+                                _this.$message({
+                                    message: '退出成功！',
+                                    type: 'success'
+                                });
+                                window.location.href = '/';
+                            }
+
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+
+                if (command === 'editUpload') {
+                    this.dialogFormVisible = true;
+                    var s= document.getElementsByClassName("v-modal");
+                    var index=0;
+                    var time= window.setInterval(function () {
+                        if (s.length!==0){
+                            document.body.removeChild(s[0]);
+                            clearInterval(time);
+                        }
+                        if (index===100000){
+                            clearInterval(time);
+                        }
+                        index++;
+                    },10)
+                }
+            },
+
+            collect(){
+                var title = "三国演义-三国古城池";
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                    title:title,
+                };
+                let _this =this;
+                var url = "/page/collect/add";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                            _this.$message({
+                                message: '添加收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('添加收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+            cancelCollect(){
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/cancel";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = true;
+                            _this.$message({
+                                message: '取消收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('取消收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+
+            },
+            selectCollect(){
+                this.saveUrl= decodeURI(this.saveUrl);
+                console.log(this.userInfo);
+                console.log(this.userInfo.id);
+                console.log(this.saveUrl);
+                if(this.userInfo.id===''){
+                    return;
+                }
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/select";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                        }else {
+                            _this.collectFlag = true;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+
+            handleCollect(command){
+                if (command==="add"){
+                    this.collect();
+                }
+                if (command==="cancel"){
+                    this.cancelCollect();
+                }
+                if (command==="share"){
+                    this.dialogFormVisibleShare=true;
+                }
+            },
+
+            shareToQzone(){
+                var _shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?';
+                console.log(this.linkUrl);
+                var url = 'www.liaoyunfeng.top'
+                _shareUrl += 'url=' + encodeURIComponent(url || document.location);   //参数url设置分享的内容链接|默认当前页location
+                _shareUrl += '&title=' + encodeURIComponent( this._title || document.title);
+                window.open(_shareUrl);
+            }
+
+        },
+
+    })
+
+</script>
+<!--轮播结束-->
+
+<script src="../../common/statics/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/swiper.animate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/main.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" src="//apps.bdimg.com/libs/jquery-lazyload/1.9.5/jquery.lazyload.min.js"></script>
+<script type="text/javascript" src="//apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//www.sdmz.net/e/public/ViewClick/ViewMore.php?id=19&amp;onclick=1&amp;down=0&amp;plnum=1&amp;pfen=0&amp;pfennum=0&amp;diggtop=0&amp;diggdown=0&amp;addclick=0"></script>
+
+
+</html>

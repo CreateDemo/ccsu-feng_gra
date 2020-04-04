@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.util.ListUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author admin
@@ -61,5 +62,24 @@ public class PageDeedsNodeController {
         }
     }
 
+    @GetMapping("/getPicture")
+    public Result<String> getPicture(String name) {
+      String node = iDeedsNodeService.getPicture(name);
+        if (node != null) {
+            return Result.build(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), node);
+        } else {
+            return Result.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
+        }
+    }
+
+    @GetMapping("/getDeedsNodeValueByType")
+    public Result<List<Map<String, String>>> getDeedsNodeValueByType(String type) {
+        List<Map<String, String>> node = iDeedsNodeService.getDeedsNodeValueByType(type);
+        if (node != null) {
+            return Result.build(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), node);
+        } else {
+            return Result.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
+        }
+    }
 
 }

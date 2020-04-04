@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>108将</title>
+    <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/navperson.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/css/person.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="../../common/js/person.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+
+    <link rel="dns-prefetch" href="//apps.bdimg.com">
+    <link rel="dns-prefetch" href="//hm.baidu.com">
+    <link rel="dns-prefetch" href="//changyan.sohu.com">
+    <link rel="dns-prefetch" href="//changyan.itc.cn">
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css" type="text/css" media="all">
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/fontawesome/4.4.0/css/font-awesome.min.css" type="text/css" media="all">
+    <link rel="stylesheet" href="//www.sdmz.net/skin/v2/css/common.css" type="text/css" media="all">
+    <script type="text/javascript" src="//apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script async="" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--[if lt IE 9]><script src="//apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script><![endif]-->
+    <script src="//www.sdmz.net/e/data/js/ajax.js"></script>
+    <script src="//www.sdmz.net/skin/v2/js/content.js"></script>
+
+    <link href="//www.sdmz.net/skin/v2/leaflet/leaflet.css" rel="stylesheet">
+    <script src="//www.sdmz.net/skin/v2/leaflet/leaflet.js"></script>
+    <script src="//www.sdmz.net/skin/v2/leaflet/leaflet.ChineseTmsProviders.js"></script>
+
+</head>
+
+<style>
+    #mappan {height:500px;}
+    /*
+    1px  solid
+    */
+
+    #result {float:left;height:610px;overflow-y:scroll;margin-top: 100px;}
+    #result a{font-size:12px;}
+
+    /*
+    .Popupinfo{text-indent:10px}
+    */
+
+    .Popupinfo p{text-indent:0}
+    .Popupinfo p,.Popupinfo h3{margin:0;padding:0;}
+    .Popupinfo a:link,.Popupinfo a:visited {color:#333;text-decoration:none}
+    .Popupinfo a:hover,.Popupinfo a:active {color:#333;text-decoration:underline}
+    .el-input.is-disabled .el-input__inner {
+        background-color: #F5F7FA;
+        border-color: #E4E7ED;
+        color: black;
+        cursor: not-allowed;
+    }
+    .el-textarea.is-disabled .el-textarea__inner {
+        background-color: #F5F7FA;
+        border-color: #E4E7ED;
+        color: black;
+        cursor: not-allowed;
+    }
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+    .Popupinfo{
+        color: black;
+    }
+    .leaflet-popup-content{
+        color: black;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+
+    .nav .login {
+        padding-top: 25px;
+        float: right;
+    }
+
+    .nav .login a {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;
+    }
+
+    .nav .login a:nth-child(1) {
+        padding-left: 30px;
+    }
+
+    .nav .login a:nth-child(2) {
+        background: #FD8A08;
+        border-radius: 4px;
+        color: #fff;
+        margin-right: 10px;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0;
+        text-align: center;
+    }
+
+    .head_img {
+        height: 50px;
+    }
+
+    .head_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        position: absolute;
+        left: 990px;
+        top: 16px;
+    }
+
+    .link {
+        fill: none;
+        stroke: #666;
+        stroke-width: 1.5px;
+    }
+
+    #licensing {
+        fill: green;
+    }
+
+    .link.licensing {
+        stroke: green;
+    }
+
+    .link.resolved {
+        stroke-dasharray: 0, 21;
+    }
+    circle {
+        fill: #ccc;
+        stroke: #333;
+        stroke-width: 1.5px;
+    }
+
+    text {
+        font: 10px Microsoft YaHei;
+        pointer-events: none;
+        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+
+    .linetext {
+        font-size: 12px;
+    }
+
+    .tooltip {
+        position: absolute;
+        width: 120px;
+        height: auto;
+        font-family: simsun;
+        font-size: 14px;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        background-color: white;
+        border-radius: 5px;
+    }
+    .el-icon-star-off:before {
+        font-size: 40px;
+        content: "\e717";
+        cursor: pointer;
+    }
+
+    .el-icon-star-on:before {
+        font-size: 40px;
+        content: "\e797";
+        cursor: pointer;
+    }
+    .el-icon-arrow-down::before {
+        position: absolute;
+        content: "\e6df";
+        top: 20px;
+    }
+    .abc{
+        position: relative;
+        margin: 0 auto 50px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-sizing: border-box;
+        width: 80%;
+    }
+</style>
+<body style="background-color: #ddd;">
+<div id="table">
+
+    <!--导航开始-->
+    <div class="nav" style="
+    background-color: #292929;
+">
+        <div id="menu_hover_bg" style="height: 0px; overflow: hidden;"></div>
+        <div class="w1200">
+
+            <div class="menu">
+                <ul>
+                    <li id="men_pro">
+                        <h2><a href="/">首页</a></h2>
+                        <div class="sub_menu">
+                            <div class="h30"></div>
+
+                            <div class="sub_menu_list" style="width: 315px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/fxw.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                分销王
+                                            </h3>
+                                            <p>
+                                                全终端分销平台，PC+手机+微信合一
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/sqws.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                社群微商
+                                            </h3>
+                                            <p>
+                                                热门移动分销软件，快速引分销流量
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="sub_menu_list" style="width: 295px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/erp.png" alt="">
+                                        </div>
+                                        <div class="info">
+
+                                            <p>
+                                                对接43+平台, 订单库存统一管理
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/hdt.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                货店通
+                                            </h3>
+                                            <p>
+                                                多平台一键铺货神器，省时便捷
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/crm.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                会员通
+                                            </h3>
+                                            <p>
+                                                专业电商CRM，更快了解客户
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/taoda.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                淘打
+                                            </h3>
+                                            <p>
+                                                订单批量打印，对接10+主流平台
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ysd.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                云云收订
+                                            </h3>
+                                            <p>
+                                                对接40+主流平台，订单实时获取
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li id="men_sol1">
+                        <h2><a href="#">西游记</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>西游记</h3>
+                                    <div class="list sol_list">
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_fuwu">
+                        <h2 class="men_sol"><a href="#">三国演义</a></h2>
+                        <div class="sub_menu">
+                            <div class="w1200">
+                                <h3>服务市场</h3></div>
+                            <div class="sub_menu_list">
+                                <div class="category">
+                                    <ul>
+                                        <li>热销产品推荐</li>
+                                        <li>店铺模板/二开/插件定制</li>
+                                        <li>营销推广流量</li>
+                                        <li>软件配套服务</li>
+                                    </ul>
+                                </div>
+                                <div class="content">
+                                    <div class="cont_list" style="display: block;">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon1.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon2.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon3.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon4.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon5.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon6.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon7.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon8.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon9.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon10.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon11.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon12.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon13.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon14.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon15.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon16.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon17.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon18.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon19.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><a href="#">水浒传</a></h2>
+                    </li>
+                    <li>
+                        <h2><a href="#">红楼梦</a></h2>
+                    </li>
+                    <li id="men_sol">
+                        <h2><a href="#">关于作者</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 1250px;">
+                                    <h3></h3>作者介绍</h3>
+                                    <div class="list sol_list">
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E5%90%B4%E6%89%BF%E6%81%A9/18713182#4">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    西游记
+                                                </h3>
+                                                <p>
+                                                    吴承恩（约1500—1583<br> 明代小说家，淮安府山阳县河下人（现江苏省淮安市淮安区）
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E7%BD%97%E8%B4%AF%E4%B8%AD/172206">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国演义
+                                                </h3>
+                                                <p>
+                                                    罗贯中（约1330年－约1400年）<br> 名本，字贯中，号湖海散人，元末明初小说家
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%96%BD%E8%80%90%E5%BA%B5">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    水浒传
+                                                </h3>
+                                                <p>
+                                                    施耐庵（约1296年—约1370年）<br> 江苏兴化人，原名彦端，字肇瑞，号子安，别号耐庵
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%9B%B9%E9%9B%AA%E8%8A%B9/14919">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    红楼梦
+                                                </h3>
+                                                <p>曹雪芹（约1715年5月—约1763年2月）<br> 名沾，字梦阮，号雪芹，又号芹溪、芹圃；出生于江宁（今南京）
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+
+
+                </ul>
+            </div>
+            <div id="123" v-if="userInfo.flag">
+                <div class="login">
+                    <a href="/page/login">
+                        <div class="head_img">
+                            <img :src="originPicture"/>
+                        </div>
+                        <span style="position: absolute;left: 1055px;top: 25px;"> 登陆 </span>
+                    </a>
+                    <a href="/page/register">免费注册</a>
+                </div>
+            </div>
+            <div v-else>
+                <div class="login">
+                    <div class="head_img">
+                        <img :src="userInfo.picture"/>
+                    </div>
+                    <el-dialog v-loading="loading"
+                               element-loading-text="拼命上传中"
+                               element-loading-spinner="el-icon-loading"
+                               element-loading-background="rgba(0, 0, 0, 0.8)"
+
+                               title="修改头像" :visible.sync="dialogFormVisible">
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/admin/file/ftpUploadImg"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccessEdit"
+                                :before-upload="beforeAvatarUploadEdit">
+                            <img v-if="imgTemp" :src="imgTemp" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="update()">确 定</el-button>
+                        </div>
+                    </el-dialog>
+
+                    <span style="position: absolute;left: 1055px;top: 25px;height: 30px;
+        cursor: pointer;width: 200px">  <el-dropdown trigger="click" @command="handleCommand">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+     {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
+    <el-dropdown-item>个人收藏</el-dropdown-item>
+      <el-dropdown-item command="loginOut">退出</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+
+
+                    <span style="position: absolute;left: 1195px;top: 25px;height: 30px;
+        cursor: pointer;width: 100px">  <el-dropdown trigger="click" @command="handleCollect">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+
+      <i  v-if="collectFlag"  title="添加收藏"  class="el-icon-star-off"></i>
+      <i  v-if="!collectFlag" title="取消收藏" class="el-icon-star-on"></i>
+          <i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item  v-if="collectFlag" command="add">添加收藏</el-dropdown-item>
+       <el-dropdown-item  v-if="!collectFlag" command="cancel">已收藏(取消收藏)</el-dropdown-item>
+      <el-dropdown-item command="share">分享</el-dropdown-item>
+
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!--导航结束-->
+    <!--轮播开始-->
+
+
+
+
+    <!--         修改-->
+    <el-dialog :title="personName" :visible.sync="dialogFormVisibleShowPerson">
+        <el-form :model="showPersonDtail">
+            <el-form-item label="相片" :label-width="formLabelWidth">
+                <template slot-scope="scope">
+                    <el-image
+                            style="width: 130px; height: 130px"
+                            :src="showPersonDtail.picture"
+                            :preview-src-list="showPersonDtail.pictures">
+                        >
+                    </el-image>
+                </template>
+            </el-form-item>
+
+            <el-form-item label="名字" :label-width="formLabelWidth">
+                <el-input   :disabled="flag" v-model="showPersonDtail.name" autocomplete="off" style="color: black"></el-input>
+            </el-form-item>
+
+
+            <el-form-item label="地点简介" :label-width="formLabelWidth">
+                <el-input style="color: black" :disabled="flag" v-model="showPersonDtail.content"  type="textarea" autocomplete="off"></el-input>
+            </el-form-item>
+
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShowPerson=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog class="abc" title="分享到" :visible.sync="dialogFormVisibleShare">
+        <div style="height: 50px;width: 50px; cursor: pointer"  @click="shareToQzone()">
+            <img style="width: 50px; height: 50px;" src="../../common/image/QQkong.png"/>
+            <span style="position: absolute;left: 20px;margin-top: 60px">QQ空间</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 150px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/pyquan.png"/>
+            <span style="position: absolute;left: 20px; width: 60px; margin-top: 60px">朋友圈</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 300px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/weibo.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">微博</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 450px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/qunzu.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">QQ好友</span>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShare=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+
+</div>
+<section class="container container-page">
+    <div class="pageside">
+        <div class="pagemenus">
+            <ul class="pagemenu" id="result">
+                <li onclick="getmap(1);"><a href="javacript:void(0);">1.天魁星  及时雨  宋江</a></li>
+                <li onclick="getmap(2);"><a href="javacript:void(0);">2.天罡星  玉麒麟  卢俊义</a></li>
+                <li onclick="getmap(3);"><a href="javacript:void(0);">3.天机星  智多星  吴用</a></li>
+                <li onclick="getmap(4);"><a href="javacript:void(0);">4.天闲星  入云龙  公孙胜</a></li>
+                <li onclick="getmap(5);"><a href="javacript:void(0);">5.天勇星  大刀  关胜</a></li>
+                <li onclick="getmap(6);"><a href="javacript:void(0);">6.天雄星  豹子头  林冲</a></li>
+                <li onclick="getmap(7);"><a href="javacript:void(0);">7.天猛星  霹雳火  秦明</a></li>
+                <li onclick="getmap(8);"><a href="javacript:void(0);">8.天威星  双鞭  呼延灼</a></li>
+                <li onclick="getmap(9);"><a href="javacript:void(0);">9.天英星  小李广  花荣</a></li>
+                <li onclick="getmap(10);"><a href="javacript:void(0);">10.天贵星  小旋风  柴进</a></li>
+                <li onclick="getmap(11);"><a href="javacript:void(0);">11.天富星  扑天雕  李应</a></li>
+                <li onclick="getmap(12);"><a href="javacript:void(0);">12.天满星  美髯公  朱仝</a></li>
+                <li onclick="getmap(13);"><a href="javacript:void(0);">13.天孤星  镇关西  鲁智深</a></li>
+                <li onclick="getmap(14);"><a href="javacript:void(0);">14.天伤星  行者  武松</a></li>
+                <li onclick="getmap(15);"><a href="javacript:void(0);">15.天立星  双枪将  董平</a></li>
+                <li onclick="getmap(16);"><a href="javacript:void(0);">16.天捷星  没羽箭  张清</a></li>
+                <li onclick="getmap(17);"><a href="javacript:void(0);">17.天暗星  青面兽  杨志</a></li>
+                <li onclick="getmap(18);"><a href="javacript:void(0);">18.天佑星  金枪手  徐宁</a></li>
+                <li onclick="getmap(19);"><a href="javacript:void(0);">19.天空星  急先锋  索超</a></li>
+                <li onclick="getmap(20);"><a href="javacript:void(0);">20.天速星  神行太保  戴宗</a></li>
+                <li onclick="getmap(21);"><a href="javacript:void(0);">21.天异星  赤发鬼  刘唐</a></li>
+                <li onclick="getmap(22);"><a href="javacript:void(0);">22.天杀星  黑旋风  李逵</a></li>
+                <li onclick="getmap(23);"><a href="javacript:void(0);">23.天微星  九纹龙  史进</a></li>
+                <li onclick="getmap(24);"><a href="javacript:void(0);">24.天究星  没遮拦  穆弘</a></li>
+                <li onclick="getmap(25);"><a href="javacript:void(0);">25.天退星  插翅虎  雷横</a></li>
+                <li onclick="getmap(26);"><a href="javacript:void(0);">26.天寿星  混江龙  李俊</a></li>
+                <li onclick="getmap(27);"><a href="javacript:void(0);">27.天剑星  立地太岁  阮小二</a></li>
+                <li onclick="getmap(28);"><a href="javacript:void(0);">28.天竟星  船火儿  张横</a></li>
+                <li onclick="getmap(29);"><a href="javacript:void(0);">29.天罪星  短命二郎  阮小五</a></li>
+                <li onclick="getmap(30);"><a href="javacript:void(0);">30.天损星  浪里白条  张顺</a></li>
+                <li onclick="getmap(31);"><a href="javacript:void(0);">31.天败星  活阎罗  阮小七</a></li>
+                <li onclick="getmap(32);"><a href="javacript:void(0);">32.天牢星  病关索  杨雄</a></li>
+                <li onclick="getmap(33);"><a href="javacript:void(0);">33.天慧星  拼命三郎  石秀</a></li>
+                <li onclick="getmap(34);"><a href="javacript:void(0);">34.天暴星  两头蛇  解珍</a></li>
+                <li onclick="getmap(35);"><a href="javacript:void(0);">35.天哭星  双尾蝎  解宝</a></li>
+                <li onclick="getmap(36);"><a href="javacript:void(0);">36.天巧星  浪子  燕青</a></li>
+
+                <li onclick="getmap(37);"><a href="javacript:void(0);">37.地魁星  神机军师  朱武</a></li>
+                <li onclick="getmap(38);"><a href="javacript:void(0);">38.地煞星  镇三山  黄信</a></li>
+                <li onclick="getmap(39);"><a href="javacript:void(0);">39.地勇星  病尉迟  孙立</a></li>
+                <li onclick="getmap(40);"><a href="javacript:void(0);">40.地杰星  丑郡马  宣赞</a></li>
+                <li onclick="getmap(41);"><a href="javacript:void(0);">41.地雄星  井木犴  郝思文</a></li>
+                <li onclick="getmap(42);"><a href="javacript:void(0);">42.地威星  百胜将  韩滔</a></li>
+                <li onclick="getmap(43);"><a href="javacript:void(0);">43.地英星  天目将  彭玘</a></li>
+                <li onclick="getmap(44);"><a href="javacript:void(0);">44.地奇星  圣水将  单廷珪</a></li>
+                <li onclick="getmap(45);"><a href="javacript:void(0);">45.地猛星  神火将  魏定国</a></li>
+                <li onclick="getmap(46);"><a href="javacript:void(0);">46.地文星  圣手书生  萧让</a></li>
+                <li onclick="getmap(47);"><a href="javacript:void(0);">47.地正星  铁面孔目  裴宣</a></li>
+                <li onclick="getmap(48);"><a href="javacript:void(0);">48.地阔星  摩云金翅  欧鹏</a></li>
+                <li onclick="getmap(49);"><a href="javacript:void(0);">49.地阖星  火眼狻猊  邓飞</a></li>
+                <li onclick="getmap(50);"><a href="javacript:void(0);">50.地强星  锦毛虎  燕顺</a></li>
+                <li onclick="getmap(51);"><a href="javacript:void(0);">51.地暗星  锦豹子  杨林</a></li>
+                <li onclick="getmap(52);"><a href="javacript:void(0);">52.地轴星  轰天雷  凌振</a></li>
+                <li onclick="getmap(53);"><a href="javacript:void(0);">53.地会星  神算子  蒋敬</a></li>
+                <li onclick="getmap(54);"><a href="javacript:void(0);">54.地佐星  小温侯  吕方</a></li>
+                <li onclick="getmap(55);"><a href="javacript:void(0);">55.地佑星  赛仁贵  郭盛</a></li>
+                <li onclick="getmap(56);"><a href="javacript:void(0);">56.地灵星  神医  安道全</a></li>
+                <li onclick="getmap(57);"><a href="javacript:void(0);">57.地兽星  紫髯伯  皇甫端</a></li>
+                <li onclick="getmap(58);"><a href="javacript:void(0);">58.地微星  矮脚虎  王英</a></li>
+                <li onclick="getmap(59);"><a href="javacript:void(0);">59.地慧星  一丈青  扈三娘</a></li>
+                <li onclick="getmap(60);"><a href="javacript:void(0);">60.地暴星  丧门神  鲍旭</a></li>
+                <li onclick="getmap(61);"><a href="javacript:void(0);">61.地然星  混世魔王  樊瑞</a></li>
+                <li onclick="getmap(62);"><a href="javacript:void(0);">62.地猖星  毛头星  孔明</a></li>
+                <li onclick="getmap(63);"><a href="javacript:void(0);">63.地狂星  独火星  孔亮</a></li>
+                <li onclick="getmap(64);"><a href="javacript:void(0);">64.地飞星  八臂哪吒  项充</a></li>
+                <li onclick="getmap(65);"><a href="javacript:void(0);">65.地走星  飞天大圣  李衮</a></li>
+                <li onclick="getmap(66);"><a href="javacript:void(0);">66.地巧星  玉臂匠  金大坚</a></li>
+                <li onclick="getmap(67);"><a href="javacript:void(0);">67.地明星  铁笛仙  马麟</a></li>
+                <li onclick="getmap(68);"><a href="javacript:void(0);">68.地进星  出洞蛟  童威</a></li>
+                <li onclick="getmap(69);"><a href="javacript:void(0);">69.地退星  翻江蜃  童猛</a></li>
+                <li onclick="getmap(70);"><a href="javacript:void(0);">70.地满星  玉幡竿  孟康</a></li>
+                <li onclick="getmap(71);"><a href="javacript:void(0);">71.地遂星  通臂猿  侯健</a></li>
+                <li onclick="getmap(72);"><a href="javacript:void(0);">72.地周星  跳涧虎  陈达</a></li>
+                <li onclick="getmap(73);"><a href="javacript:void(0);">73.地隐星  白花蛇  杨春</a></li>
+                <li onclick="getmap(74);"><a href="javacript:void(0);">74.地异星  白面郎君  郑天寿</a></li>
+                <li onclick="getmap(75);"><a href="javacript:void(0);">75.地理星  九尾龟  陶宗旺</a></li>
+                <li onclick="getmap(76);"><a href="javacript:void(0);">76.地俊星  铁扇子  宋清</a></li>
+                <li onclick="getmap(77);"><a href="javacript:void(0);">77.地乐星  铁叫子  乐和</a></li>
+                <li onclick="getmap(78);"><a href="javacript:void(0);">78.地捷星  花项虎  龚旺</a></li>
+                <li onclick="getmap(79);"><a href="javacript:void(0);">79.地速星  中箭虎  丁得孙</a></li>
+                <li onclick="getmap(80);"><a href="javacript:void(0);">80.地镇星  小遮拦  穆春</a></li>
+                <li onclick="getmap(81);"><a href="javacript:void(0);">81.地嵇星  操刀鬼  曹正</a></li>
+                <li onclick="getmap(82);"><a href="javacript:void(0);">82.地魔星  云里金刚  宋万</a></li>
+                <li onclick="getmap(83);"><a href="javacript:void(0);">83.地妖星  摸着天  杜迁</a></li>
+                <li onclick="getmap(84);"><a href="javacript:void(0);">84.地幽星  病大虫  薛永</a></li>
+                <li onclick="getmap(85);"><a href="javacript:void(0);">85.地伏星  金眼彪  施恩</a></li>
+                <li onclick="getmap(86);"><a href="javacript:void(0);">86.地僻星  打虎将  李忠</a></li>
+                <li onclick="getmap(87);"><a href="javacript:void(0);">87.地空星  小霸王  周通</a></li>
+                <li onclick="getmap(88);"><a href="javacript:void(0);">88.地孤星  金钱豹子  汤隆</a></li>
+                <li onclick="getmap(89);"><a href="javacript:void(0);">89.地全星  鬼脸儿  杜兴</a></li>
+                <li onclick="getmap(90);"><a href="javacript:void(0);">90.地短星  出林龙  邹渊</a></li>
+                <li onclick="getmap(91);"><a href="javacript:void(0);">91.地角星  独角龙  邹润</a></li>
+                <li onclick="getmap(92);"><a href="javacript:void(0);">92.地囚星  旱地忽律  朱贵</a></li>
+                <li onclick="getmap(93);"><a href="javacript:void(0);">93.地藏星  笑面虎  朱富</a></li>
+                <li onclick="getmap(94);"><a href="javacript:void(0);">94.地平星  铁臂膊  蔡福</a></li>
+                <li onclick="getmap(95);"><a href="javacript:void(0);">95.地损星  一枝花  蔡庆</a></li>
+                <li onclick="getmap(96);"><a href="javacript:void(0);">96.地奴星  催命判官  李立</a></li>
+                <li onclick="getmap(97);"><a href="javacript:void(0);">97.地察星  青眼虎  李云</a></li>
+                <li onclick="getmap(98);"><a href="javacript:void(0);">98.地恶星  没面目  焦挺</a></li>
+                <li onclick="getmap(99);"><a href="javacript:void(0);">99.地丑星  石将军  石勇</a></li>
+                <li onclick="getmap(100);"><a href="javacript:void(0);">100.地数星  小尉迟  孙新</a></li>
+                <li onclick="getmap(101);"><a href="javacript:void(0);">101.地阴星  母大虫  顾大嫂</a></li>
+                <li onclick="getmap(102);"><a href="javacript:void(0);">102.地刑星  菜园子  张青</a></li>
+                <li onclick="getmap(103);"><a href="javacript:void(0);">103.地壮星  母夜叉  孙二娘</a></li>
+                <li onclick="getmap(104);"><a href="javacript:void(0);">104.地劣星  活闪婆  王定六</a></li>
+                <li onclick="getmap(105);"><a href="javacript:void(0);">105.地健星  险道神  郁保四</a></li>
+                <li onclick="getmap(106);"><a href="javacript:void(0);">106.地耗星  白日鼠  白胜</a></li>
+                <li onclick="getmap(107);"><a href="javacript:void(0);">107.地贼星  鼓上蚤  时迁</a></li>
+                <li onclick="getmap(108);"><a href="javacript:void(0);">108.地狗星  金毛犬  段景住</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content" style="margin-top: 100px;">
+        <header class="article-header">
+            <h1 class="article-title"><a href="/map/sh108.html">水浒108将</a></h1>
+        </header>
+        <!--内容开始-->
+        <article class="article-content">
+            <div id="mappan" class="leaflet-container leaflet-retina leaflet-fade-anim" tabindex="0" style="position: relative;"><div class="leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-tile-pane"><div class="leaflet-layer" style="z-index: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="transform: translate3d(294.25px, 156.5px, 0px) scale(0.25);"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=26&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 391px; top: 98px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=26&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 391px; top: -158px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=25&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 135px; top: 98px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=27&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 647px; top: 98px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=26&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 391px; top: 354px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=25&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 135px; top: -158px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=27&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 647px; top: -158px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=25&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 135px; top: 354px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=27&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 647px; top: 354px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=24&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: -121px; top: 98px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=28&amp;y=12&amp;z=5" style="height: 256px; width: 256px; left: 903px; top: 98px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=24&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: -121px; top: -158px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=28&amp;y=11&amp;z=5" style="height: 256px; width: 256px; left: 903px; top: -158px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=24&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: -121px; top: 354px;"><img class="leaflet-tile leaflet-tile-loaded" src="http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&amp;size=1&amp;scale=1&amp;style=8&amp;x=28&amp;y=13&amp;z=5" style="height: 256px; width: 256px; left: 903px; top: 354px;"></div><div class="leaflet-tile-container" style=""></div></div><div class="leaflet-layer"><div class="leaflet-tile-container leaflet-zoom-animated" style=""></div><div class="leaflet-tile-container leaflet-zoom-animated" style=""><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/3/6/3.png" style="height: 256px; width: 256px; left: 264px; top: 181px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/3/6/2.png" style="height: 256px; width: 256px; left: 264px; top: -75px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/3/5/3.png" style="height: 256px; width: 256px; left: 8px; top: 181px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/3/7/3.png" style="height: 256px; width: 256px; left: 520px; top: 181px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/3/6/4.png" style="height: 256px; width: 256px; left: 264px; top: 437px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/3/5/2.png" style="height: 256px; width: 256px; left: 8px; top: -75px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/3/7/2.png" style="height: 256px; width: 256px; left: 520px; top: -75px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/3/5/4.png" style="height: 256px; width: 256px; left: 8px; top: 437px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/3/7/4.png" style="height: 256px; width: 256px; left: 520px; top: 437px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/3/4/3.png" style="height: 256px; width: 256px; left: -248px; top: 181px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/3/0/3.png" style="height: 256px; width: 256px; left: 776px; top: 181px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://a.tile.openstreetmap.org/3/4/2.png" style="height: 256px; width: 256px; left: -248px; top: -75px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/3/0/2.png" style="height: 256px; width: 256px; left: 776px; top: -75px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://c.tile.openstreetmap.org/3/4/4.png" style="height: 256px; width: 256px; left: -248px; top: 437px;"><img class="leaflet-tile leaflet-tile-loaded" src="https://b.tile.openstreetmap.org/3/0/4.png" style="height: 256px; width: 256px; left: 776px; top: 437px;"></div></div></div><div class="leaflet-objects-pane"><div class="leaflet-shadow-pane"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(411px, 219px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(408px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 220px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(420px, 189px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(404px, 223px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(403px, 226px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(369px, 250px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(403px, 237px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(426px, 214px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(417px, 201px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(406px, 200px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 220px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(359px, 220px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(409px, 206px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(396px, 216px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(403px, 217px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(392px, 204px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(402px, 226px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(407px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 260px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(395px, 216px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(427px, 219px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(378px, 226px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 259px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 220px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(419px, 245px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 221px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(413px, 258px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 221px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(413px, 256px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 221px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(392px, 226px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 244px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(447px, 208px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(446px, 208px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(407px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(422px, 241px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(424px, 279px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(379px, 321px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(411px, 238px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(372px, 228px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(406px, 255px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(390px, 244px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(401px, 218px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(403px, 214px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(395px, 272px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(355px, 253px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(414px, 191px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(418px, 240px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(409px, 214px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(406px, 219px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(427px, 212px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(417px, 226px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(423px, 228px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(415px, 221px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(403px, 202px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(411px, 266px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(382px, 223px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(438px, 249px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(407px, 243px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(430px, 211px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 259px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(402px, 225px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(415px, 221px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(392px, 226px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(422px, 241px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(375px, 228px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(375px, 212px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(429px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(421px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(418px, 240px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(418px, 240px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(407px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(408px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(419px, 245px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(428px, 218px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(406px, 199px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(407px, 215px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(380px, 321px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(448px, 208px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(394px, 225px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(394px, 225px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(428px, 243px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(426px, 212px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(412px, 220px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(413px, 211px, 0px);"><img src="http://www.sdmz.net/d/map/sh/shren-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(404px, 215px, 0px);"></div><div class="leaflet-overlay-pane"></div><div class="leaflet-marker-pane"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(411px, 219px, 0px); z-index: 219;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(408px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 220px, 0px); z-index: 220;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(420px, 189px, 0px); z-index: 189;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(404px, 223px, 0px); z-index: 223;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(403px, 226px, 0px); z-index: 226;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(369px, 250px, 0px); z-index: 250;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(403px, 237px, 0px); z-index: 237;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(426px, 214px, 0px); z-index: 214;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(417px, 201px, 0px); z-index: 201;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(406px, 200px, 0px); z-index: 200;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 220px, 0px); z-index: 220;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(359px, 220px, 0px); z-index: 220;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(409px, 206px, 0px); z-index: 206;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(396px, 216px, 0px); z-index: 216;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(403px, 217px, 0px); z-index: 217;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(392px, 204px, 0px); z-index: 204;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(402px, 226px, 0px); z-index: 226;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(407px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 260px, 0px); z-index: 260;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(395px, 216px, 0px); z-index: 216;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(427px, 219px, 0px); z-index: 219;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(378px, 226px, 0px); z-index: 226;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 259px, 0px); z-index: 259;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 220px, 0px); z-index: 220;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(419px, 245px, 0px); z-index: 245;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 221px, 0px); z-index: 221;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(413px, 258px, 0px); z-index: 258;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 221px, 0px); z-index: 221;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(413px, 256px, 0px); z-index: 256;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 221px, 0px); z-index: 221;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(392px, 226px, 0px); z-index: 226;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 244px, 0px); z-index: 244;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(447px, 208px, 0px); z-index: 208;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(446px, 208px, 0px); z-index: 208;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(407px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(422px, 241px, 0px); z-index: 241;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(424px, 279px, 0px); z-index: 279;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(379px, 321px, 0px); z-index: 321;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(411px, 238px, 0px); z-index: 238;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(372px, 228px, 0px); z-index: 228;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(406px, 255px, 0px); z-index: 255;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(390px, 244px, 0px); z-index: 244;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(401px, 218px, 0px); z-index: 218;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(403px, 214px, 0px); z-index: 214;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(395px, 272px, 0px); z-index: 272;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(355px, 253px, 0px); z-index: 253;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(414px, 191px, 0px); z-index: 191;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(418px, 240px, 0px); z-index: 240;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(409px, 214px, 0px); z-index: 214;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(406px, 219px, 0px); z-index: 219;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(427px, 212px, 0px); z-index: 212;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(417px, 226px, 0px); z-index: 226;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(423px, 228px, 0px); z-index: 228;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(415px, 221px, 0px); z-index: 221;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(403px, 202px, 0px); z-index: 202;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(411px, 266px, 0px); z-index: 266;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(382px, 223px, 0px); z-index: 223;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(438px, 249px, 0px); z-index: 249;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(407px, 243px, 0px); z-index: 243;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(430px, 211px, 0px); z-index: 211;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 259px, 0px); z-index: 259;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(402px, 225px, 0px); z-index: 225;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(415px, 221px, 0px); z-index: 221;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(392px, 226px, 0px); z-index: 226;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(422px, 241px, 0px); z-index: 241;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(375px, 228px, 0px); z-index: 228;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(375px, 212px, 0px); z-index: 212;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(429px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(421px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(418px, 240px, 0px); z-index: 240;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(418px, 240px, 0px); z-index: 240;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(407px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(408px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(419px, 245px, 0px); z-index: 245;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(428px, 218px, 0px); z-index: 218;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(406px, 199px, 0px); z-index: 199;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(407px, 215px, 0px); z-index: 215;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(380px, 321px, 0px); z-index: 321;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(448px, 208px, 0px); z-index: 208;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(394px, 225px, 0px); z-index: 225;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(394px, 225px, 0px); z-index: 225;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(428px, 243px, 0px); z-index: 243;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(426px, 212px, 0px); z-index: 212;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(412px, 220px, 0px); z-index: 220;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(413px, 211px, 0px); z-index: 211;"><img src="http://www.sdmz.net/d/map/sh/shren.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 15px; height: 42px; transform: translate3d(404px, 215px, 0px); z-index: 215;"></div><div class="leaflet-popup-pane"></div></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="放大">+</a><a class="leaflet-control-zoom-out" href="#" title="缩小">-</a></div></div><div class="leaflet-top leaflet-right"><div class="leaflet-control-layers leaflet-control" aria-haspopup="true"><a class="leaflet-control-layers-toggle" href="#" title="Layers"></a><form class="leaflet-control-layers-list"><div class="leaflet-control-layers-base"><label><input type="radio" class="leaflet-control-layers-selector" name="leaflet-base-layers" checked="checked"><span> 高德地图</span></label><label><input type="radio" class="leaflet-control-layers-selector" name="leaflet-base-layers"><span> 高德影像</span></label></div><div class="leaflet-control-layers-separator" style="display: none;"></div><div class="leaflet-control-layers-overlays"></div></form></div></div>
+        </article>
+
+
+        <!--内容结束--></div>
+</section>
+<script language="javascript">
+    /*** 智图地图内容
+     var normalm1 = L.tileLayer.chinaProvider('Geoq.Normal.Map', {maxZoom: 18,minZoom: 5});
+     var normalm2 = L.tileLayer.chinaProvider('Geoq.Normal.Color', {maxZoom: 18,minZoom: 5});
+     var normalm3 = L.tileLayer.chinaProvider('Geoq.Normal.PurplishBlue', {maxZoom: 18,minZoom: 5});
+     var normalm4 = L.tileLayer.chinaProvider('Geoq.Normal.Gray', {maxZoom: 18,minZoom: 5});
+     var normalm5 = L.tileLayer.chinaProvider('Geoq.Normal.Warm', {maxZoom: 18, minZoom: 5});
+     var normalm6 = L.tileLayer.chinaProvider('Geoq.Normal.Cold', {maxZoom: 18,minZoom: 5});
+     */
+
+    /*** 天地图内容
+     var normalm = L.tileLayer.chinaProvider('TianDiTu.Normal.Map', {maxZoom: 18,minZoom: 5}),
+     normala = L.tileLayer.chinaProvider('TianDiTu.Normal.Annotion', {maxZoom: 18,minZoom: 5}),
+     imgm = L.tileLayer.chinaProvider('TianDiTu.Satellite.Map', {maxZoom: 18,minZoom: 5}),
+     imga = L.tileLayer.chinaProvider('TianDiTu.Satellite.Annotion', {maxZoom: 18,minZoom: 5});
+     var normal = L.layerGroup([normalm, normala]),image = L.layerGroup([imgm, imga]);
+     */
+
+
+
+    /*** 谷歌
+     var normalMap = L.tileLayer.chinaProvider('Google.Normal.Map', {maxZoom: 18,minZoom: 5}),
+     satelliteMap = L.tileLayer.chinaProvider('Google.Satellite.Map', {maxZoom: 18,minZoom: 5});
+     */
+
+
+    /*** 高德地图*/
+    var Gaode = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {maxZoom: 18,minZoom: 5});
+    var Gaodimgem = L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {maxZoom: 18,minZoom: 5});
+    var Gaodimga = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion', {maxZoom: 18,minZoom: 5});
+    var Gaodimage = L.layerGroup([Gaodimgem, Gaodimga]);
+
+
+    /*
+      var baseLayers = {
+          "智图地图": normalm1,
+          "智图多彩": normalm2,
+          "智图午夜蓝": normalm3,
+          "智图灰色": normalm4,
+          "智图暖色": normalm5,
+          "智图冷色": normalm6,
+          "天地图": normal,
+          "天地图影像": image,
+          "谷歌地图": normalMap,
+          "谷歌影像": satelliteMap,
+          "高德地图": Gaode,
+          "高德影像": Gaodimage
+      }*/
+    var baseLayers = {
+        "高德地图": Gaode,
+        "高德影像": Gaodimage
+    }
+
+
+
+    var map = L.map("mappan", {
+        center: [35.74874, 116.05408],
+        zoom: 5,
+        layers: [Gaode],
+        zoomControl: false
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.sdmz.net/map/">sdmz.net</a>'}).addTo(map);
+
+    L.control.layers(baseLayers, null).addTo(map);
+    L.control.zoom({
+        zoomInTitle: '放大',
+        zoomOutTitle: '缩小'
+    }).addTo(map);
+
+
+    // 使用用户自己的图标
+
+    var greenIcon = L.icon({
+        iconUrl: 'http://www.sdmz.net/d/map/sh/shren.png',
+        shadowUrl: 'http://www.sdmz.net/d/map/sh/shren-shadow.png',
+        iconSize:     [15,42],    // size of the icon
+        shadowSize:   [41,41], // size of the shadow
+        iconAnchor:   [14,42], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12,41],  // the same for the shadow
+        popupAnchor:  [-5, -40] // point from which the popup should open relative to the iconAnchor
+    });
+
+
+
+    //  L.marker([31.52587, 106.83655], {icon: greenIcon}).addTo(map);
+
+
+    /*
+
+    var map = L.map('mappan').setView([31.72817,106.52344],5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.sdmz.net/map/">sdmz.net</a>'}).addTo(map);
+    //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+    */
+
+    /*默认：36.3461, 118.94348 */
+    var list = [
+
+
+        [1,'宋江',[35.78872, 115.9013],'http://www.sdmz.net/d/map/sh/108/1.jpg','<p><b>星号：</b>天魁星</p><p><b>绰号：</b>及时雨</p><p><b>梁山职务：</b>总兵都头领</p><p><b>武器：</b>朴刀、宝剑</p><p><b>上山前身份职业：</b>郓城押司</p><p><b>上山原因：</b>私放晁盖；与梁山来往，被阎婆惜发觉；被阎婆惜敲诈，杀了阎婆惜；杀人事发逃跑，后被捉拿归案，刺配江州；几经坎坷，对宦途失望，题诗发泄不满被判死罪，后被晁盖等义士救上梁山落草</p><p><b>结局：</b>得胜后被高俅毒死</p><p><b>主要事迹：</b>怒杀阎婆惜，浔阳楼题诗，平定方腊</p>','http://www.sdmz.net'],
+        [2,'卢俊义',[36.38149, 115.2301],'http://www.sdmz.net/d/map/sh/108/2.jpg','<p><b>星号：</b>天罡星</p><p><b>绰号：</b>玉麒麟</p><p><b>梁山职务：</b>总兵都副头领</p><p><b>武器：</b>麒麟宝马、麒麟黄金矛、麒麟黄金甲</p><p><b>上山前身份职业：</b>北京大员外</p><p><b>上山原因：</b>因名头太大，被宋江看中欲赚之上山；被吴用诬造反；家人出首告发；卢俊义判刺配沙门岛；李固和贾氏贿赂董超恭薛霸欲在路上结果了姓名，被燕青救出；后被判处死刑；被梁山好汉打破大名府救出，上山落草</p><p><b>结局：</b>得胜后被奸臣陷害，误饮毒酒后，失足落水而死</p><p><b>主要事迹：</b>活捉史文恭、大战玉田县、兵陷青石峪、赚城黑夜、大战昱岭关</p>','http://www.sdmz.net'],
+        [3,'吴用',[35.61666, 116.05026],'http://www.sdmz.net/d/map/sh/108/3.jpg','<p><b>星号：</b>天机星</p><p><b>绰号：</b>智多星</p><p><b>梁山职务：</b>机密军师</p><p><b>武器：</b>铜链</p><p><b>上山前身份职业：</b>私塾先生</p><p><b>上山原因：</b>劫生辰纲事发，上山落草</p><p><b>结局：</b>宋江死后与花荣上吊</p><p><b>主要事迹：</b>智取生辰纲、双用连环计、使时迁盗甲、赚金铃吊挂、智赚玉麒麟、智取大名府、布四斗五方旗、智取文安县、打盖郡智多星密筹、计鸩邬梨</p>','http://www.sdmz.net'],
+        [4,'公孙胜',[39.91816, 117.45483],'http://www.sdmz.net/d/map/sh/108/4.jpg','<p><b>星号：</b>天闲星</p><p><b>绰号：</b>入云龙</p><p><b>梁山职务：</b>机密副军师</p><p><b>武器：</b>松文古定剑</p><p><b>上山前身份职业：</b>一清道人</p><p><b>上山原因：</b>劫生辰纲事发，上山落草</p><p><b>结局：</b>征方腊前回罗真人处</p><p><b>主要事迹：</b>应七星聚义、 入云龙斗法破高廉、芒砀山降魔</p>','http://www.sdmz.net'],
+        [5,'关胜',[35.2187, 114.65881],'http://www.sdmz.net/d/map/sh/108/5.jpg','<p><b>星号：</b>天勇星</p><p><b>绰号：</b>大刀</p><p><b>梁山职务：</b>马军五虎将、左军大将</p><p><b>武器：</b>青龙偃月刀</p><p><b>上山前身份职业：</b>蒲东巡检</p><p><b>上山原因：</b>被呼延灼设计引入埋伏圈，被俘，上山落草</p><p><b>结局：</b>得胜后酒醉坠马得病而亡</p><p><b>主要事迹：</b>劝降二将，南征北战</p>','http://www.sdmz.net'],
+        [6,'林冲',[34.77659, 114.36527],'http://www.sdmz.net/d/map/sh/108/6.jpg','<p><b>星号：</b>天雄星</p><p><b>绰号：</b>豹子头</p><p><b>梁山职务：</b>马军五虎将、右军大将</p><p><b>武器：</b>丈八蛇矛</p><p><b>上山前身份职业：</b>八十万禁军教头</p><p><b>上山原因：</b>被高俅害得家破人亡，无家可归，经柴进介绍入伙，上山落草</p><p><b>结局：</b>得胜后风瘫与武松留在六和寺，一年后病死</p><p><b>主要事迹：</b>误入白虎堂，刺配沧州道、棒打洪教头、风雪山神庙、雪夜上梁山、梁山泊林冲落草、水寨大并火</p>','http://www.sdmz.net'],
+        [7,'秦明',[31.21985, 108.39386],'http://www.sdmz.net/d/map/sh/108/7.jpg','<p><b>星号：</b>天猛星</p><p><b>绰号：</b>霹雳火</p><p><b>梁山职务：</b>马军五虎将、先锋大将</p><p><b>武器：</b>狼牙烽火棒</p><p><b>上山前身份职业：</b>青州指挥司总管兵马统制</p><p><b>上山原因：</b>被花荣用计生俘，灌醉后宋江派小卒假扮秦明攻打青州，害秦明一家老小被慕容彦达知府杀害；秦明无处可去，上山落草</p><p><b>结局：</b>征清溪洞被杜微、方杰杀死</p><p><b>主要事迹：</b>夜走瓦砾场</p>','http://www.sdmz.net'],
+        [8,'呼延灼',[33.13755, 114.38416],'http://www.sdmz.net/d/map/sh/108/8.jpg','<p><b>星号：</b>天威星</p><p><b>绰号：</b>双鞭</p><p><b>梁山职务：</b>马军五虎将、合后大将</p><p><b>武器：</b>雌雄虎眼鞭，乌油七星链，踢雪乌骓马</p><p><b>上山前身份职业：</b>汝宁州都统制，呼延赞之后</p><p><b>上山原因：</b>攻打梁山泊被徐宁破了连环马，不得以去青州借兵，又被三山聚义戏弄；被宋江生俘，上山落草</p><p><b>结局：</b>得胜做官，后在河西阵亡，死于金兀术</p><p><b>主要事迹：</b>摆布连环马、夜月赚关胜、力擒番将</p>','http://www.sdmz.net'],
+        [9,'花荣',[36.51847, 118.47107],'http://www.sdmz.net/d/map/sh/108/9.jpg','<p><b>星号：</b>天英星</p><p><b>绰号：</b>小李广</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>点钢枪、弓箭</p><p><b>上山前身份职业：</b>清风寨知寨</p><p><b>上山原因：</b>原为青风寨武知寨(副职)，本与刘高文知寨(正职)有隙，为解救宋江，与刘高彻底决裂，又被黄信生俘；解送途上被清风山三个头岭燕顺、王英、郑天寿救出；生俘秦明，后秦明说服黄信，一同上山落草；</p><p><b>结局：</b>随吴用上吊而死</p><p><b>主要事迹：</b>大闹清风寨、梁山射雁</p>','http://www.sdmz.net'],
+        [10,'柴进',[38.28562, 116.87805],'http://www.sdmz.net/d/map/sh/108/10.jpg','<p><b>星号：</b>天贵星</p><p><b>绰号：</b>小旋风</p><p><b>梁山职务：</b>内库房大统领</p><p><b>武器：</b>长枪、弓箭</p><p><b>上山前身份职业：</b>柴大官人，周世宗之后</p><p><b>上山原因：</b>本已与梁山来往；后因殷天锡(高俅叔伯兄弟、高唐州知府高廉的老婆的兄弟)强占其叔父柴皇城花园而去高唐州看望，李逵同去，在殷天锡作威作福时，李逵怒从胆边生，杀了因殷天锡并逃回梁山。柴进被指指使&ldquo;李大&rdquo;打死殷天锡，被打入死囚牢，柴皇城家产被抄。后李逵从梁山搬回救兵救出柴进，柴进上山落草。</p><p><b>结局：</b>得胜做官，后辞官回乡，无疾而终</p><p><b>主要事迹：</b>招天下客、横海郡柴进留宾、柴进失陷高唐州、簪花入禁院、藏炮击贼</p>','http://www.sdmz.net'],
+        [11,'李应',[38.45789, 115.02686],'http://www.sdmz.net/d/map/sh/108/11.jpg','<p><b>星号：</b>天富星</p><p><b>绰号：</b>扑天雕</p><p><b>梁山职务：</b>粮食库大统领</p><p><b>武器：</b>浑铁点钢枪.五口飞刀</p><p><b>上山前身份职业：</b>李家庄庄主</p><p><b>上山原因：</b>三打祝家庄时被萧让、戴宗等假扮官人捉拿，押解途中又派林冲等&ldquo;解救&rdquo;上山，吴用又派人将李家庄烧成白地，家眷取上山。只得上山落草。</p><p><b>结局：</b>得胜后与杜兴同为富豪而善终</p><p><b>主要事迹：</b>掌管钱粮头领，搭救时迁</p>','http://www.sdmz.net'],
+        [12,'朱仝',[35.60874, 115.96481],'http://www.sdmz.net/d/map/sh/108/12.jpg','<p><b>星号：</b>天满星</p><p><b>绰号：</b>美髯公</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>九龙朝阳刀</p><p><b>上山前身份职业：</b>郓城马兵都头</p><p><b>上山原因：</b>原与梁山有来往；后因私放雷横，刺配沧州，每日陪小衙内玩耍，被吴用、雷横、李逵等用计杀了小衙内，不得已只能上山。</p><p><b>结局：</b>得胜做官，官至节度使</p><p><b>主要事迹：</b>智稳插翅虎、义释宋公明、 误失小衙内</p>','http://www.sdmz.net'],
+        [13,'鲁智深',[35.60372, 106.68823],'http://www.sdmz.net/d/map/sh/108/13.jpg','<p><b>星号：</b>天孤星</p><p><b>绰号：</b>镇关西</p><p><b>梁山职务：</b>步军头领</p><p><b>武器：</b>禅杖、戒刀</p><p><b>上山前身份职业：</b>提辖、和尚</p><p><b>上山原因：</b>因救林冲被高俅陷害，逃走江湖，被张青、孙二娘麻翻，介绍投奔二龙山不被接纳，后设计占了二龙山宝珠寺，上山落草。</p><p><b>结局：</b>得胜后在浙江坐化</p><p><b>主要事迹：</b>拳打镇关西、大闹五台山、大闹桃花村、火烧选出瓦罐寺、倒拔垂杨柳、大闹野猪林、单打二龙山、浙江坐化、解脱缘缠井</p>','http://www.sdmz.net'],
+        [14,'武松',[37.52715, 115.55969],'http://www.sdmz.net/d/map/sh/108/14.jpg','<p><b>星号：</b>天伤星</p><p><b>绰号：</b>行者</p><p><b>梁山职务：</b>步军头领</p><p><b>武器：</b>2把戒刀</p><p><b>上山前身份职业：</b>都头</p><p><b>上山原因：</b>因杀死潘金莲等被刺配孟州；替施恩作打手得罪了蒋门神等；蒋门神等又买通张都监诬陷武松作贼，刺配恩州；路上张都监、蒋门神等派人欲结果武松，武松大闹飞云浦，血溅鸳鸯楼，不得已，经孙二娘、张青介绍上二龙山落草。</p><p><b>结局：</b>征乌龙岭时被包天师砍断左臂，后六合寺终老</p><p><b>主要事迹：</b>景阳冈打虎、武松斗杀西门庆、武都头十字坡遇张清、威镇平安寨、醉打蒋门神、大闹飞云浦、夜走蜈蚣岭、醉打孔亮</p>','http://www.sdmz.net'],
+        [15,'董平',[36.20065, 113.11712],'http://www.sdmz.net/d/map/sh/108/15.jpg','<p><b>星号：</b>天立星</p><p><b>绰号：</b>双枪将</p><p><b>梁山职务：</b>马军五虎将、虎军大将</p><p><b>武器：</b>一双长枪</p><p><b>上山前身份职业：</b>东平府都监，风流双枪将</p><p><b>上山原因：</b>原为东平府兵马都监，因求婚一事与太守程万里不和。后被宋江用计生俘，赚开城门，杀了程万里夺了女儿，上山落草。</p><p><b>结局：</b>独松关被张韬砍作两半</p><p><b>主要事迹：</b>攻打独松关</p>','http://www.sdmz.net'],
+        [16,'张清',[36.08018, 114.3512],'http://www.sdmz.net/d/map/sh/108/16.jpg','<p><b>星号：</b>天捷星</p><p><b>绰号：</b>没羽箭</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>身披连环铠，掌中梨花枪，座下银鬃马，擅长飞蝗石绝技</p><p><b>上山前身份职业：</b>东昌府</p><p><b>上山原因：</b>原为东昌府猛将，打东昌府时被林冲赶下水，被三阮生俘，上山落草。</p><p><b>结局：</b>独松关被厉天闰刺腹死</p><p><b>主要事迹：</b>飞石打英雄、缘配琼英、琼英双建功</p>','http://www.sdmz.net'],
+        [17,'杨志',[37.87458, 112.55236],'http://www.sdmz.net/d/map/sh/108/17.jpg','<p><b>星号：</b>天暗星</p><p><b>绰号：</b>青面兽</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>刀、枪</p><p><b>上山前身份职业：</b>殿司制使官，管军提辖使，杨家将之后</p><p><b>上山原因：</b>三代将门之后；因丢失花石纲逃去他处避难，后被赦；欲行贿高俅俗官复原职，高俅(及下人)收了钱不办事，杨志穷困潦倒，卖刀进杀了牛二；被刺配大名府，因与索超比武被梁中书赏识，做了管军提辖使；后因替梁中书押送生辰纲被劫，与鲁智深一同用计夺了二龙山宝珠寺落草。</p><p><b>结局：</b>病死于杭州</p><p><b>主要事迹：</b>汴京城卖刀、青面兽北京斗武、杨志押送金银担、青面兽双夺宝珠寺</p>','http://www.sdmz.net'],
+        [18,'徐宁',[34.75515, 114.34021],'http://www.sdmz.net/d/map/sh/108/18.jpg','<p><b>星号：</b>天佑星</p><p><b>绰号：</b>金枪手</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>金枪、钩镰枪</p><p><b>上山前身份职业：</b>金枪班教师，汤隆表哥</p><p><b>上山原因：</b>本是随驾金枪班教师，因懂得使勾镰枪，被时迁盗了家传宝甲及表弟汤隆等用计赚上山落草</p><p><b>结局：</b>征杭州时中药箭，之后身死</p><p><b>主要事迹：</b>教使钩镰枪</p>','http://www.sdmz.net'],
+        [19,'索超',[36.28244, 115.1526],'http://www.sdmz.net/d/map/sh/108/19.jpg','<p><b>星号：</b>天空星</p><p><b>绰号：</b>急先锋</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>战神斧、雪豹马</p><p><b>上山前身份职业：</b>大名府留守司正牌军，管军提辖使</p><p><b>上山原因：</b>宋江攻打大名府时被俘，上山落草。</p><p><b>结局：</b>征杭州被石宝的流星锤砸死</p><p><b>主要事迹：</b>急先锋东郭争功</p>','http://www.sdmz.net'],
+        [20,'戴宗',[29.7298, 116.04584],'http://www.sdmz.net/d/map/sh/108/20.jpg','<p><b>星号：</b>天速星</p><p><b>绰号：</b>神行太保</p><p><b>梁山职务：</b>总探声息头领</p><p><b>武器：</b>铜铃</p><p><b>上山前身份职业：</b>江州两院押牢节级</p><p><b>上山原因：</b>本已梁山来往；欲用假信救宋江被黄文炳识破，同罪判处死刑。后被梁山好汉救出，上山落草。</p><p><b>结局：</b>得胜做官，后辞官到泰安州岳庙陪堂出家，大笑而终</p><p><b>主要事迹：</b>戴宗传假言、智取公孙胜、定计赚萧让</p>','http://www.sdmz.net'],
+        [21,'刘唐',[36.17336, 113.11523],'http://www.sdmz.net/d/map/sh/108/21.jpg','<p><b>星号：</b>天异星</p><p><b>绰号：</b>赤发鬼</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>朴刀</p><p><b>上山前身份职业：</b>江湖人士</p><p><b>上山原因：</b>劫生辰纲事发，上山落草</p><p><b>结局：</b>征杭州被闸门压死</p><p><b>主要事迹：</b>赤发鬼醉卧灵官殿、郓城县月夜走刘唐、 放火烧战船</p>','http://www.sdmz.net'],
+        [22,'李逵',[35.81336, 118.62488],'http://www.sdmz.net/d/map/sh/108/22.jpg','<p><b>星号：</b>天杀星</p><p><b>绰号：</b>黑旋风</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>两柄大斧</p><p><b>上山前身份职业：</b>铁牛，江州小牢子</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>宋江临死时怕李逵造反一同饮毒酒而死</p><p><b>主要事迹：</b>斗浪里白跳、沂岭杀四虎、打死殷天锡、斧劈罗真人、探穴救柴进、元夜闹东京、黑旋风乔捉鬼、寿张乔坐衙、扯诏谤徽宗、梦闹天池、莽陷众人。</p>','http://www.sdmz.net'],
+        [23,'史进',[34.67839, 110.07751],'http://www.sdmz.net/d/map/sh/108/23.jpg','<p><b>星号：</b>天微星</p><p><b>绰号：</b>九纹龙</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>棒</p><p><b>上山前身份职业：</b>史家庄少庄主</p><p><b>上山原因：</b>本与少华山来往；事发后杀死俩都头并李吉，不愿意落草而去投奔王进；寻王进不得结识鲁智深。因鲁智深拳打镇关西而离开渭州；后至延州、北京，盘缠用尽，与鲁智深一起火烧瓦罐寺后分手，投少华山落草。</p><p><b>结局：</b>征昱岭关被庞万春、雷炯、计稷射死</p><p><b>主要事迹：</b>九纹龙大闹史家村、夜走华阴县、剪迳赤松林、东平府误陷九纹龙。</p>','http://www.sdmz.net'],
+        [24,'穆弘',[29.78822, 115.99915],'http://www.sdmz.net/d/map/sh/108/24.jpg','<p><b>星号：</b>天究星</p><p><b>绰号：</b>没遮拦</p><p><b>梁山职务：</b>马军八骠骑、兼先锋使</p><p><b>武器：</b>朴刀、长枪</p><p><b>上山前身份职业：</b>揭阳镇一霸，穆弘之弟</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>杭州病死</p><p><b>主要事迹：</b>没遮拦追赶及时雨</p>','http://www.sdmz.net'],
+        [25,'雷横',[35.60372, 115.93872],'http://www.sdmz.net/d/map/sh/108/25.jpg','<p><b>星号：</b>天退星</p><p><b>绰号：</b>插翅虎</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>朴刀</p><p><b>上山前身份职业：</b>郓城马兵都头</p><p><b>上山原因：</b>本与梁山来往；因打了白玉乔，被知县姘头告了一状，戴枷示众；后因白秀英与其母亲厮打，用枷打死白秀英；被朱仝私放，上山落草。</p><p><b>结局：</b>征德清县被司行方砍死</p><p><b>主要事迹：</b>插翅虎枷打白秀英</p>','http://www.sdmz.net'],
+        [26,'李俊',[31.95216, 117.32849],'http://www.sdmz.net/d/map/sh/108/26.jpg','<p><b>星号：</b>天寿星</p><p><b>绰号：</b>混江龙</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>七宝蟠龙槊</p><p><b>上山前身份职业：</b>扬子江梢公</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>得胜后出海</p><p><b>主要事迹：</b>水灌太原城、太湖小结义</p>','http://www.sdmz.net'],
+        [27,'阮小二',[35.4092, 116.04481],'http://www.sdmz.net/d/map/sh/108/27.jpg','<p><b>星号：</b>天剑星</p><p><b>绰号：</b>立地太岁</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>玄铁霸王刀</p><p><b>上山前身份职业：</b>阮氏三兄弟老大，石碣村</p><p><b>上山原因：</b>劫生辰纲事发，上山落草</p><p><b>结局：</b>征乌龙岭水路被方腊军包围，自刎而死</p><p><b>主要事迹：</b>智取生辰纲、三打祝家庄</p>','http://www.sdmz.net'],
+        [28,'张横',[30.00965, 116.27106],'http://www.sdmz.net/d/map/sh/108/28.jpg','<p><b>星号：</b>天竟星</p><p><b>绰号：</b>船火儿</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>火焰鱼王刀</p><p><b>上山前身份职业：</b>梢公，李俊义弟</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>杭州病死</p><p><b>主要事迹：</b>船火儿夜闹浔阳江</p>','http://www.sdmz.net'],
+        [29,'阮小五',[35.40808, 116.06369],'http://www.sdmz.net/d/map/sh/108/29.jpg','<p><b>星号：</b>天罪星</p><p><b>绰号：</b>短命二郎</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>鳄鱼爪</p><p><b>上山前身份职业：</b>阮氏三兄弟老二，石碣村</p><p><b>上山原因：</b>劫生辰纲事发，上山落草</p><p><b>结局：</b>征清溪洞被娄丞相杀死</p><p><b>主要事迹：</b>智取生辰纲</p>','http://www.sdmz.net'],
+        [30,'张顺',[30.25432, 116.12],'http://www.sdmz.net/d/map/sh/108/30.jpg','<p><b>星号：</b>天损星</p><p><b>绰号：</b>浪里白条</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>叉</p><p><b>上山前身份职业：</b>渔家，张横之弟</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>征杭州死在涌金门被刀箭攒死</p><p><b>主要事迹：</b>活捉黄文炳、夜闹金沙渡、水上报冤、凿漏海鳅船、夜伏金山寺、涌金门张顺归神、魂捉方天定</p>','http://www.sdmz.net'],
+        [31,'阮小七',[35.40696, 116.08154],'http://www.sdmz.net/d/map/sh/108/31.jpg','<p><b>星号：</b>天败星</p><p><b>绰号：</b>活阎罗</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>龙王刺</p><p><b>上山前身份职业：</b>阮氏三兄弟老三，石碣村</p><p><b>上山原因：</b>劫生辰纲事发，上山落草</p><p><b>结局：</b>得胜后被污蔑回乡打鱼</p><p><b>主要事迹：</b>活阎罗倒船偷御酒</p>','http://www.sdmz.net'],
+        [32,'杨雄',[34.71452, 112.42859],'http://www.sdmz.net/d/map/sh/108/32.jpg','<p><b>星号：</b>天牢星</p><p><b>绰号：</b>病关索</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>刽子手</p><p><b>上山原因：</b>杀了与和尚裴如海私通的老婆潘巧云，投奔梁山落草</p><p><b>结局：</b>得胜后背疮病死</p><p><b>主要事迹：</b>病关索长街遇石秀、醉骂潘巧云、大闹翠屏山</p>','http://www.sdmz.net'],
+        [33,'石秀',[32.09188, 118.94348],'http://www.sdmz.net/d/map/sh/108/33.jpg','<p><b>星号：</b>天慧星</p><p><b>绰号：</b>拼命三郎</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>枪.棒</p><p><b>上山前身份职业：</b>杨雄义弟</p><p><b>上山原因：</b>杀了与杨雄老婆潘巧云勾搭的头陀和报晓和尚，与杨雄一起杀了潘巧云，远处可去，投奔梁山落草。</p><p><b>结局：</b>征昱岭关被庞万春、雷炯、计稷乱箭射死</p><p><b>主要事迹：</b>智杀裴如海、火烧祝家店、劫法场石秀跳楼</p>','http://www.sdmz.net'],
+        [34,'解珍',[37.24126, 122.18513],'http://www.sdmz.net/d/map/sh/108/34.jpg','<p><b>星号：</b>天暴星</p><p><b>绰号：</b>两头蛇</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>解家流双蛇铛、金蛇弓</p><p><b>上山前身份职业：</b>猎户，孙立表弟</p><p><b>上山原因：</b>因官府下令限期捉拿大虫，打死老虎后被毛太公诬陷入狱，毛太公并与勾结王正、包吉等勾结欲结果其姓名，得乐和等救出，杀了毛太公一家老小，投奔梁山落草。</p><p><b>结局：</b>征乌龙岭爬悬崖摔死</p><p><b>主要事迹：</b>守梁山山前南路第一关</p>','http://www.sdmz.net'],
+        [35,'解宝',[37.28717, 122.04712],'http://www.sdmz.net/d/map/sh/108/35.jpg','<p><b>星号：</b>天哭星</p><p><b>绰号：</b>双尾蝎</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>解家流蝎尾叉、银蝎针</p><p><b>上山前身份职业：</b>猎户，解珍之弟</p><p><b>上山原因：</b>因官府下令限期捉拿大虫，打死老虎后被毛太公诬陷入狱，毛太公并与勾结王正、包吉等勾结欲结果其姓名，得乐和等救出，杀了毛太公一家老小，投奔梁山落草。</p><p><b>结局：</b>征乌龙岭爬悬崖被石头砸，弓箭射死</p><p><b>主要事迹：</b>征讨方腊</p>','http://www.sdmz.net'],
+        [36,'燕青',[36.28856, 115.14221],'http://www.sdmz.net/d/map/sh/108/36.jpg','<p><b>星号：</b>天巧星</p><p><b>绰号：</b>浪子</p><p><b>梁山职务：</b>歩军头领</p><p><b>武器：</b>张川弩 .杆棒</p><p><b>上山前身份职业：</b>小乙，卢俊义家童，擅长相扑</p><p><b>上山原因：</b>被李固赶出家门；因救卢俊义杀了董超薛霸，救不了卢俊义，上梁山搬救兵；卢俊义被救出后一同上山落草。</p><p><b>结局：</b>得胜辞去</p><p><b>主要事迹：</b>放冷箭救主、智扑擎天柱、月夜遇道君、双林镇燕青遇敌</p>','http://www.sdmz.net'],
+
+
+        [37,'朱武',[32.57922, 117.78717],'http://www.sdmz.net/d/map/sh/108/37.jpg','<p><b>星号：</b>地魁星</p><p><b>绰号：</b>神机军师</p><p><b>梁山职务：</b>军师参赞</p><p><b>武器：</b>两口双刀</p><p><b>上山前身份职业：</b>少华山大寨主</p><p><b>上山原因：</b>&ldquo;累被官司逼迫，不得已上山落草&rdquo;</p><p><b>结局：</b>得胜后投公孙胜出家</p><p><b>主要事迹：</b>龚端被打军师犯、打破六花阵</p>','http://www.sdmz.net'],
+        [38,'黄信',[26.6671, 118.1662],'http://www.sdmz.net/d/map/sh/108/38.jpg','<p><b>星号：</b>地煞星</p><p><b>绰号：</b>镇三山</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>丧门剑</p><p><b>上山前身份职业：</b>青州府都监，秦明徒弟</p><p><b>上山原因：</b>为救宋江，打破清风寨，一同上山落草</p><p><b>结局：</b>得胜，朝廷封为都统领</p><p><b>主要事迹：</b>大闹青州道</p>','http://www.sdmz.net'],
+        [39,'孙立',[19.96431, 110.24643],'http://www.sdmz.net/d/map/sh/108/39.jpg','<p><b>星号：</b>地勇星</p><p><b>绰号：</b>病尉迟</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>竹节钢鞭 金枪</p><p><b>上山前身份职业：</b>登州兵马提辖</p><p><b>上山原因：</b>为劫狱救解氏兄弟，上山落草</p><p><b>结局：</b>征方腊后带全家回登州，继续做官</p><p><b>主要事迹：</b>孙立孙新大劫牢</p>','http://www.sdmz.net'],
+        [40,'宣赞',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/40.jpg','<p><b>星号：</b>地杰星</p><p><b>绰号：</b>丑郡马</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>枪</p><p><b>上山前身份职业：</b>关胜讨梁山军后合</p><p><b>上山原因：</b>被秦明生擒，上山落草</p><p><b>结局：</b>征苏州与郭世广鏖战两两身死</p><p><b>主要事迹：</b>征讨方腊</p>','http://www.sdmz.net'],
+        [41,'郝思文',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/41.jpg','<p><b>星号：</b>地雄星</p><p><b>绰号：</b>井木犴</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>关胜义兄，讨梁山军先锋</p><p><b>上山原因：</b>被扈三娘生擒，上山落草</p><p><b>结局：</b>征杭州被拖进城凌迟处死枭首</p><p><b>主要事迹：</b>关胜被宋江用呼延灼假降 的计谋捉拿，郝思文与宣赞前去相救也被捉</p>','http://www.sdmz.net'],
+        [42,'韩滔',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/42.jpg','<p><b>星号：</b>地威星</p><p><b>绰号：</b>百胜将</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>枣木槊</p><p><b>上山前身份职业：</b>陈州团练使，呼延灼讨梁山军正先锋</p><p><b>上山原因：</b>被刘唐、杜迁生擒，上山落草</p><p><b>结局：</b>征常州被张近仁搠死</p><p><b>主要事迹：</b>与呼延灼、杨志及彭玘一起镇守梁山泊正北旱寨</p>','http://www.sdmz.net'],
+        [43,'彭玘',[32.93032, 115.83435],'http://www.sdmz.net/d/map/sh/108/43.jpg','<p><b>星号：</b>地英星</p><p><b>绰号：</b>天目将</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>三尖两刃四窍八环刀</p><p><b>上山前身份职业：</b>颍州团练使，呼延灼讨梁山军副先锋</p><p><b>上山原因：</b>被扈三娘生擒，上山落草</p><p><b>结局：</b>征常州被张近仁杀死</p><p><b>主要事迹：</b>与呼延灼、杨志、韩滔一起驻守梁山正北旱寨</p>','http://www.sdmz.net'],
+        [44,'单廷珪',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/44.jpg','<p><b>星号：</b>地奇星</p><p><b>绰号：</b>圣水将</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>决水浸兵</p><p><b>上山前身份职业：</b>凌州团练使</p><p><b>上山原因：</b>被关胜生擒，上山落草</p><p><b>结局：</b>征歙州陷坑剁做肉泥</p><p><b>主要事迹：</b>善用淡水浸兵之法，与林冲、董平、魏定国把守梁山正西旱寨</p>','http://www.sdmz.net'],
+        [45,'魏定国',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/45.jpg','<p><b>星号：</b>地猛星</p><p><b>绰号：</b>神火将</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>火器</p><p><b>上山前身份职业：</b>凌州团练使</p><p><b>上山原因：</b>被围，向关胜投降，上山落草</p><p><b>结局：</b>征歙州陷坑阵亡</p><p><b>主要事迹：</b>与单廷珪一起奉旨攻打梁山。尚未出征，就被关胜围在凌州城里</p>','http://www.sdmz.net'],
+        [46,'萧让',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/46.jpg','<p><b>星号：</b>地文星</p><p><b>绰号：</b>圣手书生</p><p><b>梁山职务：</b>文书作成</p><p><b>武器：</b>毛笔</p><p><b>上山前身份职业：</b>擅长书法</p><p><b>上山原因：</b>梁山欲救宋江，被戴宗赚上梁山落草</p><p><b>结局：</b>征方腊前留于京</p><p><b>主要事迹：</b>著名书法家，吴用献计让戴宗请圣手书生萧让和善刻金石印记的，玉臂匠金大坚到梁山伪造蔡京的文书</p>','http://www.sdmz.net'],
+        [47,'裴宣',[34.47034, 108.93494],'http://www.sdmz.net/d/map/sh/108/47.jpg','<p><b>星号：</b>地正星</p><p><b>绰号：</b>铁面孔目</p><p><b>梁山职务：</b>论功赏罚</p><p><b>武器：</b>生死阴阳剑</p><p><b>上山前身份职业：</b>原任六案孔目，后饮马川寨主</p><p><b>上山原因：</b>&ldquo;为因朝廷除将一员贪滥知府到来，把他寻事刺配沙门岛&rdquo;，路过饮马川被救上山落草</p><p><b>结局：</b>征方腊后，朝廷封其为武奕郎都统领，后回饮马川求闲</p><p><b>主要事迹：</b>得罪了知府，被发配沙门岛</p>','http://www.sdmz.net'],
+        [48,'欧鹏',[30.48182, 114.89502],'http://www.sdmz.net/d/map/sh/108/48.jpg','<p><b>星号：</b>地阔星</p><p><b>绰号：</b>摩云金翅</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>金顶冲天槊</p><p><b>上山前身份职业：</b>黄门山</p><p><b>上山原因：</b>&ldquo;因恶了本官，逃走在江湖上&rdquo;，原著中未交待为何落草，出场即为黄门山头领。</p><p><b>结局：</b>征歙州被庞万春、雷炯、计稷乱箭射死</p><p><b>主要事迹：</b>听说宋江在江州被判死刑，便于黄门山的蒋敬、马麟和陶宗旺四人前往相救，但路上已看见梁山好汉已救出了宋江，四人便归了梁山。</p>','http://www.sdmz.net'],
+        [49,'邓飞',[32.04533, 112.13745],'http://www.sdmz.net/d/map/sh/108/49.jpg','<p><b>星号：</b>地阖星</p><p><b>绰号：</b>火眼狻猊</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>饮马川寨主</p><p><b>上山原因：</b>原著并未交待，开场即为饮马川头领</p><p><b>结局：</b>征杭州时救索超，被石宝用刀砍作两半</p><p><b>主要事迹：</b>因运送花石纲受提调官欺压，一怒之下杀了提调官 在饮马川落草为寇。</p>','http://www.sdmz.net'],
+        [50,'燕顺',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/50.jpg','<p><b>星号：</b>地强星</p><p><b>绰号：</b>锦毛虎</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>朴刀</p><p><b>上山前身份职业：</b>清风山大寨主</p><p><b>上山原因：</b>&ldquo;原是贩羊马客人出身。因为消折了本钱，流落在绿林丛内打劫&rdquo;，占据清风山落草</p><p><b>结局：</b>征乌龙岭被石宝的流星锤打死</p><p><b>主要事迹：</b>锦毛虎义释宋江</p>','http://www.sdmz.net'],
+        [51,'杨林',[35.88015, 114.05457],'http://www.sdmz.net/d/map/sh/108/51.jpg','<p><b>星号：</b>地暗星</p><p><b>绰号：</b>锦豹子</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>枪</p><p><b>上山前身份职业：</b>江湖人</p><p><b>上山原因：</b>&ldquo;多在绿林丛中安身&rdquo;，遇公孙胜，举荐上梁山，后遇戴宗，一起寻找公孙胜，后上梁山落草。</p><p><b>结局：</b>得胜后做官</p><p><b>主要事迹：</b>锦豹子小径逢戴宗</p>','http://www.sdmz.net'],
+        [52,'凌振',[36.39918, 114.37317],'http://www.sdmz.net/d/map/sh/108/52.jpg','<p><b>星号：</b>地轴星</p><p><b>绰号：</b>轰天雷</p><p><b>梁山职务：</b>大小号炮制造</p><p><b>武器：</b>火炮.刀</p><p><b>上山前身份职业：</b>大宋第一炮手</p><p><b>上山原因：</b>攻打梁山时落水被生俘，上山落草</p><p><b>结局：</b>得胜后做官</p><p><b>主要事迹：</b>梁山军打大名府时，凌振在飞虎峪放&ldquo;风火等炮</p>','http://www.sdmz.net'],
+        [53,'蒋敬',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/53.jpg','<p><b>星号：</b>地会星</p><p><b>绰号：</b>神算子</p><p><b>梁山职务：</b>金钱粮食会计</p><p><b>武器：</b>算盘</p><p><b>上山前身份职业：</b>黄门山，精通书算</p><p><b>上山原因：</b>原著未交待，只说&ldquo;原是落科举子出身。科举不弟，弃文就武。颇有谋略，精通书算，积万累千，纤毫不差。亦能刺枪使棒，布阵排兵&rdquo;</p><p><b>结局：</b>得胜后做官</p><p><b>主要事迹：</b>落第举子，布阵排兵</p>','http://www.sdmz.net'],
+        [54,'吕方',[27.86822, 112.94495],'http://www.sdmz.net/d/map/sh/108/54.jpg','<p><b>星号：</b>地佐星</p><p><b>绰号：</b>小温侯</p><p><b>梁山职务：</b>中军守护、骑兵骁将</p><p><b>武器：</b>方天画戟</p><p><b>上山前身份职业：</b>对影山寨主，方天画戟</p><p><b>上山原因：</b>&ldquo;因贩生药到山东，消折了本钱，不能够还乡&rdquo;，占对影山落草，后一同上梁山</p><p><b>结局：</b>征乌龙岭与白钦交战双双滚落到悬崖身死</p><p><b>主要事迹：</b>影山一带落草为寇，后和郭盛一起投奔梁山。担任守护中军马骁将。</p>','http://www.sdmz.net'],
+        [55,'郭盛',[30.81853, 106.07849],'http://www.sdmz.net/d/map/sh/108/55.jpg','<p><b>星号：</b>地佑星</p><p><b>绰号：</b>赛仁贵</p><p><b>梁山职务：</b>中军守护、骑兵骁将</p><p><b>武器：</b>方天画戟</p><p><b>上山前身份职业：</b>从事水银买卖</p><p><b>上山原因：</b>&ldquo;因贩水银货卖，黄河里遭风翻了船，回乡不得&rdquo;，欲占对影山落草，后一同上梁山</p><p><b>结局：</b>征乌龙岭被石头砸死</p><p><b>主要事迹：</b>与吕方大战三十回合不分上下，两支方天画戟搅在一起，被小李广花荣一箭射开，方心服口服，归顺梁山</p>','http://www.sdmz.net'],
+        [56,'安道全',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/56.jpg','<p><b>星号：</b>地灵星</p><p><b>绰号：</b>神医</p><p><b>梁山职务：</b>梁山疗伤营总巡查</p><p><b>武器：</b>医术</p><p><b>上山前身份职业：</b>建康府太医</p><p><b>上山原因：</b>被张顺杀死姘头并题&ldquo;杀人者安道全也&rdquo;，上山落草</p><p><b>结局：</b>征方腊中诏回京师</p><p><b>主要事迹：</b>治好了宋江的病</p>','http://www.sdmz.net'],
+        [57,'皇甫端',[39.66491, 116.35071],'http://www.sdmz.net/d/map/sh/108/57.jpg','<p><b>星号：</b>地兽星</p><p><b>绰号：</b>紫髯伯</p><p><b>梁山职务：</b>马房总管</p><p><b>武器：</b>兽医</p><p><b>上山前身份职业：</b>兽医</p><p><b>上山原因：</b>被张清举荐，上山落草</p><p><b>结局：</b>征方腊前留在京师</p><p><b>主要事迹：</b>张清归顺梁山，便向宋江推荐了皇甫端</p>','http://www.sdmz.net'],
+        [58,'王英',[32.71336, 117.01538],'http://www.sdmz.net/d/map/sh/108/58.jpg','<p><b>星号：</b>地微星</p><p><b>绰号：</b>矮脚虎</p><p><b>梁山职务：</b>内营护卫队头领</p><p><b>武器：</b>单枪</p><p><b>上山前身份职业：</b>清风山二寨主</p><p><b>上山原因：</b>&ldquo;原是车家出身。为因半路里见财起意，就势劫了客人。事发到官，越狱走了&rdquo; ，上清风山落草</p><p><b>结局：</b>征睦州时被郑彪戳死</p><p><b>主要事迹：</b>宋江打下祝家庄后，为两人做媒，将被林冲活捉的扈三娘嫁与王英。</p>','http://www.sdmz.net'],
+        [59,'扈三娘',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/59.jpg','<p><b>星号：</b>地慧星</p><p><b>绰号：</b>一丈青</p><p><b>梁山职务：</b>内营娘子军统领</p><p><b>武器：</b>日月双刀</p><p><b>上山前身份职业：</b>独龙冈扈家庄扈太公女儿</p><p><b>上山原因：</b>二打祝家时被林冲生擒上山，被宋太公认为义女，上山落草</p><p><b>结局：</b>征睦州时被郑彪的铜砖扔死</p><p><b>主要事迹：</b>一丈青单捉王矮虎</p>','http://www.sdmz.net'],
+        [60,'鲍旭',[36.51626, 115.44708],'http://www.sdmz.net/d/map/sh/108/60.jpg','<p><b>星号：</b>地暴星</p><p><b>绰号：</b>丧门神</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>大刀</p><p><b>上山前身份职业：</b>枯树山强人</p><p><b>上山原因：</b>原著未交待，原为枯树山头领，被李逵说服上梁山落草</p><p><b>结局：</b>征杭州时，莽撞入城，被石宝用刀砍作两半</p><p><b>主要事迹：</b>枯树山的强盗，李逵和没面目焦挺路途中相识后，联合鲍旭攻打凌州</p>','http://www.sdmz.net'],
+        [61,'樊瑞',[35.7844, 115.04333],'http://www.sdmz.net/d/map/sh/108/61.jpg','<p><b>星号：</b>地然星</p><p><b>绰号：</b>混世魔王</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>冥界魔王剑、暗黑流星锤</p><p><b>上山前身份职业：</b>芒砀山首领</p><p><b>上山原因：</b>原著未交待，原为芒砀头领，后被项充、李衮说服，一同上梁山</p><p><b>结局：</b>得胜后投公孙胜出家</p><p><b>主要事迹：</b>在芒砀山占山为王。后来宋江带领大军前去征讨，被公孙胜用石头阵降伏。</p>','http://www.sdmz.net'],
+        [62,'孔明',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/62.jpg','<p><b>星号：</b>地猖星</p><p><b>绰号：</b>毛头星</p><p><b>梁山职务：</b>中军守护、歩兵骁将</p><p><b>武器：</b>狼牙风雷锤</p><p><b>上山前身份职业：</b>孔家庄，白虎山，宋江徒弟，孔明之弟</p><p><b>上山原因：</b>因与本村财主财主争执而杀其全家，逃上白虎山落草</p><p><b>结局：</b>杭州病死</p><p><b>主要事迹：</b>因和本乡财主争财，杀了财主及家眷落草白虎山，打青州后归梁山。</p>','http://www.sdmz.net'],
+        [63,'孔亮',[36.76969, 118.67432],'http://www.sdmz.net/d/map/sh/108/63.jpg','<p><b>星号：</b>地狂星</p><p><b>绰号：</b>独火星</p><p><b>梁山职务：</b>中军守护、歩兵骁将</p><p><b>武器：</b>犬牙钩镰刀</p><p><b>上山前身份职业：</b>孔家庄，白虎山，宋江徒弟</p><p><b>上山原因：</b>因与本村财主财主争执而杀其全家，逃上白虎山落草</p><p><b>结局：</b>征昆山淹死</p><p><b>主要事迹：</b>杀本村财主后占据白虎山落草。兄弟俩攻打青州救叔叔，孔明被呼延灼所捉。</p>','http://www.sdmz.net'],
+        [64,'项充',[34.76869, 116.93298],'http://www.sdmz.net/d/map/sh/108/64.jpg','<p><b>星号：</b>地飞星</p><p><b>绰号：</b>八臂哪吒</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>百兽金刚盾、火尖枪、红绫飞刀</p><p><b>上山前身份职业：</b>芒砀山副将</p><p><b>上山原因：</b>原著未交待，原为芒砀头领，后被俘虏，一同上梁山</p><p><b>结局：</b>征睦州时追赶郑彪摔倒在溪中被乱箭射死</p><p><b>主要事迹：</b>早先是樊瑞、李衮的同伙，在徐州城外芒砀山占山为王。梁山人马攻打芒砀山时，他被公孙胜用道术活捉，后来就归降了梁山泊。</p>','http://www.sdmz.net'],
+        [65,'李衮',[34.38878, 117.98767],'http://www.sdmz.net/d/map/sh/108/65.jpg','<p><b>星号：</b>地走星</p><p><b>绰号：</b>飞天大圣</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>南蛮盾、秋风剑、落叶标枪</p><p><b>上山前身份职业：</b>芒砀山副将</p><p><b>上山原因：</b>原著未交待，原为芒砀头领，后被俘虏，一同上梁山</p><p><b>结局：</b>征睦州时追赶郑彪被绳索套住乱刀砍死</p><p><b>主要事迹：</b>梁山人马攻打芒砀山时，他被公孙胜用石阵法诱入陷坑被捉，后来就归降了梁山泊。</p>','http://www.sdmz.net'],
+        [66,'金大坚',[35.41703, 116.61369],'http://www.sdmz.net/d/map/sh/108/66.jpg','<p><b>星号：</b>地巧星</p><p><b>绰号：</b>玉臂匠</p><p><b>梁山职务：</b>兵符印信制作</p><p><b>武器：</b>雕刻</p><p><b>上山前身份职业：</b>擅长制印</p><p><b>上山原因：</b>梁山欲救宋江，被戴宗赚上梁山落草</p><p><b>结局：</b>征方腊前留在京师</p><p><b>主要事迹：</b>宋江因&ldquo;反诗&rdquo;被捉，关在江州时，吴用献计，使戴宗把圣手书生萧让和金大坚请上梁山，以制作假信救出宋江。金大坚负责刻蔡京的假印。</p>','http://www.sdmz.net'],
+        [67,'马麟',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/67.jpg','<p><b>星号：</b>地明星</p><p><b>绰号：</b>铁笛仙</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>消魂无双笛、天王大滚刀</p><p><b>上山前身份职业：</b>黄门山</p><p><b>上山原因：</b>原著未交待，只是&ldquo;原是小番子闲汉出身，吹得双铁笛，使得好大滚刀，百十人近他不得&rdquo;</p><p><b>结局：</b>征乌龙岭被石宝剁作两段</p><p><b>主要事迹：</b>梁山人马劫法场，在江州城救了宋江、戴宗</p>','http://www.sdmz.net'],
+        [68,'童威',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/68.jpg','<p><b>星号：</b>地进星</p><p><b>绰号：</b>出洞蛟</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>叉</p><p><b>上山前身份职业：</b>私盐贩子</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>得胜随李俊出海</p><p><b>主要事迹：</b>跟随宋江征讨返回时，因不愿做官，同李俊一起，从太仓港乘船到暹罗国(现泰国)去了</p>','http://www.sdmz.net'],
+        [69,'童猛',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/69.jpg','<p><b>星号：</b>地退星</p><p><b>绰号：</b>翻江蜃</p><p><b>梁山职务：</b>水军头领</p><p><b>武器：</b>叉</p><p><b>上山前身份职业：</b>私盐贩子，童威之弟</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>得胜随李俊出海</p><p><b>主要事迹：</b>童猛是童威的弟弟，早先兄弟两一起在浔阳江上贩卖私盐</p>','http://www.sdmz.net'],
+        [70,'孟康',[38.17775, 114.505],'http://www.sdmz.net/d/map/sh/108/70.jpg','<p><b>星号：</b>地满星</p><p><b>绰号：</b>玉幡竿</p><p><b>梁山职务：</b>造船监督</p><p><b>武器：</b>玉幡竿 造船</p><p><b>上山前身份职业：</b>饮马川寨主</p><p><b>上山原因：</b>&ldquo;原因押送花石纲，要造大舡，嗔怪这提调官催并责罚他，把本官一时杀了，弃家逃走在江湖上&rdquo;</p><p><b>结局：</b>征乌龙岭水路被火炮打中脑袋而死</p><p><b>主要事迹：</b>因押运花石纲，孟康奉命造大船，被负责的提调官欺侮，一气之下杀了提调官，弃家逃走江湖</p>','http://www.sdmz.net'],
+        [71,'侯健',[28.80136, 115.86182],'http://www.sdmz.net/d/map/sh/108/71.jpg','<p><b>星号：</b>地遂星</p><p><b>绰号：</b>通臂猿</p><p><b>梁山职务：</b>旗帜、衣服制作</p><p><b>武器：</b>天蚕丝、无影针</p><p><b>上山前身份职业：</b>薛永徒弟，擅长裁缝</p><p><b>上山原因：</b>提供捉拿黄文炳线索，为宋江出气，后一同上山落草</p><p><b>结局：</b>钱塘江淹死</p><p><b>主要事迹：</b>在宋江攻打黄文炳时，他正在其家干活，便与薛永一起，内应杀了黄文炳一家。上梁山后，负责制作旌旗袍袄等军服。</p>','http://www.sdmz.net'],
+        [72,'陈达',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/72.jpg','<p><b>星号：</b>地周星</p><p><b>绰号：</b>跳涧虎</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>丈八虎矛枪</p><p><b>上山前身份职业：</b>少华山二寨主</p><p><b>上山原因：</b>&ldquo;累被官司逼迫，不得已上山落草&rdquo;</p><p><b>结局：</b>征昱岭关被庞万春、雷炯、计稷乱箭射死</p><p><b>主要事迹：</b>在攻打史家庄时，被史进活捉，由朱武设计救回</p>','http://www.sdmz.net'],
+        [73,'杨春',[35.22767, 110.76416],'http://www.sdmz.net/d/map/sh/108/73.jpg','<p><b>星号：</b>地隐星</p><p><b>绰号：</b>白花蛇</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>碧血白蛇刀</p><p><b>上山前身份职业：</b>少华山三寨主</p><p><b>上山原因：</b>&ldquo;累被官司逼迫，不得已上山落草&rdquo;</p><p><b>结局：</b>征昱岭关被庞万春、雷炯、计稷乱箭射死</p><p><b>主要事迹：</b>在攻打史家庄时，三人和史进结为好友。后来在梁山军马闹华州时归顺梁山。</p>','http://www.sdmz.net'],
+        [74,'郑天寿',[31.32549, 120.64087],'http://www.sdmz.net/d/map/sh/108/74.jpg','<p><b>星号：</b>地异星</p><p><b>绰号：</b>白面郎君</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>朴刀</p><p><b>上山前身份职业：</b>清风山三寨主</p><p><b>上山原因：</b>路过清风山时与王英斗五六十回合不分胜负，被燕顺请上山落草</p><p><b>结局：</b>征宣州被磨扇打死</p><p><b>主要事迹：</b>清风山捉宋江时与宋江相识，宋江被清风寨刘高陷害关押，郑天寿等与花荣一起救了宋江，入伙梁山。</p>','http://www.sdmz.net'],
+        [75,'陶宗旺',[32.20351, 115.06531],'http://www.sdmz.net/d/map/sh/108/75.jpg','<p><b>星号：</b>地理星</p><p><b>绰号：</b>九尾龟</p><p><b>梁山职务：</b>城砦筑造监督</p><p><b>武器：</b>神龟铁贝锹</p><p><b>上山前身份职业：</b>黄门山</p><p><b>上山原因：</b>原著未交待，只说&ldquo;庄家田户出身。惯使一把铁锹，有的是气力，亦能使枪轮刀&rdquo;</p><p><b>结局：</b>征润州马踏、中箭身死</p><p><b>主要事迹：</b>负责建造梁山泊城垣等一些建筑物</p>','http://www.sdmz.net'],
+        [76,'宋清',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/76.jpg','<p><b>星号：</b>地俊星</p><p><b>绰号：</b>铁扇子</p><p><b>梁山职务：</b>宴会筹备</p><p><b>武器：</b>铁扇</p><p><b>上山前身份职业：</b>宋江之弟</p><p><b>上山原因：</b>与宋太公一起被同取上山落草。</p><p><b>结局：</b>得胜后染病，未死，被封武奕郎</p><p><b>主要事迹：</b>专管梁山筵宴差事</p>','http://www.sdmz.net'],
+        [77,'乐和',[36.82248, 119.22913],'http://www.sdmz.net/d/map/sh/108/77.jpg','<p><b>星号：</b>地乐星</p><p><b>绰号：</b>铁叫子</p><p><b>梁山职务：</b>机密传达</p><p><b>武器：</b>钢笛</p><p><b>上山前身份职业：</b>小节级，孙立妻弟</p><p><b>上山原因：</b>为劫狱救解氏兄弟，上山落草</p><p><b>结局：</b>征方腊前留在京师</p><p><b>主要事迹：</b>被毛太公陷害入狱后，乐和联系孙立、孙新、顾大嫂等救出解家兄弟，一同上了梁山</p>','http://www.sdmz.net'],
+        [78,'龚旺',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/78.jpg','<p><b>星号：</b>地捷星</p><p><b>绰号：</b>花项虎</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>飞枪</p><p><b>上山前身份职业：</b>张清副将</p><p><b>上山原因：</b>梁山打东昌府时被林冲、花荣生俘，上山落草</p><p><b>结局：</b>征德清时追杀黄爱陷在溪中被乱军杀死</p><p><b>主要事迹：</b>卢俊义攻打东昌府失败，宋江前去支援，龚旺被林冲、花荣活捉，归降了梁山</p>','http://www.sdmz.net'],
+        [79,'丁得孙',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/79.jpg','<p><b>星号：</b>地速星</p><p><b>绰号：</b>中箭虎</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>白虎叉、虎牙飞叉</p><p><b>上山前身份职业：</b>张清副将</p><p><b>上山原因：</b>梁山打东昌府时被燕青打中马蹄，被吕方、郭盛生擒，上山落草</p><p><b>结局：</b>征昱岭关被毒蛇咬死</p><p><b>主要事迹：</b>感念宋江不杀之恩，就投降了梁山</p>','http://www.sdmz.net'],
+        [80,'穆春',[29.76438, 115.99915],'http://www.sdmz.net/d/map/sh/108/80.jpg','<p><b>星号：</b>地镇星</p><p><b>绰号：</b>小遮拦</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>揭阳镇一霸</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>得胜后，被封武奕郎</p><p><b>主要事迹：</b>追杀宋江，劫法场救宋江</p>','http://www.sdmz.net'],
+        [81,'曹正',[34.82282, 114.33472],'http://www.sdmz.net/d/map/sh/108/81.jpg','<p><b>星号：</b>地嵇星</p><p><b>绰号：</b>操刀鬼</p><p><b>梁山职务：</b>家畜屠杀</p><p><b>武器：</b>庖丁解牛刀</p><p><b>上山前身份职业：</b>屠夫，林冲徒弟</p><p><b>上山原因：</b>&ldquo;为因本处一个财主，将五千贯钱教小人来此山东做客，不想折本，回乡不得&rdquo;，后助鲁智深打破二龙山，一并上山落草</p><p><b>结局：</b>征宣州中药箭身亡</p><p><b>主要事迹：</b>出身屠户，在山东境内开酒店，曾协助鲁智深、杨志夺取二龙山</p>','http://www.sdmz.net'],
+        [82,'宋万',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/82.jpg','<p><b>星号：</b>地魔星</p><p><b>绰号：</b>云里金刚</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>金刚剑</p><p><b>上山前身份职业：</b>原梁山二寨主</p><p><b>上山原因：</b>原著未交待，原著开场即为梁山泊头领</p><p><b>结局：</b>征润州时中箭，马踏身亡</p><p><b>主要事迹：</b>早先和王伦、杜迁占梁山为王</p>','http://www.sdmz.net'],
+        [83,'杜迁',[35.42151, 116.58417],'http://www.sdmz.net/d/map/sh/108/83.jpg','<p><b>星号：</b>地妖星</p><p><b>绰号：</b>摸着天</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>原梁山三寨主</p><p><b>上山原因：</b>&ldquo;(王伦)因鸟气合着杜迁来这里落草&rdquo;</p><p><b>结局：</b>征清溪洞马踏而亡</p><p><b>主要事迹：</b>同王伦、宋万、朱贵一齐占山为王</p>','http://www.sdmz.net'],
+        [84,'薛永',[34.68743, 112.44232],'http://www.sdmz.net/d/map/sh/108/84.jpg','<p><b>星号：</b>地幽星</p><p><b>绰号：</b>病大虫</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>枪棒</p><p><b>上山前身份职业：</b>卖艺</p><p><b>上山原因：</b>劫法场救宋江后，上山落草</p><p><b>结局：</b>征昱岭关被庞万春、雷炯、计稷乱箭射死</p><p><b>主要事迹：</b>劫法场</p>','http://www.sdmz.net'],
+        [85,'施恩',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/85.jpg','<p><b>星号：</b>地伏星</p><p><b>绰号：</b>金眼彪</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>九节花蟒鞭</p><p><b>上山前身份职业：</b>小管营</p><p><b>上山原因：</b>&ldquo;因武松杀了张都监一家人口，官司着落他家追捉凶身，以此连夜拿家逃走在江湖上&rdquo;，后投二龙山入伙</p><p><b>结局：</b>征常熟淹死</p><p><b>主要事迹：</b>重霸孟州道、三进死囚牢</p>','http://www.sdmz.net'],
+        [86,'李忠',[32.60699, 117.70752],'http://www.sdmz.net/d/map/sh/108/86.jpg','<p><b>星号：</b>地僻星</p><p><b>绰号：</b>打虎将</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b></p><p><b>上山前身份职业：</b>卖艺，史进第一位师傅，后为桃花山寨主</p><p><b>上山原因：</b>与鲁智深在渭州分手之后，经过桃花山，被周通劫道；杀退周通，被请上桃花山落草。</p><p><b>结局：</b>征昱岭关被庞万春、雷炯、计稷乱箭射死</p><p><b>主要事迹：</b>占据桃花山后盗了呼延灼的战马又联合二龙山打青州</p>','http://www.sdmz.net'],
+        [87,'周通',[34.51561, 109.51172],'http://www.sdmz.net/d/map/sh/108/87.jpg','<p><b>星号：</b>地空星</p><p><b>绰号：</b>小霸王</p><p><b>梁山职务：</b>小彪将兼斥候</p><p><b>武器：</b>走水绿沉枪</p><p><b>上山前身份职业：</b>桃花山寨主</p><p><b>上山原因：</b>原著未交待，出场即为桃花山原主人，后投梁山。</p><p><b>结局：</b>征方腊被厉天闰砍死</p><p><b>主要事迹：</b>小霸王醉入销金帐</p>','http://www.sdmz.net'],
+        [88,'汤隆',[36.68164, 109.50073],'http://www.sdmz.net/d/map/sh/108/88.jpg','<p><b>星号：</b>地孤星</p><p><b>绰号：</b>金钱豹子</p><p><b>梁山职务：</b>武器甲胄制造</p><p><b>武器：</b>打造军器 锤子</p><p><b>上山前身份职业：</b>铁匠</p><p><b>上山原因：</b>流落江湖，遇李逵，跟随上山落草</p><p><b>结局：</b>征清溪洞乱军受伤死亡</p><p><b>主要事迹：</b>赚徐宁上山</p>','http://www.sdmz.net'],
+        [89,'杜兴',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/89.jpg','<p><b>星号：</b>地全星</p><p><b>绰号：</b>鬼脸儿</p><p><b>梁山职务：</b>南山酒店</p><p><b>武器：</b>刀刺</p><p><b>上山前身份职业：</b>李家庄主管</p><p><b>上山原因：</b>&ldquo;因一口气上打死了同夥的客人，吃官司监在蓟州府里。杨雄见他说起拳棒都省得，一力维持，救了他。&rdquo;后在李应家落草，&ldquo;每日拨万论千&rdquo;，后随李应上山落草。</p><p><b>结局：</b>得胜跟随李应成为富豪而善终</p><p><b>主要事迹：</b>献计宋江，计救时迁</p>','http://www.sdmz.net'],
+        [90,'邹渊',[36.3461, 118.94348],'http://www.sdmz.net/d/map/sh/108/90.jpg','<p><b>星号：</b>地短星</p><p><b>绰号：</b>出林龙</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>仆刀</p><p><b>上山前身份职业：</b>登云山头目</p><p><b>上山原因：</b>开场即为登云山头领，也邓飞、杨林、石勇为旧识，后救解氏弟兄一起上梁山。</p><p><b>结局：</b>征清溪洞马踏而亡</p><p><b>主要事迹：</b>登云山落草为寇，聚众打劫，为救解珍、解宝打入祝家庄</p>','http://www.sdmz.net'],
+        [91,'邹润',[36.25313, 117.68005],'http://www.sdmz.net/d/map/sh/108/91.jpg','<p><b>星号：</b>地角星</p><p><b>绰号：</b>独角龙</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>剑</p><p><b>上山前身份职业：</b>登云山头目</p><p><b>上山原因：</b>开场即为登云山头领，</p><p><b>结局：</b>得胜回登云山聚义</p><p><b>主要事迹：</b>为救解珍、解宝打入祝家庄</p>','http://www.sdmz.net'],
+        [92,'朱贵',[32.72491, 117.11975],'http://www.sdmz.net/d/map/sh/108/92.jpg','<p><b>星号：</b>地囚星</p><p><b>绰号：</b>旱地忽律</p><p><b>梁山职务：</b>南山酒店</p><p><b>武器：</b>鹊画弓</p><p><b>上山前身份职业：</b>梁山耳目</p><p><b>上山原因：</b>&ldquo;因在江湖上做客，消折了本钱，就于梁山泊落草。&rdquo;(感谢网友Cupwater提供线索，后于《假李逵剪径劫单身　黑旋风沂岭杀四虎》一章中查到出处，果然如此，特此感谢。)</p><p><b>结局：</b>杭州病死</p><p><b>主要事迹：</b>以开酒店为名，专门探听往来客商的消息</p>','http://www.sdmz.net'],
+        [93,'朱富',[32.72029, 117.07581],'http://www.sdmz.net/d/map/sh/108/93.jpg','<p><b>星号：</b>地藏星</p><p><b>绰号：</b>笑面虎</p><p><b>梁山职务：</b>酿造&middot;供应</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>朱贵之弟</p><p><b>上山原因：</b>因麻烦了李云而跟同一起上梁山落草。</p><p><b>结局：</b>杭州病死</p><p><b>主要事迹：</b>李逵下山接老母，宋江派朱贵前往暗中照顾李逵，在梁山负责监造、供应酒醋</p>','http://www.sdmz.net'],
+        [94,'蔡福',[36.31955, 115.10925],'http://www.sdmz.net/d/map/sh/108/94.jpg','<p><b>星号：</b>地平星</p><p><b>绰号：</b>铁臂膊</p><p><b>梁山职务：</b>刽子手</p><p><b>武器：</b>骷髅斩鬼刀</p><p><b>上山前身份职业：</b>大名府两院押牢节级兼刽子手</p><p><b>上山原因：</b>宋江攻破大名府，因照顾卢俊义有功，被硬请上山落草</p><p><b>结局：</b>征清溪洞乱军受伤死亡</p><p><b>主要事迹：</b>押狱兼行刑刽子手，因杀人手段高强，手专管梁山杀人行刑的事情</p>','http://www.sdmz.net'],
+        [95,'蔡庆',[36.3107, 115.22736],'http://www.sdmz.net/d/map/sh/108/95.jpg','<p><b>星号：</b>地损星</p><p><b>绰号：</b>一枝花</p><p><b>梁山职务：</b>刽子手</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>小押狱</p><p><b>上山原因：</b>宋江攻破大名府，因照顾卢俊义有功，被硬请上山落草</p><p><b>结局：</b>得胜后返乡为民</p><p><b>主要事迹：</b>专管牢狱的小押狱，是个有名的刽子，手专管梁山杀人行刑的事情</p>','http://www.sdmz.net'],
+        [96,'李立',[31.95216, 117.24609],'http://www.sdmz.net/d/map/sh/108/96.jpg','<p><b>星号：</b>地奴星</p><p><b>绰号：</b>催命判官</p><p><b>梁山职务：</b>北山酒店</p><p><b>武器：</b>刀</p><p><b>上山前身份职业：</b>揭阳岭黑店主</p><p><b>上山原因：</b>原开黑店，因闹江州救宋江而上山落草</p><p><b>结局：</b>征清溪洞乱军受伤，医治无效死亡</p><p><b>主要事迹：</b>在浔阳江上为私商提供食宿、运输，和李俊同霸揭阳岭后，监造梁山泊一应房舍、厅堂</p>','http://www.sdmz.net'],
+        [97,'李云',[35.84453, 118.74573],'http://www.sdmz.net/d/map/sh/108/97.jpg','<p><b>星号：</b>地察星</p><p><b>绰号：</b>青眼虎</p><p><b>梁山职务：</b>家屋建筑修理</p><p><b>武器：</b>斩轮刀</p><p><b>上山前身份职业：</b>沂水县都头</p><p><b>上山原因：</b>因押解李逵，被朱富麻倒，无法交差，只好上山落草</p><p><b>结局：</b>征方腊时身亡</p><p><b>主要事迹：</b>押李逵被朱贵兄弟麻翻</p>','http://www.sdmz.net'],
+        [98,'焦挺',[38.56535, 114.9884],'http://www.sdmz.net/d/map/sh/108/98.jpg','<p><b>星号：</b>地恶星</p><p><b>绰号：</b>没面目</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>金瓜大椎</p><p><b>上山前身份职业：</b>擅长相扑</p><p><b>上山原因：</b>&ldquo;平生最无面目(不顾面子，不讲交情)，到处投人不着&rdquo;，准备投枯树山落草，李逵劝上梁山落草。</p><p><b>结局：</b>征润州时中箭，马踏身死</p><p><b>主要事迹：</b>相扑为生，独门单传三十六路擒龙手</p>','http://www.sdmz.net'],
+        [99,'石勇',[36.31291, 115.18066],'http://www.sdmz.net/d/map/sh/108/99.jpg','<p><b>星号：</b>地丑星</p><p><b>绰号：</b>石将军</p><p><b>梁山职务：</b>歩军将校</p><p><b>武器：</b>雌雄星月刀</p><p><b>上山前身份职业：</b>放赌为生</p><p><b>上山原因：</b>&ldquo;为因赌博上一拳打死了个人，逃走在柴大官人庄上。&rdquo;，送信给送宋江，一同上山。</p><p><b>结局：</b>征歙州被王尚书搠死</p><p><b>主要事迹：</b>因赌博打死了人，逃到柴进庄上避难</p>','http://www.sdmz.net'],
+        [100,'孙新',[19.98109, 110.34943],'http://www.sdmz.net/d/map/sh/108/100.jpg','<p><b>星号：</b>地数星</p><p><b>绰号：</b>小尉迟</p><p><b>梁山职务：</b>东山酒店</p><p><b>武器：</b>烂银花枪，太岁钢鞭</p><p><b>上山前身份职业：</b>酒店老板</p><p><b>上山原因：</b>为劫狱救解氏兄弟，上山落草</p><p><b>结局：</b>得胜后被封武奕郎</p><p><b>主要事迹：</b>劫狱救出了解家兄弟，攻破了祝家庄，开梁山东山酒店</p>','http://www.sdmz.net'],
+        [101,'顾大嫂',[37.28389, 122.38358],'http://www.sdmz.net/d/map/sh/108/101.jpg','<p><b>星号：</b>地阴星</p><p><b>绰号：</b>母大虫</p><p><b>梁山职务：</b>东山酒店</p><p><b>武器：</b>雌雄虎头刀</p><p><b>上山前身份职业：</b>酒店老板娘</p><p><b>上山原因：</b>为劫狱救解氏兄弟，上山落草</p><p><b>结局：</b>得胜后被封东源县君</p><p><b>主要事迹：</b>劫狱救出了解家兄弟，攻破了祝家庄，开梁山东山酒店</p>','http://www.sdmz.net'],
+        [102,'张青',[34.95574, 112.84607],'http://www.sdmz.net/d/map/sh/108/102.jpg','<p><b>星号：</b>地刑星</p><p><b>绰号：</b>菜园子</p><p><b>梁山职务：</b>西山酒店</p><p><b>武器：</b>碎石翻地锄</p><p><b>上山前身份职业：</b>十字坡黑店老板</p><p><b>上山原因：</b>原在孟州道上开黑店，后投奔二龙山落草</p><p><b>结局：</b>征清溪洞乱军杀死</p><p><b>主要事迹：</b>开西山酒店</p>','http://www.sdmz.net'],
+        [103,'孙二娘',[34.94224, 112.79388],'http://www.sdmz.net/d/map/sh/108/103.jpg','<p><b>星号：</b>地壮星</p><p><b>绰号：</b>母夜叉</p><p><b>梁山职务：</b>西山酒店</p><p><b>武器：</b>匕首</p><p><b>上山前身份职业：</b>十字坡黑店老板娘</p><p><b>上山原因：</b>原在孟州道上开黑店，后投奔二龙山落草</p><p><b>结局：</b>征清溪洞被杜微飞刀伤死</p><p><b>主要事迹：</b>母夜叉孟州道卖人肉</p>','http://www.sdmz.net'],
+        [104,'王定六',[32.19886, 118.78967],'http://www.sdmz.net/d/map/sh/108/104.jpg','<p><b>星号：</b>地劣星</p><p><b>绰号：</b>活闪婆</p><p><b>梁山职务：</b>北山酒店</p><p><b>武器：</b>泥鳅双枪</p><p><b>上山前身份职业：</b>酒店老板</p><p><b>上山原因：</b>随张顺在取安道全时一同上山落草</p><p><b>结局：</b>征宣州中药箭死亡</p><p><b>主要事迹：</b>江边卖酒度日，山驻北山酒店迎宾使兼消息头领</p>','http://www.sdmz.net'],
+        [105,'郁保四',[36.75209, 118.53149],'http://www.sdmz.net/d/map/sh/108/105.jpg','<p><b>星号：</b>地健星</p><p><b>绰号：</b>险道神</p><p><b>梁山职务：</b>帅字旗捧持</p><p><b>武器：</b>开山双刃斧</p><p><b>上山前身份职业：</b>盗贼</p><p><b>上山原因：</b>原为曾头市人马，随曾生一同上梁山谈判，被说服落草。</p><p><b>结局：</b>征清溪洞被杜微飞刀伤死</p><p><b>主要事迹：</b>两次抢夺梁山马匹</p>','http://www.sdmz.net'],
+        [106,'白胜',[35.62158, 115.94559],'http://www.sdmz.net/d/map/sh/108/106.jpg','<p><b>星号：</b>地耗星</p><p><b>绰号：</b>白日鼠</p><p><b>梁山职务：</b>机密传达</p><p><b>武器：</b>哨棒</p><p><b>上山前身份职业：</b>闲汉</p><p><b>上山原因：</b>劫生辰纲事发被捉拿，后被解救，上山落草</p><p><b>结局：</b>杭州病死</p><p><b>主要事迹：</b>智取生辰纲</p>','http://www.sdmz.net'],
+        [107,'时迁',[36.87962, 116.21338],'http://www.sdmz.net/d/map/sh/108/107.jpg','<p><b>星号：</b>地贼星</p><p><b>绰号：</b>鼓上蚤</p><p><b>梁山职务：</b>机密传达</p><p><b>武器：</b>柳叶刀</p><p><b>上山前身份职业：</b>盗贼</p><p><b>上山原因：</b>&ldquo;流落在此，则一地里做些飞檐走壁，跳篱骗马的勾当。曾在苏州府里吃官司，却得杨雄救了他&rdquo;，听说石秀、杨雄欲上梁山，便一同跟去上山落草。</p><p><b>结局：</b>得胜后得绞肠痧而死</p><p><b>主要事迹：</b>火烧翠云楼、秋林渡射雁。</p>','http://www.sdmz.net'],
+        [108,'段景住',[36.36159, 114.60114],'http://www.sdmz.net/d/map/sh/108/108.jpg','<p><b>星号：</b>地狗星</p><p><b>绰号：</b>金毛犬</p><p><b>梁山职务：</b>机密传达</p><p><b>武器：</b>无</p><p><b>上山前身份职业：</b>盗马贼</p><p><b>上山原因：</b>以盗马为生，欲盗好马送给宋江作上山见面礼，因被劫了马而直接投奔。</p><p><b>结局：</b>钱塘江淹死</p><p><b>主要事迹：</b>宝马被抢，引得梁山攻打曾头市</p>','http://www.sdmz.net']
+
+    ];
+
+
+
+
+    for ($j=0;$j<list.length;$j++)
+    {
+        //L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3><a  href='"+ list[$j][5] + "'  target=_blank><img style='width:150px;overflow:hidden;float:right;padding:5;'  src=" + list[$j][3] + " /></a>"+ list[$j][4]  + "<a  href='"+ list[$j][5] + "' target=_blank>" +"更多信息"+"</a></div>").openPopup();
+        L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3><a  href='"+ list[$j][5] + "'  target=_blank><img style='width:150px;overflow:hidden;float:right;padding:5;'  src=" + list[$j][3] + " /></a>"+ list[$j][4]  + "<a  href='"+ list[$j][5] + "' target=_blank>" +"更多信息"+"</a></div>");
+    }
+
+
+
+    //   L.marker([31.72817,106.52344],{icon: greenIcon}).addTo(map).bindPopup('A pretty CSS3 popup.<br> Easily customizable.').openPopup();
+
+
+    function getmap(picid) {
+        $j=picid-1;
+        L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3><a  href='"+ list[$j][5] + "'  target=_blank><img style='width:150px;overflow:hidden;float:right;padding:5;'  src=" + list[$j][3] + " /></a>"+ list[$j][4]  + "<a  href='"+ list[$j][5] + "'  target=_blank>" +"更多信息"+"</a></div>").openPopup();
+    }
+
+
+    /**/
+    var popup = new L.popup();
+    function onMapClick(e) {
+        popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(map);
+    }
+    map.on('click', onMapClick);
+
+    if(top != self){
+        window.top.location.replace(self.location);
+    }
+
+</script>
+<footer class="footer"><div class="container">
+    <p>Copyright © 2020 <a href="#">四大名著</a></p> <span class="tongji"><p>普及四大名著知识，传播四大名著文化，引领四大名著研究。</p></div></footer>
+</body>
+
+<script>
+    var app = new Vue({
+        el: '#table',
+        data: {
+            originPicture: '../../common/statics/images/login_i.png',
+            userInfo: {
+                flag: true,
+                id: '',
+                nickName: '',
+                picture: '',
+            },
+            dialogFormVisible: false,
+            loading: 'false',
+            imgTemp: '',
+            type: '',
+            personList: [],
+            linksNode:[],
+            personName:'',
+            dialogFormVisibleShowPerson:false,
+            dialogFormVisibleShare:false,
+            formLabelWidth:'120px',
+            showPersonDtail:'',
+            flag:true,
+            input:'',
+            paramName:'',
+            paramLikeName:'',
+            linkUrl:'',
+            collectFlag:true,
+            _title:'',
+            saveUrl:'',
+
+        },
+        mounted() {
+        },
+        created() {
+
+            this.getPageUser();
+            this.selectCollect();
+        },
+        methods: {
+            getPageUser() {
+                let _this = this;
+                var url = "/user/page/getPageUser";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    // data: ,
+                    async:false,
+                    success: function (res) {
+                        if (res.code === "200") {
+                            console.log(_this.userInfo)
+                            _this.userInfo.id = res.data.id;
+                            _this.userInfo.nickName = _this.strFilter(res.data.nickName);
+                            _this.userInfo.picture = res.data.picture;
+                            _this.userInfo.flag = false;
+                        }
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            strFilter(str) {
+                // 1字符串转化成数组
+                let phoneArr = [...str];
+                let userName = '';
+
+                if (phoneArr.length === 3) {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 0 && index < 2) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                    return userName;
+                }
+
+                if (phoneArr.length === 4) {
+                    phoneArr.map((res, index) => {
+                        if (index > 0 && index < 3) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                } else {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 1 && index < 5) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                }
+
+                return userName;
+            },
+
+
+            handleAvatarSuccessEdit(res, file) {
+                console.log(res);
+                if (res.code !== "200") {
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.loading = false;
+                this.imgTemp = res.data;
+                console.log(this.userInfo.picture)
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+            },
+            beforeAvatarUploadEdit(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 1;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 1MB!');
+                    this.files = null;
+                    return false;
+                }
+                this.loading = true;
+                return true;
+            },
+            update() {
+                let _this = this;
+                console.log(_this.userInfo)
+                let postData = {
+                    id: _this.userInfo.id,
+                    imgUrl: _this.imgTemp,
+
+                };
+                var url = "/user/page/updatePicture";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res)
+                        if (res.code !== "200") {
+                            _this.$message.error(res.data);
+                        }
+                        _this.$message({
+                            message: '修改成功！',
+                            type: 'success'
+                        });
+
+                        _this.dialogFormVisible = false;
+                        _this.userInfo.picture = _this.imgTemp;
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            handleCommand(command) {
+                if (command === 'loginOut') {
+                    let _this = this;
+
+                    let postData = {
+                        id: _this.userInfo.id,
+                    };
+                    var url = "/user/page/loginOut";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        success: function (res) {
+                            console.log(res)
+                            if (res.code === "200") {
+                                _this.$message({
+                                    message: '退出成功！',
+                                    type: 'success'
+                                });
+                                window.location.href = '/';
+                            }
+
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+
+                if (command === 'editUpload') {
+                    this.dialogFormVisible = true;
+                    var s= document.getElementsByClassName("v-modal");
+                    var index=0;
+                    var time= window.setInterval(function () {
+                        if (s.length!==0){
+                            document.body.removeChild(s[0]);
+                            clearInterval(time);
+                        }
+                        if (index===100000){
+                            clearInterval(time);
+                        }
+                        index++;
+                    },10)
+                }
+            },
+
+
+            collectUrl(){
+                var url =this.linkUrl;
+                if (url.indexOf("?") !== -1) {
+                    let str = '';
+                    str+="?";
+                    str+="type="+this.type;
+                    str+="&paramName="+this.paramName;
+                    str+="&paramLikeName="+this.paramLikeName;
+                    this.saveUrl = location.pathname+str;
+                    console.log(this.saveUrl);
+                }
+            },
+            collect(){
+                var title = this.type+"-地点浏览";
+                if(this.paramName!==''){
+                    title+=': '+this.paramName;
+                }
+                if(this.paramLikeName!==''){
+                    title+=': '+this.paramLikeName;
+                }
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                    title:title,
+                };
+                let _this =this;
+                var url = "/page/collect/add";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                            _this.$message({
+                                message: '添加收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('添加收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+            cancelCollect(){
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/cancel";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = true;
+                            _this.$message({
+                                message: '取消收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('取消收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+
+            },
+            selectCollect(){
+                this.saveUrl= decodeURI(this.saveUrl);
+                console.log(this.userInfo);
+                console.log(this.userInfo.id);
+                console.log(this.saveUrl);
+                if(this.userInfo.id===''){
+                    return;
+                }
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/select";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                        }else {
+                            _this.collectFlag = true;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+
+            handleCollect(command){
+                if (command==="add"){
+                    this.collect();
+                }
+                if (command==="cancel"){
+                    this.cancelCollect();
+                }
+                if (command==="share"){
+                    this.dialogFormVisibleShare=true;
+                }
+            },
+
+            shareToQzone(){
+                var _shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?';
+                console.log(this.linkUrl);
+                var url = 'www.liaoyunfeng.top'
+                _shareUrl += 'url=' + encodeURIComponent(url || document.location);   //参数url设置分享的内容链接|默认当前页location
+                _shareUrl += '&title=' + encodeURIComponent( this._title || document.title);
+                window.open(_shareUrl);
+            }
+
+        },
+
+    })
+
+</script>
+<!--轮播结束-->
+
+<script src="../../common/statics/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/swiper.animate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/main.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" src="//apps.bdimg.com/libs/jquery-lazyload/1.9.5/jquery.lazyload.min.js"></script>
+<script type="text/javascript" src="//apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//www.sdmz.net/e/public/ViewClick/ViewMore.php?id=19&amp;onclick=1&amp;down=0&amp;plnum=1&amp;pfen=0&amp;pfennum=0&amp;diggtop=0&amp;diggdown=0&amp;addclick=0"></script>
+
+
+</html>

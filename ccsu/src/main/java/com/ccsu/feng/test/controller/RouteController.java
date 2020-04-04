@@ -46,12 +46,20 @@ public class RouteController {
 
 
     @RequestMapping("/page/xi/deeds/{type}")
-    public String deeds(@PathVariable("type") String type,RedirectAttributes attr){
+    public String xiDeeds(@PathVariable("type") String type,RedirectAttributes attr){
         System.out.println(type);
         attr.addAttribute("type",type);
         attr.addAttribute("paramName","");
         return "redirect:/page/xi/deeds";
     }
+    @RequestMapping("/page/san/deeds/{type}")
+    public String sanDeeds(@PathVariable("type") String type,RedirectAttributes attr){
+        System.out.println(type);
+        attr.addAttribute("type",type);
+        attr.addAttribute("paramName","");
+        return "redirect:/page/san/deeds";
+    }
+
 
     @RequestMapping("/page/xi/deedsDetail/{id}")
     public String deedsDetail(@PathVariable("id") Integer id,RedirectAttributes attr){

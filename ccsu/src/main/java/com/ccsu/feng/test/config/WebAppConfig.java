@@ -3,6 +3,7 @@ package com.ccsu.feng.test.config;
 import com.ccsu.feng.test.filter.ReplaceStreamFilter;
 import com.ccsu.feng.test.interceptor.AdminUserLoginInterceptor;
 import com.ccsu.feng.test.interceptor.AntiBrushInterceptor;
+import com.ccsu.feng.test.interceptor.IntercepterMobile;
 import com.ccsu.feng.test.interceptor.UserLoginInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -37,6 +38,12 @@ public class WebAppConfig  implements WebMvcConfigurer {
         return new AntiBrushInterceptor();
     }
 
+    @Bean
+    public HandlerInterceptor getIntercepterMobile(){
+        return new IntercepterMobile();
+    }
+
+
     /**
      * 注册过滤器
      *
@@ -65,7 +72,7 @@ public class WebAppConfig  implements WebMvcConfigurer {
     public void addViewControllers( ViewControllerRegistry registry ) {
         registry.addViewController("/error/404").setViewName("error/404");
         registry.addViewController("/error/500").setViewName("error/500");
-
+        registry.addViewController("/error/mobile").setViewName("error/mobile");
 
         registry.addViewController("/admin").setViewName("admin/index");
         registry.addViewController("/admin/index").setViewName("admin/index");
@@ -109,6 +116,10 @@ public class WebAppConfig  implements WebMvcConfigurer {
         registry.addViewController("/page/san/withPicture").setViewName("page/withPicture");
 
         registry.addViewController("/page/xi/deeds").setViewName("page/xi/deeds");
+        registry.addViewController("/page/xi/process").setViewName("page/xi/process");
+        registry.addViewController("/page/san/deeds").setViewName("page/san/deeds");
+        registry.addViewController("/page/san/place").setViewName("page/san/place");
+        registry.addViewController("/page/shui/108").setViewName("page/shui/108");
 
         registry.addViewController("/page/collect").setViewName("page/collect");
         registry.addViewController("/page/place").setViewName("page/place");
@@ -133,6 +144,10 @@ public class WebAppConfig  implements WebMvcConfigurer {
 
         InterceptorRegistration interceptorRegistration1 = registry.addInterceptor(getAntiBrushInterceptor());
         interceptorRegistration1.addPathPatterns("/**");
+
+        InterceptorRegistration interceptorRegistration2 = registry.addInterceptor(getIntercepterMobile());
+        interceptorRegistration2.addPathPatterns("/**");
+        interceptorRegistration2.excludePathPatterns("/error/**");
 
 //        // 排除路径
 //        loginRegistry.excludePathPatterns("/");

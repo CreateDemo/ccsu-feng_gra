@@ -1,5 +1,6 @@
 package com.ccsu.feng.test.service.node.impl;
 
+import com.ccsu.feng.test.domain.base.BaseNode;
 import com.ccsu.feng.test.domain.base.BaseRelationship;
 import com.ccsu.feng.test.domain.node.DeedsNode;
 import com.ccsu.feng.test.domain.node.PersonNode;
@@ -191,7 +192,41 @@ public class DeedsNodeServiceImpl implements IDeedsNodeService {
             return (int) (NumberUtils.chineseNumber2Int(str1) - NumberUtils.chineseNumber2Int(str2));
         }).collect(Collectors.toList());
         redisUtil.hset("DeedsNode:",type,strings, LoginTime.SAVE_LOGIN_TIME.getTime());
-        return null;
+        return strings;
+    }
+
+    @Override
+    public String getPicture(String name) {
+        DeedsNode deedsNodeByName = deedsNodeRepository.getDeedsNodeByName(name);
+        return deedsNodeByName.getPicture();
+    }
+
+
+    @Override
+    public List<Map<String, String>> getDeedsNodeValueByType(String type) {
+        List<Map<String, String>>  hget =  (List<Map<String, String>>) redisUtil.hget("DeedsNodes:", type);
+        if (!ListUtils.isEmpty(hget)){
+            return  hget;
+        }
+        List<DeedsNode> listDeedsNodeByType = deedsNodeRepository.getListDeedsNodeByType(type);
+        if (ListUtils.isEmpty(listDeedsNodeByType)) {
+            return null;
+        }
+        List<String> strings = listDeedsNodeByType.stream().map(x->x.getName()).sorted((o1, o2) -> {
+            String str1 = o1;
+            String str2 = o2;
+            str1 = NumberUtils.getNumberStr(str1);
+            str2 = NumberUtils.getNumberStr(str2);
+            return (int) (NumberUtils.chineseNumber2Int(str1) - NumberUtils.chineseNumber2Int(str2));
+        }).collect(Collectors.toList());
+        List<Map<String, String>> list = new ArrayList<>(strings.size());
+        strings.forEach(x->{
+            Map<String,String>  map= new LinkedHashMap<>();
+            map.put("value", x);
+            list.add(map);
+        });
+        redisUtil.hset("DeedsNodes:",type,list, LoginTime.SAVE_LOGIN_TIME.getTime());
+        return list;
     }
 
 

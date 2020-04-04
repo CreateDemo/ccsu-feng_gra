@@ -7,8 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.util.ListUtils;
+import org.thymeleaf.util.SetUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -34,12 +37,17 @@ public class ReadNumScheduledTask {
         //从redis取值封装List
         Integer prefixLength = "read_num::detail_id_".length();
         Set<String> keySet = redisUtil.getKeys("read_num::detail_id_*");
+        if (SetUtils.isEmpty(keySet)){
+            log.info("======================无文章同步======================");
+              return;
+        }
         for (String key : keySet) {
             DeedsDetail deedsDetail =new DeedsDetail();
             deedsDetail.setId(Integer.valueOf(key.substring(prefixLength)));
             deedsDetail.setReadNum((Integer) redisUtil.get(key));
             dtoList.add(deedsDetail);
         }
+
         //更新到数据库中
         deedsDetailMapper.batchUpdateReadNumById(dtoList);
         Long endTime = System.nanoTime();

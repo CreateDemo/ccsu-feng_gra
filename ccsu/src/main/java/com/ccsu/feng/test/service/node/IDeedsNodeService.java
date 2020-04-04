@@ -4,8 +4,10 @@ import com.ccsu.feng.test.domain.base.BaseRelationship;
 import com.ccsu.feng.test.domain.node.DeedsNode;
 import com.ccsu.feng.test.domain.vo.DeedsVO;
 import com.ccsu.feng.test.utils.PageResult;
+import com.ccsu.feng.test.utils.Result;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -95,4 +97,11 @@ public interface IDeedsNodeService {
     PageResult<DeedsVO> getListDeedsNodeByPageAndName(String name, int pageIndex, int pageSize,String type);
 
     List<String> getDeedsNodeByType(String type);
+
+
+   String getPicture(String name);
+
+    List<Map<String, String>> getDeedsNodeValueByType(String type);
+
+
 }

@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ccsu.feng.test.dao.DeedsDetailMapper">
     <update id="batchUpdateReadNumById" parameterType="java.util.List">
-
         update deeds_detail
         set  read_num=
         <foreach collection="list" item="item" index="index"

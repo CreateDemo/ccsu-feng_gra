@@ -282,7 +282,7 @@ public class PersonNodeServiceImpl implements IPersonNodeService {
         List<PersonNode> personNodeList = getLikeVO(personNodeLikeByName);
         List<NodeRelationsListVO> listVOS = new ArrayList<>();
         for (PersonNode personNode : personNodeList) {
-            if (personNode.getRelationships() == null) {
+            if (personNode.getRelationships() == null || !jugeCotainsPersonNode(personNode.getRelationships())) {
                 NodeRelationsListVO nodeRelationsListVO = new NodeRelationsListVO();
                 nodeRelationsListVO.setSource(personNode.getName());
                 nodeRelationsListVO.setTarget(personNode.getName());
@@ -301,6 +301,15 @@ public class PersonNodeServiceImpl implements IPersonNodeService {
             }
         }
         return listVOS;
+    }
+
+    private boolean jugeCotainsPersonNode(Set<BaseRelationship> baseRelationships){
+        for (BaseRelationship baseRelationship : baseRelationships) {
+            if (baseRelationship.getEnd() instanceof PersonNode){
+                return true;
+            }
+        }
+        return false;
     }
 
     private List<PersonNode> getLikeVO(List<PersonNode> list) {

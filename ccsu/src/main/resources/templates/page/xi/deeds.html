@@ -634,17 +634,16 @@
                         </div>
                     </li>
 
-                    <!--<li @keyup.enter="selectInputName()">-->
-                        <!--<el-input style="top: 20px; margin-left: 10px"-->
-                                  <!--placeholder="请输入人物名称"-->
-                                  <!--v-model="input"-->
-                                  <!--clearable>-->
-                        <!--</el-input>-->
-                    <!--</li>-->
+                    <li>
+                        <el-autocomplete style="top: 20px; margin-left: 10px"
+                                v-model="state"
+                                :fetch-suggestions="querySearchAsync"
+                                placeholder="请输入查询内容(名称)"
+                                @select="handleSelect">
+                        </el-autocomplete>
 
-                    <!--<li>-->
-                        <!--<el-button style="position:absolute;top: 20px; margin-left: 20px" type="primary" @click="selectInputName()">查询</el-button>-->
-                    <!--</li>-->
+                    </li>
+
 
                 </ul>
             </div>
@@ -999,6 +998,8 @@
             collectFlag:true,
             _title:'',
             saveUrl:'',
+            state: '',
+            restaurants: [],
 
         },
         mounted() {
@@ -1009,6 +1010,7 @@
             this.getListNode();
             this.getPageUser();
             this.getPersonList();
+            this.getDeedsNodesByType();
             this.selectCollect();
         },
         methods: {
@@ -1713,6 +1715,44 @@
                 });
             },
 
+            getDeedsNodesByType(){
+                let _this = this;
+                let postData = {
+                    type: _this.type,
+                }
+                var url = "/page/deeds/getDeedsNodeValueByType";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res);
+                        if (res.code === '200') {
+                            _this.restaurants = res.data;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+            querySearchAsync(queryString, cb) {
+                console.log(queryString);
+                var restaurants = this.restaurants;
+                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    cb(results);
+                }, 1500 * Math.random());
+            },
+            createStateFilter(queryString) {
+                return (state) => {
+                    return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
+                };
+            },
+            handleSelect(item){
+                this.getDeedsNodeByName(item.value);
+             },
 
 
             getDeedsNodeByName(name){

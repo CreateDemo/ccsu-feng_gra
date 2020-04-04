@@ -240,7 +240,7 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
         }
         PersonNode personNodeByName = personNodeRepository.getPersonNodeByName(name);
         List<NodeRelationsListVO> listVOS = new ArrayList<>();
-        if (personNodeByName.getRelationships() == null) {
+        if (personNodeByName.getRelationships() == null||!jugeCotainsPersonNode(personNodeByName.getRelationships())) {
             NodeRelationsListVO nodeRelationsListVO = new NodeRelationsListVO();
             nodeRelationsListVO.setSource(personNodeByName.getName());
             nodeRelationsListVO.setTarget(personNodeByName.getName());
@@ -262,6 +262,14 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
         return listVOS;
     }
 
+    private boolean jugeCotainsPersonNode(Set<BaseRelationship> baseRelationships){
+        for (BaseRelationship baseRelationship : baseRelationships) {
+            if (baseRelationship.getEnd() instanceof PersonNode){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public List<NodeRelationsListVO> getWeaponNodeRelationByName(String name) {
