@@ -1,8 +1,10 @@
 package com.ccsu.feng.test.controller;
 
 import com.ccsu.feng.test.enums.ResultEnum;
+import com.ccsu.feng.test.service.node.ExcelService;
 import com.ccsu.feng.test.utils.FtpFileUtil;
 import com.ccsu.feng.test.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,9 @@ import java.util.Date;
 @RestController
 @RequestMapping("/admin/file")
 public class FileController {
+
+    @Autowired
+    private  ExcelService excelService;
 
     public static final String HOST_URL = "http://www.liaoyunfeng.top/images/";
 
@@ -41,6 +46,11 @@ public class FileController {
         }
         filePath = HOST_URL + fileName;
         return Result.build(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), filePath);
+    }
+
+    @RequestMapping(value = "/personNodeRelationshipExcel",method = RequestMethod.POST)
+    public  void  addPersonNodeRelationshipExcel(MultipartFile file){
+        boolean b = excelService.personNodeRelationshipExcel(file);
     }
 
 }

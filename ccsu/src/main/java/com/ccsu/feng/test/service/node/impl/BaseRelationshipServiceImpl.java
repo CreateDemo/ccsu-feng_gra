@@ -182,7 +182,7 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
         }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
-                (x.getStart() instanceof PersonNode) && ( x.getEnd() instanceof PersonNode))
+                (x.getStart() instanceof PersonNode) && ( x.getEnd() instanceof PersonNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
         redisUtil.hset("PersonRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
@@ -197,7 +197,7 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
         }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
-                (x.getStart() instanceof WeaponNode))
+                (x.getStart() instanceof WeaponNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
         redisUtil.hset("WeaponRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
@@ -213,7 +213,7 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
         }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
-                (x.getStart() instanceof PlaceNode))
+                (x.getStart() instanceof PlaceNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
         redisUtil.hset("PlaceRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
