@@ -36,15 +36,15 @@ public class ReadNumScheduledTask {
         List<DeedsDetail> dtoList = new ArrayList<>();
         //从redis取值封装List
         Integer prefixLength = "read_num::detail_id_".length();
-        Set<String> keySet = redisUtil.getKeys("read_num::detail_id_*");
+        Set<Object> keySet = redisUtil.getKeys("read_num::detail_id_*");
         if (SetUtils.isEmpty(keySet)){
             log.info("======================无文章同步======================");
               return;
         }
-        for (String key : keySet) {
+        for (Object key : keySet) {
             DeedsDetail deedsDetail =new DeedsDetail();
-            deedsDetail.setId(Integer.valueOf(key.substring(prefixLength)));
-            deedsDetail.setReadNum((Integer) redisUtil.get(key));
+            deedsDetail.setId(Integer.valueOf(((String) key).substring(prefixLength)));
+            deedsDetail.setReadNum((Integer) redisUtil.get((String) key));
             dtoList.add(deedsDetail);
         }
 

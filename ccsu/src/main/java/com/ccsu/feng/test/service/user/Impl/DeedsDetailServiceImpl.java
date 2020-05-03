@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author admin
@@ -38,7 +41,13 @@ public class DeedsDetailServiceImpl implements DeedsDetailService {
     public DeedsDetailVO getDeedsDetailById(Integer detailId)  {
         QueryWrapper<DeedsDetail> queryWrapper =new QueryWrapper<>();
         queryWrapper.eq("detail_id",detailId);
-        DeedsDetail deedsDetail = deedsDetailMapper.selectOne(queryWrapper);
+        List<DeedsDetail> deedsDetailList = deedsDetailMapper.selectList(queryWrapper);
+        DeedsDetail deedsDetail =null;
+        if (deedsDetailList!=null&&deedsDetailList.size()>0){
+            deedsDetail=deedsDetailList.get(0);
+        }else {
+            return null;
+        }
         DeedsDetailVO deedsDetailVO =new DeedsDetailVO();
         deedsDetailVO.setName(deedsDetail.getName());
         deedsDetailVO.setContent(deedsDetail.getContent());

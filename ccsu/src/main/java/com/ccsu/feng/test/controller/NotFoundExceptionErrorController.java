@@ -15,7 +15,7 @@ public class NotFoundExceptionErrorController implements ErrorController {
     private static final String ERROR_PATH = "/error";
     @RequestMapping(value=ERROR_PATH)
     public String handleError(){
-        return "redirect:error/404";
+        return "redirect:/error/404";
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.ccsu.feng.test.utils.PageResult;
 import com.ccsu.feng.test.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.ListUtils;
 import sun.rmi.runtime.Log;
@@ -93,7 +94,7 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
     @Override
     public BaseRelationship findRelationshipByStarNameAndEndName(String name, String startName, String endName) {
         log.info("startName->{},endName->{}", startName, endName);
-        List<BaseRelationship> ships = relationshipRepository.findRelationshipByStarNameAndEndName(name, startName, endName);
+        List<BaseRelationship<BaseNode,BaseNode>> ships = relationshipRepository.findRelationshipByStarNameAndEndName(name, startName, endName);
         log.info("查找关系为{}", ships);
         if (ships != null && ships.size() > 0) {
             return ships.get(0);
@@ -162,8 +163,9 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
         if (pageIndex > 1) {
             pageIndexNum = (pageIndex - 1) * pageSize;
         }
-        Iterable<BaseRelationship> all = relationshipRepository.findAll();
-        List<BaseRelationship> listRelationshipByPage = relationshipRepository.getListRelationshipByPage(pageIndexNum, pageSize, type);
+
+        Iterable<BaseRelationship> all1 = relationshipRepository.findAll();
+        List<BaseRelationship<BaseNode,BaseNode>> listRelationshipByPage = relationshipRepository.getListRelationshipByPage(pageIndexNum, pageSize, type);
         List<ListRelationVO> list = new ArrayList<>();
         for (BaseRelationship relationship : listRelationshipByPage) {
             ListRelationVO listRelationVO = new ListRelationVO(relationship);
@@ -174,49 +176,37 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
 
     }
 
+    @Cacheable(value = "PersonRelation",key = "#type",unless = "#result==null")
     @Override
     public List<NodeRelationsListVO> getPersonNodRelationByType(String type) {
-        List<NodeRelationsListVO> listVOSRedis = (List<NodeRelationsListVO>) redisUtil.hget("PersonRelation:", type);
-        if (!ListUtils.isEmpty(listVOSRedis)){
-            return  listVOSRedis;
-        }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
                 (x.getStart() instanceof PersonNode) && ( x.getEnd() instanceof PersonNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
-        redisUtil.hset("PersonRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
         return listVOS;
     }
 
+    @Cacheable(value = "WeaponRelation",key = "#type",unless = "#result==null")
     @Override
     public List<NodeRelationsListVO> getWeaponNodRelationByType(String type) {
-        List<NodeRelationsListVO> listVOSRedis = (List<NodeRelationsListVO>) redisUtil.hget("WeaponRelation:", type);
-        if (!ListUtils.isEmpty(listVOSRedis)){
-            return  listVOSRedis;
-        }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
                 (x.getStart() instanceof WeaponNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
-        redisUtil.hset("WeaponRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
         return listVOS;
     }
 
 
+    @Cacheable(value = "PlaceRelation",key = "#type",unless = "#result==null")
     @Override
     public List<NodeRelationsListVO> getPlaceNodRelationByType(String type) {
-        List<NodeRelationsListVO> listVOSRedis = (List<NodeRelationsListVO>) redisUtil.hget("PlaceRelation:", type);
-        if (!ListUtils.isEmpty(listVOSRedis)){
-            return  listVOSRedis;
-        }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
                 (x.getStart() instanceof PlaceNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
-        redisUtil.hset("PlaceRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
         return listVOS;
     }
 
@@ -231,6 +221,8 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
         });
         return  listVOS;
     }
+
+
 
     @Override
     public List<NodeRelationsListVO> getPersonNodRelationByName(String name) {
@@ -368,6 +360,7 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
       redisUtil.hset("DeedsRelationByName:",name,listVOS,LoginTime.SAVE_LOGIN_TIME.getTime());
         return listVOS;
     }
+
 
     @Override
     public DeedsTreeVO getTreeDeedsNodRelationByName(String name) {

@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <div id="title">
+        <title>西行地图</title></div>
+    <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../common/statics/css/navperson.css"/>
+    <link rel="stylesheet" type="text/css" href="../../common/css/person.css"/>
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script type="text/javascript" src="../../common/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="../../common/js/person.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <link rel="dns-prefetch" href="//apps.bdimg.com">
+    <link rel="dns-prefetch" href="//hm.baidu.com">
+    <link rel="dns-prefetch" href="//changyan.sohu.com">
+    <link rel="dns-prefetch" href="//changyan.itc.cn">
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css" type="text/css" media="all">
+    <link rel="stylesheet" href="//apps.bdimg.com/libs/fontawesome/4.4.0/css/font-awesome.min.css" type="text/css" media="all">
+    <link rel="stylesheet" href="//www.sdmz.net/skin/v2/css/common.css" type="text/css" media="all">
+    <script type="text/javascript" src="//apps.bdimg.com/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script async="" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--[if lt IE 9]><script src="//apps.bdimg.com/libs/html5shiv/r29/html5.min.js"></script><![endif]-->
+    <script src="//www.sdmz.net/e/data/js/ajax.js"></script>
+    <script src="//www.sdmz.net/skin/v2/js/content.js"></script>
+    <link href="//www.sdmz.net/skin/v2/leaflet/leaflet.css" rel="stylesheet">
+    <script src="//www.sdmz.net/skin/v2/leaflet/leaflet.js"></script>
+    <script src="//www.sdmz.net/skin/v2/leaflet/leaflet.ChineseTmsProviders.js"></script>
+
+</head>
+
+<style>
+    #tip1{
+        height:35px;
+        background-color:#fff;
+        padding-left:10px;
+        padding-right:10px;
+        border:1px solid #969696;
+        position:absolute;
+        font-size:12px;
+        right:10px;
+        top:20px;
+        border-radius:3px;
+        line-height:35px;
+    }
+
+    #tip1 input[type='button']{
+        height:22px;
+        line-height:22px;
+        outline:none;
+        text-align:center;
+        padding-left:5px;
+        padding-right:5px;
+        color:#FFF;
+        background-color:#0D9BF2;
+        border:0;
+        border-radius: 3px;
+        margin-top:8px;
+        margin-left:5px;
+        cursor:pointer;
+        margin-right:10px;
+    }
+
+    #mappan {height:500px;}
+    /*
+    1px  solid
+    */
+
+    #result {float:left;height:610px;overflow-y:scroll;}
+    #result a{font-size:12px;}
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+
+    .nav .login {
+        padding-top: 25px;
+        float: right;
+    }
+    .nav .login a {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;
+    }
+
+    .nav .login a:nth-child(1) {
+        padding-left: 30px;
+    }
+
+    .nav .login a:nth-child(2) {
+        background: #FD8A08;
+        border-radius: 4px;
+        color: #fff;
+        margin-right: 10px;
+        width: 80px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0;
+        text-align: center;
+    }
+
+    .head_img {
+        height: 50px;
+    }
+
+    .head_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        position: absolute;
+        left: 990px;
+        top: 16px;
+    }
+
+
+    circle {
+        fill: #ccc;
+        stroke: #333;
+        stroke-width: 1.5px;
+    }
+
+    text {
+        font: 10px Microsoft YaHei;
+        pointer-events: none;
+        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+    }
+    .el-icon-plus:before {
+        position: absolute;
+        top: 25px;
+        font-size: 30px;
+        margin-left: 60px;
+        content: "\e6d9";
+        cursor: pointer;
+    }
+    .el-icon-minus:before {
+        position: absolute;
+        top: 25px;
+        font-size: 30px;
+        margin-left: 140px;
+        content: "\e6d8";
+        cursor: pointer;
+    }
+    #tip1{
+        height:35px;
+        background-color:#fff;
+        padding-left:10px;
+        padding-right:10px;
+        border:1px solid #969696;
+        position:absolute;
+        font-size:12px;
+        right:10px;
+        top:100px;
+        border-radius:3px;
+        line-height:35px;
+    }
+
+    #tip1 input[type='button']{
+        height:22px;
+        line-height:22px;
+        outline:none;
+        text-align:center;
+        padding-left:5px;
+        padding-right:5px;
+        color:#FFF;
+        background-color:#0D9BF2;
+        border:0;
+        border-radius: 3px;
+        margin-top:8px;
+        margin-left:5px;
+        cursor:pointer;
+        margin-right:10px;
+    }
+    .el-icon-star-off:before {
+        font-size: 40px;
+        content: "\e717";
+        cursor: pointer;
+    }
+
+    .el-icon-star-on:before {
+        font-size: 40px;
+        content: "\e797";
+        cursor: pointer;
+    }
+    .el-icon-arrow-down::before {
+        position: absolute;
+        content: "\e6df";
+        top: 20px;
+    }
+    .abc{
+        position: relative;
+        margin: 0 auto 50px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-shadow: 0 1px 3px rgba(0,0,0,.3);
+        box-sizing: border-box;
+        width: 80%;
+    }
+</style>
+
+<body>
+
+<div id="table">
+
+    <!--导航开始-->
+    <div class="nav" style="
+    background-color: #292929;
+">
+        <div id="menu_hover_bg" style="height: 0px; overflow: hidden;"></div>
+        <div class="w1200">
+
+            <div class="menu">
+                <ul>
+                    <li id="men_pro">
+                        <h2><a href="/">首页</a></h2>
+                        <div class="sub_menu">
+                            <div class="h30"></div>
+
+                            <div class="sub_menu_list" style="width: 315px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/fxw.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                分销王
+                                            </h3>
+                                            <p>
+                                                全终端分销平台，PC+手机+微信合一
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/sqws.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                社群微商
+                                            </h3>
+                                            <p>
+                                                热门移动分销软件，快速引分销流量
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="sub_menu_list" style="width: 295px;">
+                                <h3 class="pl20">订货/分销/批发系统</h3>
+                                <div class="list pl20">
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/erp.png" alt="">
+                                        </div>
+                                        <div class="info">
+
+                                            <p>
+                                                对接43+平台, 订单库存统一管理
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/hdt.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                货店通
+                                            </h3>
+                                            <p>
+                                                多平台一键铺货神器，省时便捷
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/crm.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                会员通
+                                            </h3>
+                                            <p>
+                                                专业电商CRM，更快了解客户
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/taoda.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                淘打
+                                            </h3>
+                                            <p>
+                                                订单批量打印，对接10+主流平台
+                                            </p>
+                                        </div>
+                                    </a>
+                                    <a href="#">
+                                        <div class="icon">
+                                            <img src="../../common/statics/images/ysd.png" alt="">
+                                        </div>
+                                        <div class="info">
+                                            <h3>
+                                                云云收订
+                                            </h3>
+                                            <p>
+                                                对接40+主流平台，订单实时获取
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li id="men_sol1">
+                        <h2><a href="#">西游记</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 950px;">
+                                    <h3>西游记</h3>
+                                    <div class="list sol_list">
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    人物关系
+                                                </h3>
+                                                <p>
+                                                    查询人物<br> 展示人物关系图谱
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon4.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon5.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    门店/移动/社交/微商
+                                                </h3>
+                                                <p>
+                                                    移动/社交/门店业务<br> 帮助企业拓展移动新零售格局
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li id="men_fuwu">
+                        <h2 class="men_sol"><a href="#">三国演义</a></h2>
+                        <div class="sub_menu">
+                            <div class="w1200">
+                                <h3>服务市场</h3></div>
+                            <div class="sub_menu_list">
+                                <div class="category">
+                                    <ul>
+                                        <li>热销产品推荐</li>
+                                        <li>店铺模板/二开/插件定制</li>
+                                        <li>营销推广流量</li>
+                                        <li>软件配套服务</li>
+                                    </ul>
+                                </div>
+                                <div class="content">
+                                    <div class="cont_list" style="display: block;">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon1.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon2.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon3.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon4.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon5.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon6.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon7.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon8.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon9.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon10.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon11.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon12.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon13.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon14.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="cont_list">
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon15.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon16.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon17.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon18.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                        <a href="#">
+                                            <div class="icon"><img src="../../common/statics/images/fw_icon19.png"/>
+                                            </div>
+                                            <div class="info">
+                                                <h3>一键搭建微商城</h3>
+                                                <p>人气提升+基础设置+模板安装+操作培训，统统帮你搞定</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><a href="#">水浒传</a></h2>
+                    </li>
+                    <li>
+                        <h2><a href="#">红楼梦</a></h2>
+                    </li>
+                    <li id="men_sol">
+                        <h2><a href="#">关于作者</a></h2>
+                        <div class="sub_menu sol_left">
+                            <div class="h30"></div>
+                            <div>
+                                <div class="sub_menu_list" style="width: 1250px;">
+                                    <h3></h3>作者介绍</h3>
+                                    <div class="list sol_list">
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E5%90%B4%E6%89%BF%E6%81%A9/18713182#4">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    西游记
+                                                </h3>
+                                                <p>
+                                                    吴承恩（约1500—1583<br> 明代小说家，淮安府山阳县河下人（现江苏省淮安市淮安区）
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E7%BD%97%E8%B4%AF%E4%B8%AD/172206">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    三国演义
+                                                </h3>
+                                                <p>
+                                                    罗贯中（约1330年－约1400年）<br> 名本，字贯中，号湖海散人，元末明初小说家
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%96%BD%E8%80%90%E5%BA%B5">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    水浒传
+                                                </h3>
+                                                <p>
+                                                    施耐庵（约1296年—约1370年）<br> 江苏兴化人，原名彦端，字肇瑞，号子安，别号耐庵
+                                                </p>
+                                            </div>
+                                        </a>
+                                        <a target="_blank"
+                                           href="https://baike.baidu.com/item/%E6%9B%B9%E9%9B%AA%E8%8A%B9/14919">
+                                            <div class="icon">
+                                                <img src="../../common/statics/images/sol_icon3.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>
+                                                    红楼梦
+                                                </h3>
+                                                <p>曹雪芹（约1715年5月—约1763年2月）<br> 名沾，字梦阮，号雪芹，又号芹溪、芹圃；出生于江宁（今南京）
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div id="123" v-if="userInfo.flag">
+                <div class="login">
+                    <a href="/page/login">
+                        <div class="head_img">
+                            <img :src="originPicture"/>
+                        </div>
+                        <span style="position: absolute;left: 1055px;top: 25px;"> 登陆 </span>
+                    </a>
+                    <a href="/page/register">免费注册</a>
+                </div>
+            </div>
+            <div v-else>
+                <div class="login">
+                    <div class="head_img">
+                        <img :src="userInfo.picture"/>
+                    </div>
+                    <el-dialog v-loading="loading"
+                               element-loading-text="拼命上传中"
+                               element-loading-spinner="el-icon-loading"
+                               element-loading-background="rgba(0, 0, 0, 0.8)"
+
+                               title="修改头像" :visible.sync="dialogFormVisible">
+                        <el-upload
+                                class="avatar-uploader"
+                                action="/admin/file/ftpUploadImg"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccessEdit"
+                                :before-upload="beforeAvatarUploadEdit">
+                            <img v-if="imgTemp" :src="imgTemp" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="update()">确 定</el-button>
+                        </div>
+                    </el-dialog>
+
+
+
+
+
+                    <span style="position: absolute;left: 1055px;top: 25px;height: 30px;
+        cursor: pointer;width: 200px">  <el-dropdown trigger="click" @command="handleCommand">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+     {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
+    <el-dropdown-item>个人收藏</el-dropdown-item>
+      <el-dropdown-item command="loginOut">退出</el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+                    <span style="position: absolute;left: 1195px;top: 25px;height: 30px;
+        cursor: pointer;width: 100px">  <el-dropdown trigger="click" @command="handleCollect">
+  <span style="  line-height: 30px;
+        padding: 0 10px;
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 19px;" class="el-dropdown-link">
+
+      <i  v-if="collectFlag"  title="添加收藏"  class="el-icon-star-off"></i>
+      <i  v-if="!collectFlag" title="取消收藏" class="el-icon-star-on"></i>
+          <i class="el-icon-arrow-down el-icon--right"></i>
+  </span>
+  <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item  v-if="collectFlag" command="add">添加收藏</el-dropdown-item>
+       <el-dropdown-item  v-if="!collectFlag" command="cancel">已收藏(取消收藏)</el-dropdown-item>
+      <el-dropdown-item command="share">分享</el-dropdown-item>
+
+  </el-dropdown-menu>
+</el-dropdown></span>
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--导航结束-->
+    <!--轮播开始-->
+
+
+
+
+
+
+
+    <!-- 分享到 -->
+    <el-dialog class="abc" title="分享到" :visible.sync="dialogFormVisibleShare">
+        <div style="height: 50px;width: 50px; cursor: pointer"  @click="shareToQzone()">
+            <img style="width: 50px; height: 50px;" src="../../common/image/QQkong.png"/>
+            <span style="position: absolute;left: 20px;margin-top: 60px">QQ空间</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 150px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/pyquan.png"/>
+            <span style="position: absolute;left: 20px; width: 60px; margin-top: 60px">朋友圈</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 300px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/weibo.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">微博</span>
+        </div>
+
+        <div style="height: 50px;width: 50px; cursor: pointer;left: 450px;margin-top: -50px;position: absolute;">
+            <img style="width: 50px;     position: absolute;height: 50px;margin-left: 16px;" src="../../common/image/qunzu.png"/>
+            <span style="position: absolute;left: 26px; width: 60px; margin-top: 60px">QQ好友</span>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisibleShare=false">退出</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+<section class="container container-page">
+    <div class="pageside" style="margin-top: 100px;">
+        <div class="pagemenus">
+            <ul class="pagemenu" id="result">
+                <li onclick="getmap(1);"><a href="javacript:void(0);">金蝉遭贬第一难</a></li>
+                <li onclick="getmap(2);"><a href="javacript:void(0);">出胎几杀第二难</a></li>
+                <li onclick="getmap(3);"><a href="javacript:void(0);">满月抛江第三难</a></li>
+                <li onclick="getmap(4);"><a href="javacript:void(0);">寻亲报冤第四难</a></li>
+                <li onclick="getmap(5);"><a href="javacript:void(0);">出城逢虎第五难</a></li>
+                <li onclick="getmap(6);"><a href="javacript:void(0);">落坑折从第六难</a></li>
+                <li onclick="getmap(7);"><a href="javacript:void(0);">双叉岭上第七难</a></li>
+                <li onclick="getmap(8);"><a href="javacript:void(0);">两界山头第八难</a></li>
+                <li onclick="getmap(9);"><a href="javacript:void(0);">陡涧换马第九难</a></li>
+                <li onclick="getmap(10);"><a href="javacript:void(0);">夜被火烧第十难</a></li>
+                <li onclick="getmap(11);"><a href="javacript:void(0);">失却袈裟十一难</a></li>
+                <li onclick="getmap(12);"><a href="javacript:void(0);">收降八戒十二难</a></li>
+                <li onclick="getmap(13);"><a href="javacript:void(0);">黄风怪阻十三难</a></li>
+                <li onclick="getmap(14);"><a href="javacript:void(0);">请求灵吉十四难</a></li>
+                <li onclick="getmap(15);"><a href="javacript:void(0);">流沙难渡十五难</a></li>
+                <li onclick="getmap(16);"><a href="javacript:void(0);">收得沙僧十六难</a></li>
+                <li onclick="getmap(17);"><a href="javacript:void(0);">四圣显化十七难</a></li>
+                <li onclick="getmap(18);"><a href="javacript:void(0);">五庄观中十八难</a></li>
+                <li onclick="getmap(19);"><a href="javacript:void(0);">难活人参十九难</a></li>
+                <li onclick="getmap(20);"><a href="javacript:void(0);">贬退心猿二十难</a></li>
+                <li onclick="getmap(21);"><a href="javacript:void(0);">黑松林失散二十一难</a></li>
+                <li onclick="getmap(22);"><a href="javacript:void(0);">宝象国捎书二十二难</a></li>
+                <li onclick="getmap(23);"><a href="javacript:void(0);">金銮殿变虎二十三难</a></li>
+                <li onclick="getmap(24);"><a href="javacript:void(0);">平顶山逢魔二十四难</a></li>
+                <li onclick="getmap(25);"><a href="javacript:void(0);">莲花洞高悬二十五难</a></li>
+                <li onclick="getmap(26);"><a href="javacript:void(0);">乌鸡国救主二十六难</a></li>
+                <li onclick="getmap(27);"><a href="javacript:void(0);">被魔化身二十七难</a></li>
+                <li onclick="getmap(28);"><a href="javacript:void(0);">号山逢怪二十八难</a></li>
+                <li onclick="getmap(29);"><a href="javacript:void(0);">风摄圣僧二十九难</a></li>
+                <li onclick="getmap(30);"><a href="javacript:void(0);">心猿遭害三十难</a></li>
+                <li onclick="getmap(31);"><a href="javacript:void(0);">请圣降妖三十一难</a></li>
+                <li onclick="getmap(32);"><a href="javacript:void(0);">黑河沉没三十二难</a></li>
+                <li onclick="getmap(33);"><a href="javacript:void(0);">搬运车迟三十三难</a></li>
+                <li onclick="getmap(34);"><a href="javacript:void(0);">大赌输赢三十四难</a></li>
+                <li onclick="getmap(35);"><a href="javacript:void(0);">祛道兴僧三十五难</a></li>
+                <li onclick="getmap(36);"><a href="javacript:void(0);">路逢大水三十六难</a></li>
+                <li onclick="getmap(37);"><a href="javacript:void(0);">身落天河三十七难</a></li>
+                <li onclick="getmap(38);"><a href="javacript:void(0);">鱼篮现身三十八难</a></li>
+                <li onclick="getmap(39);"><a href="javacript:void(0);">金兜山遇怪三十九难</a></li>
+                <li onclick="getmap(40);"><a href="javacript:void(0);">普天神难伏四十难</a></li>
+                <li onclick="getmap(41);"><a href="javacript:void(0);">问佛根源四十一难</a></li>
+                <li onclick="getmap(42);"><a href="javacript:void(0);">吃水遭毒四十二难</a></li>
+                <li onclick="getmap(43);"><a href="javacript:void(0);">西梁国留婚四十三难</a></li>
+                <li onclick="getmap(44);"><a href="javacript:void(0);">琵琶洞受苦四十四难</a></li>
+                <li onclick="getmap(45);"><a href="javacript:void(0);">再贬心猿四十五难</a></li>
+                <li onclick="getmap(46);"><a href="javacript:void(0);">难辨猕猴四十六难</a></li>
+                <li onclick="getmap(47);"><a href="javacript:void(0);">路阻火焰山四十七难</a></li>
+                <li onclick="getmap(48);"><a href="javacript:void(0);">求取芭蕉扇四十八难</a></li>
+                <li onclick="getmap(49);"><a href="javacript:void(0);">收缚魔王四十九难</a></li>
+                <li onclick="getmap(50);"><a href="javacript:void(0);">赛城扫塔五十难</a></li>
+                <li onclick="getmap(51);"><a href="javacript:void(0);">取宝救僧五十一难</a></li>
+                <li onclick="getmap(52);"><a href="javacript:void(0);">棘林吟咏五十二难</a></li>
+                <li onclick="getmap(53);"><a href="javacript:void(0);">小雷音遇难五十三难</a></li>
+                <li onclick="getmap(54);"><a href="javacript:void(0);">诸天神遭困五十四难</a></li>
+                <li onclick="getmap(55);"><a href="javacript:void(0);">稀柿衕秽阻五十五难</a></li>
+                <li onclick="getmap(56);"><a href="javacript:void(0);">朱紫国行医五十六难</a></li>
+                <li onclick="getmap(57);"><a href="javacript:void(0);">拯救疲癃五十七难</a></li>
+                <li onclick="getmap(58);"><a href="javacript:void(0);">降妖取后五十八难</a></li>
+                <li onclick="getmap(59);"><a href="javacript:void(0);">七情迷没五十九难</a></li>
+                <li onclick="getmap(60);"><a href="javacript:void(0);">多目遭伤六十难</a></li>
+                <li onclick="getmap(61);"><a href="javacript:void(0);">路阻狮驼六十一难</a></li>
+                <li onclick="getmap(62);"><a href="javacript:void(0);">怪分三色六十二难</a></li>
+                <li onclick="getmap(63);"><a href="javacript:void(0);">城里遇灾六十三难</a></li>
+                <li onclick="getmap(64);"><a href="javacript:void(0);">请佛收魔六十四难</a></li>
+                <li onclick="getmap(65);"><a href="javacript:void(0);">比丘救子六十五难</a></li>
+                <li onclick="getmap(66);"><a href="javacript:void(0);">辨认真邪六十六难</a></li>
+                <li onclick="getmap(67);"><a href="javacript:void(0);">松林救怪六十七难</a></li>
+                <li onclick="getmap(68);"><a href="javacript:void(0);">僧房卧病六十八难</a></li>
+                <li onclick="getmap(69);"><a href="javacript:void(0);">无底洞遭困六十九难</a></li>
+                <li onclick="getmap(70);"><a href="javacript:void(0);">灭法国难行七十难</a></li>
+                <li onclick="getmap(71);"><a href="javacript:void(0);"> 隐雾山遇魔七十一难</a></li>
+                <li onclick="getmap(72);"><a href="javacript:void(0);">凤仙郡求雨七十二难</a></li>
+                <li onclick="getmap(73);"><a href="javacript:void(0);">失落兵器七十三难</a></li>
+                <li onclick="getmap(74);"><a href="javacript:void(0);">会庆钉钯七十四难</a></li>
+                <li onclick="getmap(75);"><a href="javacript:void(0);">竹节山遭难七十五难</a></li>
+                <li onclick="getmap(76);"><a href="javacript:void(0);">玄英洞受苦七十六难</a></li>
+                <li onclick="getmap(77);"><a href="javacript:void(0);">赶捉犀牛七十七难</a></li>
+                <li onclick="getmap(78);"><a href="javacript:void(0);">天竺招婚七十八难</a></li>
+                <li onclick="getmap(79);"><a href="javacript:void(0);">铜台府监禁七十九难</a></li>
+                <li onclick="getmap(80);"><a href="javacript:void(0);">凌云渡脱胎八十难</a></li>
+                <li onclick="getmap(81);"><a href="javacript:void(0);">通天河鼋湿经八十一难</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content" style="margin-top: 100px; color: black">
+        <header class="article-header" >
+            <h1 class="article-title"><a href="/map/81nan.html">西行记</a></h1>
+        </header>
+        <!--内容开始-->
+        <article class="article-content">
+            <div id="mappan" class="leaflet-container leaflet-retina leaflet-fade-anim" tabindex="0" style="position: relative;"><div class="leaflet-map-pane" style="transform: translate3d(6245px, 1632px, 0px);"><div class="leaflet-tile-pane"></div><div class="leaflet-objects-pane"><div class="leaflet-shadow-pane"></div><div class="leaflet-overlay-pane"><img class="leaflet-image-layer leaflet-zoom-animated" src="http://www.sdmz.net/d/map/xy/81nan.jpg" style="opacity: 1; transform: translate3d(-9084px, -5274px, 0px); width: 15292px; height: 7320px;"><svg class="leaflet-zoom-animated" width="1228" height="651" viewBox="-6387 -1708 1228 651" style="transform: translate3d(-6387px, -1708px, 0px);"><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M-5519.650088809946 -1057L-5472 -1250"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M-5472 -1250L-5730 -1302"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M-5730 -1302L-5824 -1276"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M-5824 -1276L-6195.347826086956 -1057"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M-6387 -1330.4360086767897L-6064 -1507"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M-6064 -1507L-5793 -1640"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M-5793 -1640L-5952.2405063291135 -1708"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g><g><path stroke-linejoin="round" stroke-linecap="round" stroke="red" stroke-opacity="0.5" stroke-width="5" fill="none" class="leaflet-clickable" d="M0 0"></path></g></svg></div><div class="leaflet-marker-pane"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5960px, 24px, 0px); z-index: 24;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-7469px, -2314px, 0px); z-index: -2314;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-7530px, -2099px, 0px); z-index: -2099;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-7006px, -2231px, 0px); z-index: -2231;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6590px, -2246px, 0px); z-index: -2246;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6514px, -2241px, 0px); z-index: -2241;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6678px, -2047px, 0px); z-index: -2047;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-7164px, -1976px, 0px); z-index: -1976;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6928px, -2044px, 0px); z-index: -2044;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6949px, -1846px, 0px); z-index: -1846;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6998px, -1401px, 0px); z-index: -1401;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6661px, -1710px, 0px); z-index: -1710;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6310px, -1824px, 0px); z-index: -1824;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6072px, -1751px, 0px); z-index: -1751;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5978px, -1719px, 0px); z-index: -1719;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5793px, -1640px, 0px); z-index: -1640;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6064px, -1507px, 0px); z-index: -1507;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6525px, -1255px, 0px); z-index: -1255;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6608px, -1255px, 0px); z-index: -1255;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6666px, -1192px, 0px); z-index: -1192;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6724px, -1119px, 0px); z-index: -1119;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-7065px, -872px, 0px); z-index: -872;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-7184px, -693px, 0px); z-index: -693;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6838px, -714px, 0px); z-index: -714;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6671px, -872px, 0px); z-index: -872;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6359px, -898px, 0px); z-index: -898;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6253px, -1023px, 0px); z-index: -1023;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5824px, -1276px, 0px); z-index: -1276;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5730px, -1302px, 0px); z-index: -1302;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5472px, -1250px, 0px); z-index: -1250;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5611px, -687px, 0px); z-index: -687;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5672px, -849px, 0px); z-index: -849;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5833px, -651px, 0px); z-index: -651;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5901px, -526px, 0px); z-index: -526;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5931px, -668px, 0px); z-index: -668;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6014px, -576px, 0px); z-index: -576;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6172px, -655px, 0px); z-index: -655;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6422px, -525px, 0px); z-index: -525;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6521px, -320px, 0px); z-index: -320;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-6377px, -304px, 0px); z-index: -304;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5953px, -377px, 0px); z-index: -377;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5885px, -383px, 0px); z-index: -383;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5823px, -386px, 0px); z-index: -386;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5685px, -352px, 0px); z-index: -352;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5899px, -87px, 0px); z-index: -87;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5473px, 79px, 0px); z-index: 79;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5074px, -122px, 0px); z-index: -122;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5242px, -268px, 0px); z-index: -268;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-5008px, -568px, 0px); z-index: -568;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-4727px, -647px, 0px); z-index: -647;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-4684px, -811px, 0px); z-index: -811;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-4643px, -816px, 0px); z-index: -816;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-4608px, -835px, 0px); z-index: -835;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-4479px, -1137px, 0px); z-index: -1137;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-4553px, -1457px, 0px); z-index: -1457;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-4646px, -1763px, 0px); z-index: -1763;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3961px, -1195px, 0px); z-index: -1195;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3862px, -1240px, 0px); z-index: -1240;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3698px, -1315px, 0px); z-index: -1315;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3452px, -1205px, 0px); z-index: -1205;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3525px, -1542px, 0px); z-index: -1542;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3554px, -1858px, 0px); z-index: -1858;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3283px, -1626px, 0px); z-index: -1626;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3254px, -1632px, 0px); z-index: -1632;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3078px, -1591px, 0px); z-index: -1591;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3012px, -1676px, 0px); z-index: -1676;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-3135px, -2008px, 0px); z-index: -2008;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2914px, -2029px, 0px); z-index: -2029;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2847px, -2030px, 0px); z-index: -2030;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2474px, -2050px, 0px); z-index: -2050;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2250px, -2019px, 0px); z-index: -2019;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2346px, -1829px, 0px); z-index: -1829;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2140px, -1839px, 0px); z-index: -1839;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2049px, -1933px, 0px); z-index: -1933;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-2000px, -1987px, 0px); z-index: -1987;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-1846px, -1906px, 0px); z-index: -1906;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-1568px, -1707px, 0px); z-index: -1707;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-1502px, -1590px, 0px); z-index: -1590;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-1392px, -1571px, 0px); z-index: -1571;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-1375px, -1582px, 0px); z-index: -1582;"><img src="http://www.sdmz.net/d/map/xy/tsqm.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-clickable" tabindex="0" style="margin-left: -14px; margin-top: -42px; width: 26px; height: 42px; transform: translate3d(-863px, -1298px, 0px); z-index: -1298;"></div><div class="leaflet-popup-pane"><div class="leaflet-popup  leaflet-zoom-animated" style="opacity: 1; transform: translate3d(-5472px, -1250px, 0px); bottom: 33px; left: -176px;"><a class="leaflet-popup-close-button" href="#close">×</a><div class="leaflet-popup-content-wrapper"><div class="leaflet-popup-content" style="width: 301px;"><div class="Popupinfo"><h3><font color="#00a6ac">52. 棘林吟咏</font></h3><a href="/page/xi/deedsDetail//96802.htm" target="_blank"><img style="width:150px;overflow:hidden;float:right;padding:5;" src="http://www.sdmz.net/d/map/xy/81/52.jpg"></a>话说祭赛国王谢了唐三藏师徒获宝擒怪之恩，与众官和伏龙寺僧人送到城外，继续西行。路遇八百里荆棘岭阻住去路，八戒显能，长大二十丈高身躯，披荆斩棘开出一条道，师徒跟着八戒行了两日，天色将晚，见一古庙，一老头跪地向大圣说是荆棘岭土地，被大圣识破，老头化一阵阴风把唐僧卷起。老头乃是荆棘岭树精，把唐僧摄来无歹意，只是请高僧讲经。还有孤直公柏树精，凌空子桧树精，拂云叟竹竿精，赤身鬼枫树精，杏仙杏树精，女童丹桂、腊梅精。与唐僧谈诗论经一番。</div></div></div><div class="leaflet-popup-tip-container"><div class="leaflet-popup-tip"></div></div></div></div></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in leaflet-disabled" href="#" title="Zoom in">+</a><a class="leaflet-control-zoom-out" href="#" title="Zoom out">-</a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a></div></div></div></div>
+        </article>
+
+        <script language="javascript">
+
+            var map = L.map('mappan',{ center: [0, 0],minZoom: 4,maxZoom: 9,zoom:6});
+            var imageUrl = 'http://www.sdmz.net/d/map/xy/81nan.jpg';
+            var imageBounds = [
+                [10,
+                21],
+                [-10,
+                -21]
+            ];
+            L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+
+            // 使用用户自己的图标
+            var greenIcon = L.icon({
+                iconUrl: 'http://www.sdmz.net/d/map/xy/tsqm.png',
+                iconSize:     [26,42],    // size of the icon
+                iconAnchor:   [14,42], // point of the icon which will correspond to marker's location
+                popupAnchor:  [-5, -40] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+            var list =[
+                [1,'金蝉遭贬',[-0.86789, 1.57928],'http://www.sdmz.net/d/map/xy/81/1.jpg','金蝉遭贬，是西游记九九八十一难第一难。金蝉子，是如来佛祖的二徒弟。话说金蝉子，无论是何种原因，是因为不遵守一些规则，还是因为他主动请缨去传播相应的教义，还是说金蝉子是下凡历练。不管怎样，总之呢，是选定他去做这个事情。','/page/xi/deedsDetail/456'],
+                [2,'出胎几杀',[-0.08789, 0.17303],'http://www.sdmz.net/d/map/xy/81/2.jpg','唐僧之父陈萼字光蕊，少年得志，一举考中状元。殷丞相之女抛绣球招亲，将绣球投向恰好路过的心仪的光蕊，两人从此结为夫妻。光蕊赴任途中，一个叫刘洪的恶霸，暗中偷袭杀害了光蕊，并将其推入江内。刘贪恋光蕊夫人美色，欲将其占为己有。殷夫人，怀着陈的孩子，只得忍辱偷生。于是，印鉴，官袍，夫人都为其所有，刘洪就成了陈光蕊。刘洪有一次外出，殷夫人刚好产下了孩子，为免刘洪加害，只得偷偷把孩子放在摇篮，随波逐流，并留血书一封，期盼天可怜见，有忍能救得孩子，以期日后团圆。','/page/xi/deedsDetail/413'],
+                [3,'满月抛江',[-0.1181, 0.12634],'http://www.sdmz.net/d/map/xy/81/3.jpg','刘洪有一次外出，殷夫人刚好产下了孩子，为免刘洪加害，只得偷偷把孩子放在摇篮，随波逐流，并留血书一封，期盼天可怜见，有忍能救得孩子，以期日后团圆。考取状元后封为江州州主，上任途中被害，贼人冒名顶替去了江州，其母在江州府衙生了小唐僧，因故抛弃江中，被和尚拾得，故小名江流儿。江州即现在的江西九江。','/page/xi/deedsDetail/416'],
+                [4,'寻亲报冤',[-0.06592, -0.17578],'http://www.sdmz.net/d/map/xy/81/4.jpg','未曾满月的唐僧被母亲忍痛放入江中，在木板上顺江漂流，正巧被金山寺的长老发现，并抱回寺中抚养;十八年后，已是佛门弟子的唐僧知道了自己的身世。得知亲生父母的重大冤情后，唐僧悲痛不已，决心要为父母申冤报仇。他先是遵从师父的指引找到了身处忍辱中的母亲，随后又在母亲的告知下找到了祖母及外公。最终不但为父母申报了冤屈，而且还见到了死而复生的父亲陈光蕊，一家团圆…','/page/xi/deedsDetail/420'],
+                [5,'出城逢虎',[0.25543, -0.35706],'http://www.sdmz.net/d/map/xy/81/5.jpg','唐僧带领两名随从辞别长安之后，沿着观音菩萨所指的方向，一路西行，正式开始了赶赴灵山的取经大业。由于唐僧取经心切，迫于求成，一心只想着早日到达灵山，取得真经，完全轻视了西行之路暗藏的妖魔鬼怪以及困难。结果因为赶路太急，一不小心跌入了一只号称“寅将军”，也就是老虎精的洞穴之中。','/page/xi/deedsDetail/420'],
+                [6,'落坑折从',[0.80073, -1.11975],'http://www.sdmz.net/d/map/xy/81/6.jpg','唐僧以及他随从一行人落入坑中之后，被小妖们去献给妖王。最后呢，妖魔把唐僧的随从们都吃掉了，唯独留下了唐僧，最后，唐僧被太白金星所救。','/page/xi/deedsDetail/1031'],
+                [7,'双叉岭上',[1.02317, -1.54273],'http://www.sdmz.net/d/map/xy/81/7.jpg','双叉岭是虎狼巢穴之地，山路崎岖，经常有猛兽出现。那么唐僧刚出虎穴受完惊吓，随从都被吃掉了，又来到了这个凶险之处。我们试想一下啊，当人们受完惊吓以后，疲劳过度，无论精神还是身体，会变得非常的软弱。当体力和精神已经耗尽的时候，独自走在非常危险的山中，对心理是一次重大的考验。','/page/xi/deedsDetail/425'],
+                [8,'两界山头',[0.87613, -1.67816],'http://www.sdmz.net/d/map/xy/81/8.jpg','两界山又叫五行山，我们都知道，大闹天宫的孙悟空，被如来佛祖降服后，从天而降五行山，把孙悟空封压在山下。快到五百年的时候，观音指引他，一心等候取经人，共赴西行，以求正果。五百年后，唐僧在刘伯钦的护送之下行至两界山，命中注定的师徒二人终于相逢。唐僧奋力登上了两界山顶，揭下了佛祖的“金字压帖”，解救了孙悟空，从此收了西行“团队”的第一位神徒——齐天大圣孙悟空。','/page/xi/deedsDetail/423'],
+                [9,'陡涧换马',[0.61797, -1.9281],'http://www.sdmz.net/d/map/xy/81/9.jpg','孙悟空和唐僧一路继续西行，中途呢，小白龙吃了唐僧的马，唐僧泪如雨落，也没有办法，孙悟空也是抓耳挠腮，不知道怎么解决。看过西游记的朋友都知道这样一个剧情。','/page/xi/deedsDetail/428'],
+                [10,'夜被火烧',[0.5905, -2.4939],'http://www.sdmz.net/d/map/xy/81/10.jpg','观音寺的方丈虽然在寺院，但他有贪财爱宝之心。唐僧来了以后，他无论是以茶款待，还是种种招待，都是去显示自己富贵之处。唐僧自小儿生长在佛门，没有贪欲之心，无欲无求。可是孙悟空受不了这个气，这也是我们心的映射。我们和朋友在一起聊天的时候，常会有这个攀比之心，从这儿就能显现出来。','/page/xi/deedsDetail/315'],
+                [11,'失却袈裟',[1.1123, -2.23022],'http://www.sdmz.net/d/map/xy/81/11.jpg','当晚，当孙悟空发现观音寺的和尚们，在老方丈的指使下，纵火烧禅房，想要害死他们师徒二人时，孙悟空并没有做出打杀的状态，而是飞上天宫，向广目天王借来了“辟火罩”，把唐僧保护起来，然后施法做了大风，火借风势、风借火势，将整个寺院烧得漫天通红、凄惨无比。','/page/xi/deedsDetail/316'],
+                [12,'收降八戒',[1.19742, -2.84546],'http://www.sdmz.net/d/map/xy/81/12.jpg','唐僧孙悟空他们一路走来，不知不觉到了高老庄。高老庄这户本是人家，不是什么妖怪。他们家也有他们家的愁事。高老先生呢，就讲了自己的苦衷。看过八六版电视剧的朋友都知道，高小姐被猪八戒所变化的一个大汉所救，把她送回家以后呢，高老庄主和高小姐的母亲，看这位大汉很不错，把他留了下来。猪八戒所幻化的大汉，也非常能干活儿，只不过就是能吃一点儿。当时呢，很多人在看到这段儿的时候都笑了。可他的确能干活儿，高小姐的父亲和母亲有意将猪八戒收了当女婿。','/page/xi/deedsDetail/260'],
+                [13,'黄风怪阻',[1.14125, -3.86908],'http://www.sdmz.net/d/map/xy/81/13.jpg','黄风怪武功平平，但他有一招非常厉害，就是三昧真风。它把孙悟空的眼睛吹的暂时看不见了，后来中途遇上神仙，搭救了孙悟空。','/page/xi/deedsDetail/295'],
+                [14,'请求灵吉',[1.13976, -4.05396],'http://www.sdmz.net/d/map/xy/81/14.jpg','悟空他们把黄袍怪手下的虎先锋打死以后，他们不敌黄风怪，唐僧也被抓走。这时候悟空化作小虫，告诉唐僧请师傅放心，偶然之间听到妖怪最怕灵吉菩萨。这时候自然而然就会想找灵吉菩萨来帮忙。好，找灵吉菩萨，为什么西游记把它设为一难。','/page/xi/deedsDetail/457'],
+                [15,'流沙难渡',[1.08209, -4.66095],'http://www.sdmz.net/d/map/xy/81/15.jpg','师徒一行到了流沙河，里面出来了一个所谓的妖怪，这个妖怪呢，我们都知道，他就是未来将要成为唐僧又一位高徒的沙悟净。我们回想下电视剧的情景，猪八戒下去和沙和尚去打，把沙和尚引了上来，这时候孙悟空当头一棒，又把沙和尚打到水底下不敢出来','/page/xi/deedsDetail/475'],
+                [16,'收得沙僧',[0.17029, -4.32312],'http://www.sdmz.net/d/map/xy/81/16.jpg','唐僧一路西行中，孙悟空、猪八戒、白龙马相继加入取经队伍以后，就差一个沙和尚了。沙和尚到位以后，团队组建工作就完成了。沙和尚，顾名思义在哪里?就在流沙河。可是到流沙河以后，出现了一个问题，流沙河难渡。','/page/xi/deedsDetail/1033'],
+                [17,'四圣显化',[-0.06317, -4.50439],'http://www.sdmz.net/d/map/xy/81/17.jpg','在第十六难中，唐三藏、孙悟空、猪八戒、白龙马，又收了沙和尚，一共五个人，队伍齐全了。我们想，团队齐全以后先要做什么呢?我们换个角度想，单位里面，团队齐了后先做什么?先开会，开会就是齐心。','/page/xi/deedsDetail/414'],
+                [18,'五庄观中',[0.04944, -4.98779],'http://www.sdmz.net/d/map/xy/81/18.jpg','当时清风明月两位童子摘下人参果先给了唐僧，这是镇元大仙交代的。可是呢，唐僧看到孩童模样的人参果，不敢吃。猪八戒是天蓬元帅，他识货，知道人参果的功效和作用，唆使孙悟空用偷盗的方式采了人参果。最后大圣推倒了人参果树，是因为他觉得受到了冤枉。原本他们只吃了三个，童子非说多偷吃了。其实就是为了一两个果子事情，孙大圣就把整个大树推倒了。','/page/xi/deedsDetail/476'],
+                [19,'难活人参',[0.03296, -5.06744],'http://www.sdmz.net/d/map/xy/81/19.jpg','在上一难中，孙悟空他们在五庄观偷吃了人参果，推倒大树，用瞌睡虫，让清风明月睡着了，一行人逃离五庄观，自以为神不知鬼不觉。镇元大仙回来以后，他们的行迹就被镇元大仙掌握了。镇元大仙也被称为地仙之祖，在地上的一切活动，都逃离不了他的预知。把他们抓回来以后呢，孙悟空也是非常仗义，自己担下了所有罪责。并且说他要去寻求救活人参果树的方法。看过电视剧的朋友都知道，他和镇元大仙打赌，如果可以救回人参果树，镇元大仙就和他结拜。','/page/xi/deedsDetail/476'],
+                [20,'贬退心猿',[0.67015, -5.81177],'http://www.sdmz.net/d/map/xy/81/20.jpg','从五庄观离开了，后面会发生什么事情?看过西游记的朋友都知道，后面遇上的就是“三打白骨精”。打白骨精的时候，白骨精分别化作了一个女孩儿，然后是一个老妇，第三次是一位老公公。孙悟空火眼金睛，分别识破他们，可是唐僧是肉眼凡胎，不能看出来他们本是妖怪。结果大家也都知道，妖怪想吃唐僧，孙悟空保护唐僧，把妖怪打死了，而唐僧呢，就把孙悟空贬走了。','/page/xi/deedsDetail/415'],
+                [21,'黑松林失散',[-0.19775, -5.73212],'http://www.sdmz.net/d/map/xy/81/21.jpg','孙悟空被贬走之后，一路上猪八戒开始显示自己的能耐。唐僧饿了，猪八戒积极主动去化斋。可是想不到的是什么呢，猪八戒，他在路上独自享福，睡起大觉。于是呢，唐僧苦苦等待，却怎么也见不着八戒返回。最终只好让沙僧去寻他，就此呢，师徒就在这个黑松林失散了。','/page/xi/deedsDetail/415'],
+                [22,'宝象国捎书',[-1.12328, -5.53162],'http://www.sdmz.net/d/map/xy/81/22.jpg','好现在我们继续进行西游记下一难，唐僧在赶走孙悟空以后呢，他和猪八戒沙和尚他们失散了，就是之前讲的上一难黑松林失散。失散以后呢，唐僧他毕竟是一个人，有一个细节，他听到钟声，在钟声的引导下进入了波月洞中。他当时的心理是怎么变化的，我们可以自己去猜想。他进波月洞就被妖怪所擒。里面的妖怪就是黄袍怪。看过书籍的或电视剧的朋友，对这个妖怪应该很熟悉。黄袍怪也是非常厉害的一个妖怪。当时八戒和沙僧前去搭救，也被黄袍怪所擒。可是呢，唐僧妖怪的妻子把唐僧放了，为什么放了，她请唐僧给自己的父亲宝象国国王捎一封信。她就是失散了十三年宝象国的公主。','/page/xi/deedsDetail/418'],
+                [23,'金銮殿变虎',[-0.8212, -6.20728],'http://www.sdmz.net/d/map/xy/81/23.jpg','在上一难，公主托唐僧到宝象国去送书信，送到后，八戒逞能与沙僧去救公主，他们俩都不敌黄袍怪，反而让黄袍怪知道了公主托唐僧送信之事。于是呢，黄袍怪化作英俊少年来到宝象国，对国王说，是老虎jīng咬走了公主，自己仗义相救。老虎精便是唐僧。然后做法把唐僧变成老虎关在金銮殿的笼子里。','/page/xi/deedsDetail/418'],
+                [24,'平顶山逢魔',[-1.02717, -6.65771],'http://www.sdmz.net/d/map/xy/81/24.jpg','自宝象国救了公主，唐僧复得悟空，师徒一心同体，共诣西方，时值三春景候，鸟语花香，遍地芳菲，行赏间，见一山挡路。路遇一樵夫(功曹化现)告诉他们，此山唤平顶山，山中有莲花洞，洞中两魔头，金角大王，银角大王，画影图形，抄名访姓，要吃唐僧。这个过程中，猪八戒是第一次去巡山。然后呢，他就偷懒儿睡觉，被孙悟空变作的小虫跟着发现了。猪八戒再去巡山，刚好遇到银角大王带着三十个小妖巡山来找唐僧师徒。银角大王用七星剑跟猪八戒打得不分胜负，几个小妖一起上，道路不平摔了一跤，被小妖们按住拿下，擒入洞中。','/page/xi/deedsDetail/419'],
+                [25,'莲花洞高悬',[-1.15074, -6.92963],'http://www.sdmz.net/d/map/xy/81/25.jpg','我们继续看，后面二魔变作年老受伤道士，引发唐僧同情心，让徒弟背他走。沙僧说我驮，二魔说沙僧黑他害怕，指定让悟空背着他走。悟空背他，妖怪用“移山倒海”的方法，先后调来须弥山压左肩，峨眉山压右肩，泰山压顶，把悟空压得三尸神咋，七窍喷红。悟空思念唐僧，珠泪如雨。惊动揭谛，让山神土地把山移走。悟空出来后，遇到两个小妖，拿着两个宝贝来收他，一个是紫金红葫芦，一个是羊脂玉净瓶，念了对方名字，对方一答应，就会被吸入瓶中。悟空变作道士，也变了一个瓶子，说能装天。请玉帝配合，哪吒说“自混沌初开，以轻清为天，重浊为地。……其实难装。但只孙行者保唐僧西天取经，诚所谓泰山之福缘，海深之善庆，今日当助他成功。”哪吒用皂旗把日月星辰遮蔽，配合悟空“装天”，用变出来的瓶子，跟小妖换了真宝瓶。','/page/xi/deedsDetail/479'],
+                [26,'乌鸡国救主',[0.40924, -8.81104],'http://www.sdmz.net/d/map/xy/81/26.jpg','乌鸡国国王被妖道推入井中，妖道本人变作国王，占了他的妻子和王位。死去的国王，在唐僧的梦中诉说冤情，请求除妖救他。悟空和八戒去到井下，通过井龙王引路，背出国王的尸体，用还魂丹救活了他。悟空变作木箱中的小和尚，向太子揭露了事实真象。','/page/xi/deedsDetail/480'],
+                [27,'被魔化身',[-0.43121, -8.5556],'http://www.sdmz.net/d/map/xy/81/27.jpg','上一难，乌鸡国王托梦，唐僧根据梦的指引，师徒几人在井底水晶宫把国王的尸身背上来，悟空去离恨天兜率宫找太上老君要了颗“还魂丹”，把国王救了回来。随后，师徒一行离开宝林寺，到皇宫换官文。到皇宫后，揭露了假皇帝，假皇帝逃跑不得，变作假唐僧跟真唐僧站一起，真假唐僧难辨。用了各种方法，请来几十位神仙暗中相助，险象环生，也分不出来。最后通过念紧箍咒分出来，正要降妖，文殊菩萨过来阻挡，原来假国王，是文殊菩萨的坐骑青毛狮子。','/page/xi/deedsDetail/481'],
+                [28,'号山逢怪',[-1.31001, -8.35236],'http://www.sdmz.net/d/map/xy/81/28.jpg','师徒离开乌鸡国一路西行，半月之余，正值秋尽冬初。忽见一座山摩天碍日，山凹里有一朵红云，聚一团火气，悟空叫声妖怪来矣，那妖怪摇身变做一个七岁玩童。没错，这个七岁孩童，就是电视剧里大家熟悉的红孩儿。只见他赤条条身上无衣，被麻绳捆了手足吊在树梢喊“救人!救人!”唐僧听喊救人，就叫悟空去救下来背着。','/page/xi/deedsDetail/482'],
+                [29,'风摄圣僧',[-2.13909, -8.70667],'http://www.sdmz.net/d/map/xy/81/29.jpg','孙悟空识破妖怪，并且把他狠狠的摔下。妖怪在空中看到行者摔他，忍不住心头火起。在半空里弄了一阵旋风，飞沙走石，将唐僧摄走了。这妖怪就是号山枯松涧火云洞的红孩儿，是牛魔王与铁扇公主之子，他在火焰山修行三百年，炼成三昧真火，号称圣婴大王。','/page/xi/deedsDetail/483'],
+                [30,'心猿遭害',[-2.19124, -8.8028],'http://www.sdmz.net/d/map/xy/81/30.jpg','话说三藏被妖怪摄入洞中，行者打听到他是牛魔王的儿子，便找到洞府与他攀亲，妖怪不认，二人打了起来，战有二十余合不分胜负。只见妖怪往自己鼻子上打了两拳，念个咒，口里喷出火来，鼻子浓烟迸出，大圣败下阵来。急纵云去请四海龙王。龙王随行者来战妖怪，又被他喷火，龙王用水也不成浇灭。只见妖怪将一口烟迎行者劈面喷来，熏得行者昏倒在地，八戒、沙僧急从水中找到大圣，行者叫八戒去南海找观音菩萨。妖怪见八戒向南去了，他从近路超过八戒，变成假观音等侯八戒。呆子不认真假被妖怪抓进洞里。我们看，四海龙王的水，并不能灭三昧真火。所以说呢，书里有这样一句话，私雨只能灭凡火，灭三味真火似火上浇油。再看孙悟空一开始，真觉得红孩儿是大哥的孩子，说清楚就可以了，是一家人呢，他报兄弟的名字。那后来呢，我会发现。红孩儿呢，发现翻脸不认人','/page/xi/deedsDetail/484'],
+                [31,'请圣降妖',[-2.20496, -8.91541],'http://www.sdmz.net/d/map/xy/81/31.jpg','悟空受伤不能驾云，八戒去请观音，红孩儿抄近道挡在前面，假变观音把八戒骗进洞里。红孩儿派小妖去请父亲牛魔王一起来吃唐僧肉，孙悟空变做假牛魔王被小妖请到火云洞。红孩儿察觉到异常，不断试探，问悟空自己的生日，悟空答不出，被识破，现了本相跟红孩儿打了起来。这一次，孙悟空还是被红孩儿的烟火打败，无奈之下，去南海请观音菩萨收服了他。','/page/xi/deedsDetail/485'],
+                [32,'黑河沉没',[-2.65499, -9.03351],'http://www.sdmz.net/d/map/xy/81/32.jpg','师徒四人别了观音，行径一个多月，行至黑水河，被一水妖摄入水府。此怪乃是西海龙王妹夫泾河龙王之第九子，因泾河龙王错行了风雨，被天曹降旨着大唐丞相魏征梦里斩了，其妻无处安身，龙王把其母子收在身边，不久母亲也死了。黑水河中妖怪变成船家，将乘船的唐僧、八戒摄去水底。沙僧潜水与那怪大战，不能获胜。悟空问罪于龙王。龙王命太子摩昂前去收伏','/page/xi/deedsDetail/486'],
+                [33,'搬运车迟',[-2.87172, -9.8053],'http://www.sdmz.net/d/map/xy/81/33.jpg','师徒一行走到车迟国，看到城门外有一块沙滩空地，许多和尚在那里拉车，车里装的全是砖瓦木植土坯之类。又见走出两个道士，那些和尚见道士来了，个个心惊胆战。孙悟空变做道士上前打探。原来二十年前，天无点雨，地绝谷苗，忽从天上降下三个仙人，虎力大仙(黄毛虎精)、鹿力大仙(白毛角鹿精)、羊力大仙(羚羊精)，替国王降了一场大雨。于是国王拜三个妖jīng为国师。说和尚无用，拆了寺院，毁了佛像，不让和尚回家，把和尚御赐与道士干活，给他们作奴隶修道观。','/page/xi/deedsDetail/487'],
+                [34,'大赌输赢',[-3.69434, -10.448],'http://www.sdmz.net/d/map/xy/81/34.jpg','偷吃贡品戏弄妖怪之后，转天师徒几人上朝倒换官文，被妖怪告发，国王正难以决断，忽然门外有几十名乡老来报，说一春无雨，恐夏月荒。我们知道，当年这几个国师之所以得到国王的信任，是因为他们能求雨。现在，又需要求雨了。这时悟空提出要跟国师赌求雨，国王同意了。大仙说：一声令牌响，风来;二声响，云起;三声响，雷闪齐鸣;四声响，雨至;五声响，云散雨收。让国王和大臣观看验证。悟空在每个环节到天上阻止风婆、雷公、电母，国师求雨不得。孙悟空不会求雨，便跟众神约定，以金箍棒为令，往上一指放风，二指布云，三指电闪雷鸣，四指下雨，五指大日天晴。并且请四海龙王空中现身给国王看，结果完胜国师。','/page/xi/deedsDetail/488'],
+                [35,'祛道兴僧',[-4.09441, -9.98657],'http://www.sdmz.net/d/map/xy/81/35.jpg','第三次比，妖怪把性命比没了。虎力大仙比砍头，把悟空头砍了，结果悟空又长出一个头。虎力大仙砍了头后，悟空拔毫毛变黄狗，叼了头跑掉了。虎力大仙死了，是个无头的黄毛虎。','/page/xi/deedsDetail/489'],
+                [36,'路逢大水',[-4.64487, -11.08246],'http://www.sdmz.net/d/map/xy/81/36.jpg','师徒一行别了车迟国国国王，一路西行，走至八百里通天河，河边有一灵感庙。写着，“感应一方兴庙宇，威灵千里佑黎民”。庙里大王，每年吃一对童男童女，保百姓风调雨顺。这次，轮到车迟国陈家庄陈老汉兄弟，都是中年才得唯一的孩子，正遇唐僧师徒路过。悟空和八戒分别变作童男和童女，与往年一样，坐在盘里，让人们把他俩抬去庙里。','/page/xi/deedsDetail/490'],
+                [37,'身落天河',[-4.19029, -12.2525],'http://www.sdmz.net/d/map/xy/81/37.jpg','上一难我们讲到，悟空、八戒变作童男童女，替陈老汉祭祀“灵感大王之神”，那怪物拦住庙门问道：“今年祭祀的是哪家?”孙悟空笑吟吟答道：“是陈澄、陈清家。”那怪闻言迟疑，往年问一声不言语，再问，已吓得成了死人，不敢吃悟空，准备先吃八戒。八戒跳下来现了本相，拿着钉钯就打，打下冰盘大小两个鱼鳞。行者也现了本相。那怪没拿兵器，斗之不过，化一阵狂风，钻到通天河内。','/page/xi/deedsDetail/491'],
+                [38,'鱼篮现身',[-3.46407, -11.66473],'http://www.sdmz.net/d/map/xy/81/38.jpg','上一难我们讲到，悟空、八戒变作童男童女，替陈老汉祭祀“灵感大王之神”，那怪物拦住庙门问道：“今年祭祀的是哪家?”孙悟空笑吟吟答道：“是陈澄、陈清家。”那怪闻言迟疑，往年问一声不言语，再问，已吓得成了死人，不敢吃悟空，准备先吃八戒。八戒跳下来现了本相，拿着钉钯就打，打下冰盘大小两个鱼鳞。','/page/xi/deedsDetail/492'],
+                [39,'金兜山遇怪',[-3.37086, -12.04376],'http://www.sdmz.net/d/map/xy/81/39.jpg','积雷山摩云洞有一个万岁狐王，遗下一个女儿玉面公主。数年前，玉面公主因为牛魔王神通广大，嫁了牛魔王。牛魔王便撇了原妻红纶罗刹铁扇公主，隐居此山。','/page/xi/deedsDetail/493'],
+                [40,'普天神难伏',[-3.37908, -12.21405],'http://www.sdmz.net/d/map/xy/81/40.jpg','话说孙悟空的金箍棒被妖怪用圈子套去，于是上天勘查诸天星斗、各宿神王，没有查到。玉帝派李天王父子相助，又被妖怪用圈子将兵器抢了去，悟空又请火德星君放火烧他，又被妖怪把火具抢去，又请水德星君放水淹他，又淹不着。孙悟空变化进洞偷出兵器，又与妖怪争斗，被妖怪一抛圈子，又将众人兵器都套去。这个圈子呢，就是太上老君的圈子，非常厉害。','/page/xi/deedsDetail/494'],
+                [41,'问佛根源',[-3.39553, -12.40082],'http://www.sdmz.net/d/map/xy/81/41.jpg','话说孙悟空等众神正无计可施，忽想起佛法无边。于是孙悟空去西天找如来佛祖，如来派十八罗汉用金丹砂收他，亦被妖怪用圈子把十八粒金丹砂套去。十八罗汉临走时如来单留下降龙、伏虎二尊者吩咐：如失了金丹砂，就叫孙悟空上离恨天兜率宫太上老君处寻他的踪迹，可擒也。孙悟空立即上天找太上老君下界收了妖怪，老君将“金刚琢”吹口仙气，穿了那怪的鼻子，解下勒袍带(就是平顶山莲花洞金角大王、银角大王盗取的幌金绳)，老君辞了众神，跨青牛背上，驾彩云，径归兜率宫，高升离恨天。','/page/xi/deedsDetail/477'],
+                [42,'吃水遭毒',[-3.59566, -13.56537],'http://www.sdmz.net/d/map/xy/81/42.jpg','话说师徒四人离开金兜山继续西行，正行处，忽遇一条小河，此河乃西梁女国城外一条子母河，因唐僧、八戒口渴喝了河中之水，不一会儿腹内疼痛难忍。原来西梁女国无男人，凡女子年满二十岁才可饮河中之水，形成胎气。','/page/xi/deedsDetail/478'],
+                [43,'西梁国留婚',[-3.5518, -13.96088],'http://www.sdmz.net/d/map/xy/81/43.jpg','唐僧八戒吃了落胎泉水化了胎气解了腹痛之后，三藏师徒别了村舍人家，一路西行。走不到三四十里，到了西梁国界。城中人不分老少，尽是女人，这里就是大家都熟知的女儿国。女儿国王对唐僧未见倾心，要以一国之富，江山王位相赠，与唐僧成亲。无奈之下孙悟空出主意，让唐僧先答应国王与她成亲，倒换关文后叫三个徒弟去西天取经，唐僧趁送徒弟之机逃走。吃完婚筵后，孙悟空猪八戒沙和尚继续取经，女王与唐僧相送，告别时，唐僧下龙车，对女王供手道：“陛下请回，贫僧取经去也”。女王闻言，大惊失色。','/page/xi/deedsDetail/421'],
+                [44,'琵琶洞受苦',[-2.98967, -13.68896],'http://www.sdmz.net/d/map/xy/81/44.jpg','话说唐僧告别西梁国王(女儿国国王)，国王拉住三藏苦不肯放，沙僧把师父抢出，扶侍上马。忽从路旁闪出一个女子，弄起一阵旋风，把唐僧摄走了。这个女子是一只母蝎子精化成的妖怪，住在西梁国不远处毒敌山琵琶洞，她摄去唐僧是想和唐僧成亲，并无杀害之意。这妖精十分利害，扎过如来，躲在琵琶洞作怪，菩萨也近她不得。','/page/xi/deedsDetail/503'],
+                [45,'再贬心猿',[-2.63304, -13.00232],'http://www.sdmz.net/d/map/xy/81/45.jpg','孙悟空请昴日星官降伏了妖精，从琵琶洞救出唐僧，师徒一路西行。八戒卖弄想叫白龙马快走，马不听他言。孙悟空把金箍棒幌一幌，那马如飞似箭，唐僧挽不住缰绳，走出几十里才慢下来。忽然从路旁闪出三十多人拦住去路，把唐僧吊在树上，大圣等赶上后救下唐僧，等唐僧走远，他把两个为头的打死，被师父埋怨了一顿。师徒继续前行，又遇这伙强盗一路追杀，吓得唐僧没了主意，孙悟空拿出铁棒一路打杀，把这伙强盗全杀光。唐僧一看，念起紧箍咒来，疼的大圣满地打滚，三藏道：“屡次劝你，更无一毫善念，要你何为!快走!快走!”行者怕再念，架云空中，欲回花果山，恐被见笑;欲投奔天宫，又恐天宫内不容久住。思前想后，还是去见师父，径至三藏马前道：“师父，恕弟子这遭!向后再不敢行凶，受师父教诲。”唐僧见了，又念了二十余遍咒，把个大圣疼得死去活来。大圣无奈，随即架云到了东洋大海寻找观音菩萨。','/page/xi/deedsDetail/504'],
+                [46,'难辨猕猴',[-2.84978, -12.56836],'http://www.sdmz.net/d/map/xy/81/46.jpg','话说行者被师父逐出师门后，唐僧、八戒、沙僧师徒三人一路西行。这时，唐僧又饥又渴，八戒沙僧找水不归。唐僧正独自难熬，忽见行者跪在眼前给他水喝(此乃六耳猕猴假变孙悟空)。唐僧道：“不喝你水，渴死任命，你去罢”。假行者变了脸，抡铁棒打昏了唐僧，夺了行李、包袱不知去向。等八戒、沙僧回来，等师父苏醒后备言前事，气的兄弟二人骂了孙悟空一顿，于是沙僧去花果山寻行李、包袱，发现假行者正在念通牒官文，旁边还有一个假沙僧，沙僧不知是假，抡起禅杖打死了假沙僧，却是个猴精。急架云去南海找观音菩萨，却见行者已在，菩萨派行者、沙僧同到花果山看看真假。','/page/xi/deedsDetail/505'],
+                [47,'路阻火焰山难',[-2.59738, -12.34039],'http://www.sdmz.net/d/map/xy/81/47.jpg','话说如来收伏了六耳猕猴，师徒同行一路向西，渐觉热气蒸人。一打听才知，前方乃是八百里火焰山，须到芭蕉洞找铁扇公主借芭蕉扇。这扇一煽息火，二煽生风，三煽下雨。铁扇公主乃是牛魔王之妻、红孩儿之母，只因此前孙悟空请观音菩萨收伏红孩儿做了观音的善财童子不得自由，与父母少见离多，记恨孙悟空。','/page/xi/deedsDetail/506'],
+                [48,'求取芭蕉扇',[-2.98693, -12.258],'http://www.sdmz.net/d/map/xy/81/48.jpg','上一难孙悟空一借芭蕉扇未成，师徒正进退两难，火焰山的土地(本是兜率宫守炉的道人，被老君怪他失守，降是凡间)告诉大圣，牛魔王现在撇下铁扇公主，在魔云洞玉面公主那里。大圣找牛魔王帮忙，牛魔王记恨孙悟空当年请观音菩萨收了他的儿子红孩儿，与孙悟空大战一场未分胜负。大圣变作牛魔王模样偷了牛魔王的坐骑金睛兽去骗铁扇公主，把扇子骗到手。牛魔王发现丢了金睛兽，变作八戒又把扇子骗回。','/page/xi/deedsDetail/507'],
+                [49,'收缚魔王难',[-2.64402, -12.07123],'http://www.sdmz.net/d/map/xy/81/49.jpg','孙悟空二次借扇未成，他带着八戒找牛魔王争斗，土地神众都来助力围困。魔云洞内玉面公主被八戒一钯筑死，原来是个玉面狐狸精。牛魔王与大圣赌斗变化，抵不住败了阵往北就走，早有五台山秘魔岩神通广大泼法金刚奉如来佛旨，布天罗地网在此擒之。牛魔王慌向南逃，又撞见峨眉山清凉洞法力无量胜至金刚奉佛旨在此等侯擒拿。往东逃，却逢须弥山摩耳崖毗卢沙门大力金刚;向西，又遇见昆仑山金霞岭不坏尊王永住金刚。驾云头望上，早有托塔李天王并哪吒三太子等众神将奉玉帝旨意特来剿除牛王。大圣拿扇子望火焰山连煽四十九扇，灭了火焰山，造福一方百姓。','/page/xi/deedsDetail/508'],
+                [50,'赛城扫塔',[-2.10066, -11.62903],'http://www.sdmz.net/d/map/xy/81/50.jpg','师徒四人过了火焰山一路西行，来到祭赛国，看到好多和尚披枷戴锁沿街乞讨，只因金光寺塔顶有一放光宝珠被人盗走，国王怪寺内僧人偷走，捉拿和尚拷打致死。唐僧离长安时，在法门寺立愿：上西方逢庙烧香，遇寺拜佛，见塔扫塔。因此，唐僧扫塔，行者紧随。','/page/xi/deedsDetail/509'],
+                [51,'取宝救僧',[-2.54524, -11.46149],'http://www.sdmz.net/d/map/xy/81/51.jpg','唐僧扫塔，一直扫到十层，腰酸腿痛坐下，便叫悟空替他扫剩下的三层，悟空在第十三层塔心捉住两个妖精，乃是乱石山碧波潭(孙悟空二借芭蕉扇时去玉面公主处找牛魔王争斗后，牛王赴会的地方)的两个巡塔鱼精。碧波潭老龙招一附马在祭赛国下了一场血雨，偷走了塔顶之宝(佛家舍利子)，龙宫公主又偷了王母灵芝，在潭中温养宝物。悟空与唐僧见到国王说明原由。于是悟空和八戒替国王来寻宝，兄弟二人与附马争斗，乃是一个九头虫，他二人一时难以取胜。正在此时，二郎神打猎路过，与悟空叙旧后，二郎的鹰犬把九头虫的头血淋淋咬下来。悟空、八戒打死龙王，抓住龙婆穿了琵琶骨，把她锁在塔心柱上看塔上之宝舍利子。行者为金光寺改名为伏龙寺。','/page/xi/deedsDetail/510'],
+                [52,'棘林吟咏',[-0.99971, -11.07971],'http://www.sdmz.net/d/map/xy/81/52.jpg','话说祭赛国王谢了唐三藏师徒获宝擒怪之恩，与众官和伏龙寺僧人送到城外，继续西行。路遇八百里荆棘岭阻住去路，八戒显能，长大二十丈高身躯，披荆斩棘开出一条道，师徒跟着八戒行了两日，天色将晚，见一古庙，一老头跪地向大圣说是荆棘岭土地，被大圣识破，老头化一阵阴风把唐僧卷起。老头乃是荆棘岭树精，把唐僧摄来无歹意，只是请高僧讲经。还有孤直公柏树精，凌空子桧树精，拂云叟竹竿精，赤身鬼枫树精，杏仙杏树精，女童丹桂、腊梅精。与唐僧谈诗论经一番。','/page/xi/deedsDetail/511'],
+                [53,'小雷音遇难难',[-0.8569, -11.78833],'http://www.sdmz.net/d/map/xy/81/53.jpg','话表三藏脱出荆棘针刺一路向西。见前面有座寺院，走上前，见“雷音寺”三个字，慌得三藏滚下马鞍，倒在地上。骂悟空哄他不是雷音寺，行者陪笑说：“师父莫恼，你看看，上面是四个字”。三藏战兢兢再看，乃四个字“小雷音寺”，他不听行者劝告，进寺倒头就拜，被妖怪杀个措手，把唐僧、沙僧、八戒一并拿住，行者被妖怪用一副金铙扣在里面。','/page/xi/deedsDetail/512'],
+                [54,'诸天神遭困',[-0.9283, -12.04651],'http://www.sdmz.net/d/map/xy/81/54.jpg','大圣正凄惨之时，忽见一朵彩云坠地，原来是弥勒佛，告知此妖是他面前司磬的一个黄眉童儿，趁他赴元始天尊会，偷了他的后天袋子和敲磬的槌儿在此作怪。弥勒佛叫行者变作一个大西瓜，自己变一种瓜者，让行者与之索战，许败不许胜，诱骗妖精吃了西瓜。行者在他肚子里施威，随即佛祖收伏了妖jīng装在袋中，找到碎金铙，吹口仙气念声咒，复得金铙，别了行者架祥云径转极乐世界。行者急救出师父与众神，放一把火把小雷音寺烧为灰烬。','/page/xi/deedsDetail/513'],
+                [55,'稀柿衕秽阻',[-1.62301, -13.22479],'http://www.sdmz.net/d/map/xy/81/55.jpg','话说师徒四人离开小西天，欣然上路，忽见不远处有一山庄，乃驼罗庄，住有五百多人。庄内一老者向唐僧说：“村庄西去三十余里，有一条稀柿同（稀屎衕），因地阔人稀，深山无人走，每年熟烂柿子落在路上，将一条夹路填满，经霉过夏，成了一条污秽，这方人呼为稀屎衕（通‘同’，即胡同之意），一股秽气，恶臭难闻，有八百里之遥”。老者又说：“他这里有个妖怪，经常吃人、吃羊马等，祸害庄人”。行者于是领八戒去降妖抓怪，那怪原来是一条大蟒蛇，被兄弟二人打败，逃入洞穴，因太大后半身不得入洞，行者叫八戒守住洞口，他去山另一头找到洞口，拿棍一捣，那怪护疼，往后门撺出，八戒未防备，被怪一尾巴打了一跌逃过山涧，二人赶上去，见那怪盘作一团，竖着头，张口要吞八戒，八戒一躲，行者正赶上，被怪一口吞下肚子，正好行者在肚内乱打一顿，那怪忍疼撺下山有二十余里，倒在尘埃一命呜呼。行者把那怪穿个洞钻出来，拖着怪回到庄内，众人感谢不尽。八戒施法力变作一头大猪，吃饱喝足把稀屎衕拱开，洗净污秽之胡同，成为一条逍遥大道，此乃八戒西天路上第一大功也。','/page/xi/deedsDetail/514'],
+                [56,'朱紫国行医',[-1.96617, -13.51593],'http://www.sdmz.net/d/map/xy/81/56.jpg','上一难中，唐僧师徒过了稀柿衕，一路继续西行，见前面有一座城池，西牛贺洲朱紫国，三藏进殿倒换关文不提。却说朱紫国王因三年前妖怪把皇后摄去，得病久治不愈，出榜招医。孙悟空揭了皇榜给国王治病，国王见悟空丑陋躲到帐内，悟空用毫毛变作三根丝线给国王悬空把脉，说此病乃是“双鸟失群”相思之症，国王心服口服。','/page/xi/deedsDetail/515'],
+                [57,'拯救疲癃',[-2.03753, -14.37286],'http://www.sdmz.net/d/map/xy/81/57.jpg','话说行者敲定病因，开方用药，八百八味每味三斤，共计二千四百二十四斤，再取大黄芭豆锅底灰半斤马尿半盏，搅和一处，搓了三个大丸子，曰‘乌金丹’。告诉医官要用“无根水”送下，请东海龙王熬广下雨，龙王打了两个喷嚏降下甘露，国王喝了药，腹中作响，排了三五次，少顷精神抖擞，脚力强健。','/page/xi/deedsDetail/518'],
+                [58,'降妖取后',[-2.47116, -14.83154],'http://www.sdmz.net/d/map/xy/81/58.jpg','朱紫国的国王以前还做太子时，极好射猎。他率领人马，纵放鹰犬，来到落凤坡前，见有雌雄两个孔雀，太子开弓放箭，将其射伤。岂知，这两个孔雀乃是西方佛母孔雀大明王菩萨所生，菩萨发誓必报。于是，观音菩萨的坐骑赛太岁奉旨前来，抢了他的老婆，让他害了三年大病。当孙悟空正要打死赛太岁的时候，观音来了，说他是佛母吩咐的，教他拆凤三年，身耽啾疾。<BR>悟空使计骗得妖怪金铃，溜出洞外挑战，引出那怪，用铃摇出烟、沙、火，使那怪走投无路。观音洒甘露救火，并言此怪是自己座骑金毛犭+孔，因报国王射伤孔雀大明王菩萨子女之恨，来此拆散国王鸾凤。悟空救出皇后，四人西去取经','/page/xi/deedsDetail/519'],
+                [59,'七情迷没',[-2.52878, -15.78186],'http://www.sdmz.net/d/map/xy/81/59.jpg','话说三藏师徒别了朱紫国王，整顿鞍马西行。看前面有个人家，三藏执意要去化斋，进人家见无男儿，只有七个女子，那些女子竟是用人肉做饭，长老不敢吃，想要走，被众女子捆了悬梁高吊，从肚脐吐出丝绳把整个庄门罩住。悟空三人正玩耍，行者忽见有一片光亮(丝所发的光)，拘来土地小神一问，此地乃盘丝岭，岭下盘丝洞里有七个妖精。待妖精到濯垢泉洗澡，行者变作老鹰把衣服叼走，八戒变鲇鱼精与女子嬉戏，妖精做法吐丝把八戒罩在当中。她们的干儿子变成成千上万之数来叮三兄弟，行者拔毫毛变作成千上万的黄鹰、麻鹰、鹞鹰把小妖吃尽。随即进洞救下师父，呆子一把火把洞府烧得干干净净。','/page/xi/deedsDetail/520'],
+                [60,'多目遭伤',[-2.03753, -15.45502],'http://www.sdmz.net/d/map/xy/81/60.jpg','话说八戒烧了盘丝洞，师徒继续西行，忽见前面有个庵观寺院，内有一道士，是七个蜘蛛精的师兄。七妖逃到这里向师兄细数此前遭遇，道士用百鸟粪制成的毒药放在茶中毒死师徒几人，只有行者未吃。唤出土地问明情况后，行者把七个蜘蛛精打个稀烂。道士见打死师妹，两胁千只眼放出金光，晃的大圣变作转山甲钻地里躲避。行者正在悲切之中，黎山老母化作老妇人指点行者到紫云山千花洞拜请毗蓝菩萨。毗蓝菩萨乃是昴日星官之母，她随行者来到黄花观，取出绣花针望空抛去破了金光，那道士原是大蜈蚣精。毗蓝菩萨给了行者三粒毒丹，救了唐僧、八戒和沙僧。','/page/xi/deedsDetail/521'],
+                [61,'路阻狮驼',[-1.35943, -14.51843],'http://www.sdmz.net/d/map/xy/81/61.jpg','上一难中，毗蓝菩萨帮行者收了蜈蚣精，师徒四人策马西行。正行处，忽见一座高山阻住去路。见有一老者，行者上前打探，知有几个妖精，急忙回来告诉唐僧无防。唐僧问他是什么山什么洞，有多少妖精，急猴子没问这些。唐僧埋怨他，于是又派八戒去打探。老者告诉八戒：“此山叫做八百里狮驼岭，中间有座狮驼洞，洞里有三个魔头。”急见一小妖寻山，行者变化跟来，见小妖挂着金牌，上写“小钻风”三个字，他变了个“总钻风”与小钻风调侃。小钻风详细讲了三魔头的情况，行者打死了小钻风，却又后悔，他本是好意，只因师父阻路，没奈何干出这事来。','/page/xi/deedsDetail/522'],
+                [62,'怪分三色',[-1.15898, -14.35913],'http://www.sdmz.net/d/map/xy/81/62.jpg','话说行者变作小钻风进入洞里，见高坐三个狰狞老妖。大魔头是青毛狮子怪，是五台山文殊菩萨的坐骑，已下界七日，在此为害生灵;二魔头是黄牙老象，是峨眉山普贤菩萨的坐骑;三魔头是云程九万的大鹏雕，与孔雀一母所生。变作小钻风的行者报与三个魔头，说孙悟空如何如何厉害，大魔、二魔有点害怕，却被三魔头识破行者，把假小钻风装在瓶子里，行者拔毫毛变金刚钻逃了出来。现了本相又与大魔头赌斗二十余合，不分输赢。八戒助战，那怪丢了刀现了狮子原身，张开大口吞了行者。老魔头回洞要吃药酒毒死行者，却被行者在他肚里拳打脚踢，疼得老魔头死去活来。','/page/xi/deedsDetail/523'],
+                [63,'城里遇灾',[-0.98597, -14.19983],'http://www.sdmz.net/d/map/xy/81/63.jpg','三怪一齐战行者，大圣把绳头尽力一扯，老魔心里疼，慌得那二怪、三怪，跪在坡下哀求。行者叫他们抬轿来送唐僧，妖怪口头答应暗使jiān计把八戒卷起扔进池塘。行者变作“勾司人”(阴间专勾人灵魂的鬼)从八戒身上搜出四钱六分银子，救下八戒。兄弟二人来打二怪，把金箍棒变作丈余的细针伸二怪鼻孔里，行者牵着二怪鼻子，让他们护送唐僧，不许再耍花招。三怪又暗使诡计，突然与行者三兄弟一人战一个，趁此机会叫小妖把唐僧抓走。','/page/xi/deedsDetail/524'],
+                [64,'请佛收魔难',[-0.98597, -13.97186],'http://www.sdmz.net/d/map/xy/81/64.jpg','话说在狮驼岭，三魔又使计策把唐僧抓去受苦不提。却说三魔齐心协力与行者三兄弟力战，八戒被大怪咬住，沙僧被二怪鼻子卷住，三怪现了本相扇开两翅拿下大圣。抬出铁笼，要把四个和尚蒸熟吃。大圣择机逃出，念一声“唵蓝净法界，乾元亨利贞”，拘唤北海龙王变作一阵冷风，吹入锅下保护唐僧师徒。救出师父、八戒、沙僧，一起逃走。却被妖怪发现，大怪捉了唐僧、二怪捉了沙僧、三怪捉了八戒，只是走了行者。无奈，大圣去西天见如来佛祖。如来叫文殊普贤一起到狮驼城收服了三个妖怪。','/page/xi/deedsDetail/525'],
+                [65,'比丘救子',[-0.29388, -12.70569],'http://www.sdmz.net/d/map/xy/81/65.jpg','狮驼岭一难，孙大圣请如来收了众怪救了三藏师徒，离开狮驼城一路西行，见一座城池，原唤比丘国，今改作小子城。家家门口放着一个鹅笼，笼内都装着小男孩。原来三年前，一道人模样的老人，将一貌美女子进贡陛下，宠幸在宫，号为美后，封道士为国丈。国王贪欢，身体危难不能疗治。国丈说有海外秘方，去十洲三岛采将药来，只等药引子。药引子是一千一百一十一个小儿的心肝，所以比丘国成了小子城。孙大圣念动真言，请众神各使神通，连笼带小儿摄出城外安藏，不得饿损。','/page/xi/deedsDetail/526'],
+                [66,'辨认真邪',[0.07141, -11.96136],'http://www.sdmz.net/d/map/xy/81/66.jpg','众神祇救走小儿不提，第二天唐僧入朝拜见国王倒换关文，行者变小虫儿飞在三藏帽沿上一同入朝打探消息，认出国丈是个妖精。兵马官来奏笼里小儿不知踪迹。国丈告诉国王，更好的药引子是唐僧的心肝。大圣叫八戒和些泥来，把泥贴在师父脸上变作自己模样，自己变作师父入朝去见国王。国王要借唐僧的心肝做药引子，假唐僧满口答应，把腹皮剖开，骨嘟嘟滚出一堆心来。有红心、白心、黄心、悭贪心、利名心、嫉妒心、计较心、好胜心、望高心、侮慢心、杀害心、狠毒心、恐怖心、谨慎心、邪恶心、无名隐暗之心、种种不善之心，更无一个黑心。行者现本相与国丈打斗，国丈抵不住，化一道寒光落入皇宫内院，带着美后不知去向。','/page/xi/deedsDetail/528'],
+                [67,'松林救怪',[0.28839, -12.46948],'http://www.sdmz.net/d/map/xy/81/67.jpg','唐僧师徒别了比丘国君臣黎庶，一路西行，见前面有座高山峻岭黑松大林，三藏休息，八戒、沙僧在林间玩耍，行者去化斋。三藏正念经文，忽听一女子喊“救人”，便喊八戒、沙僧去救树上绑的那女人，大圣突然赶来，说是妖jīng不要救。那女子看师徒远去，恨大圣识破她的阴谋，又叫救命，唐僧肉眼母凡胎不识真相，发慈悲救下了那女子，一同前行。','/page/xi/deedsDetail/529'],
+                [68,'僧房卧病',[0.37628, -12.72766],'http://www.sdmz.net/d/map/xy/81/68.jpg','见前面有座寺院，镇海禅林寺，他们一同来到寺院借宿。为什么女妖怪的事一直就没断过呢，就是因为前面那个没放下，后面就一直继续有。生活当中很多事情都是轮回，我们经常讲过去现在和未来，其实未来就是过去的轮回。如果你在一件事情上担心，后面但凡是遇到这个事情都会担心。','/page/xi/deedsDetail/530'],
+                [69,'无底洞遭困',[0.57677, -13.38135],'http://www.sdmz.net/d/map/xy/81/69.jpg','上一难，师徒几人救了那个女子，一同到镇海禅林寺借宿。唐僧师徒住了三日，寺里不见了六个和尚，却发现了残骸。行者答应和尚们降妖，变作一个十二三岁的小和尚夜里在念经，进殿一个美貌佳人，调戏小和尚，行者随她到后院，趁机拿出金箍棒着头就打，那女子(被救的妖精)看是行者，敌不过，脱下一只花鞋，吹口气变作自身与行者打斗，真身化一阵清风而去，把唐僧摄走。','/page/xi/deedsDetail/531'],
+                [70,'灭法国难行',[0.26367, -14.3454],'http://www.sdmz.net/d/map/xy/81/70.jpg','上一难中，行者找托塔李天王父子从无底洞中救出唐僧，师徒一路西行。正行处，见前面有一老母挽着一个小孩儿，告诉唐僧不要前行，说前面是灭法国。国王要杀一万个和尚，已杀了九千九百九十六名和尚，等四个和尚，凑成一万。行者认得老母是观音菩萨和善财童子，倒身下拜。行者偷了客人衣服，一行人换下僧服，扮做贩马人睡在柜中，夜间被贼把柜子和白马一同劫走，被守门官劫下。悟空施法把皇宫内院所有人的头发都剃光，巡城总兵说昨夜劫获一只赃柜，打开一看，原来里面是四个和尚，讲明缘由，满朝文武随国王一起朝拜，大摆筵宴，招待贵僧，从此不在杀戮和尚。','/page/xi/deedsDetail/532'],
+                [71,'隐雾山遇魔',[-0.58501, -15.271],'http://www.sdmz.net/d/map/xy/81/71.jpg','','/page/xi/deedsDetail/533'],
+                [72,'凤仙郡求雨',[0.63719, -15.13641],'http://www.sdmz.net/d/map/xy/81/72.jpg','','/page/xi/deedsDetail/534'],
+                [73,'失落兵器',[1.18095, -15.07874],'http://www.sdmz.net/d/map/xy/81/73.jpg','话说唐僧师徒别了凤仙郡侯，一路西行，到了天竺国下郡玉华县。师徒四人到玉华王府倒换关文，小王子要他们比试，见识了行者三兄弟的本事，拜他们为师。次日请行者三人将金箍棒、九齿钉耙、降妖杖都取出放在篷厂，造样打造。这兵器原是随身之宝，一刻不可离身，现放在厂院中几日，那霞光有万道冲天。其夜豹头山虎口洞的妖精，见霞光动了心，一股风将三般兵器尽皆收之。这一难告诉我们随身之物不可轻易放下。要给就直接给出去，不要临时拿出去。一些技术发明等相关的事情，不能做到像老子讲的无为状态，而是有为去做出来的，你就不能放出去。钉耙金箍棒都是别人所赐的，不是内生的东西，一旦离手会惹来一系列问题。财大量露白，让妖jīng有机可乘。','/page/xi/deedsDetail/535'],
+                [74,'会庆钉钯难',[0.99421, -15.72693],'http://www.sdmz.net/d/map/xy/81/74.jpg','兄弟变化进入洞中，拿了兵器一齐乱打，老妖敌不过逃走。三人打死洞内群妖，火烧洞府，转回州城。那妖精往东南直奔九曲盘桓洞找祖翁九灵元圣，祖翁老怪带领众狮jīng直奔玉华城找行者报仇。八戒敌不过被抓去，沙僧、行者也战败。第二日，九头狮叫其它小狮王缠住行者、沙僧，自己变作九个头的狮怪，一口噙着唐僧，一口噙着八戒，一口噙着老王，一口噙着大王子，一口噙着二王子，一口噙着三王子，回到洞中。次日，行者和沙僧寻来，被九头怪一张口把他二人轻轻地衔于洞内。夜深行者使遁身法逃了出来，询问土地，才知九头怪乃是太乙救苦天尊的坐骑九头狮子，因看狮子小童偷吃了太上老君送的酒睡着，狮子跑下界为妖作怪，已近三日(地上三年)。行者上天找到太乙救苦天尊，天尊随行者前来，念咒语收了九头狮子，行者去洞中救出师父及玉华王等人，回至王府，传授了三个王子武艺，离城而去。','/page/xi/deedsDetail/537'],
+                [75,'竹节山遭难',[1.18918, -14.39209],'http://www.sdmz.net/d/map/xy/81/75.jpg','','/page/xi/deedsDetail/516'],
+                [76,'玄英洞受苦难',[1.72185, -13.94165],'http://www.sdmz.net/d/map/xy/81/76.jpg','','/page/xi/deedsDetail/536'],
+                [77,'赶捉犀牛',[1.73557, -14.15039],'http://www.sdmz.net/d/map/xy/81/77.jpg','话说大圣回到慈云寺向师弟说明原由，三人连夜架云向东北艮地上，顷刻至青龙山玄英洞。赌斗多时，不分输赢。八戒、沙僧被捉，行者逃出，上天去请玉帝查寻妖怪来历，是三个犀牛精。玉帝便差许天师与四星下界收降。府县官大排素宴款待，并建生祠，为四星建立降妖之庙。唐僧师徒怕误取经路程，次日五更悄悄早起离开了慈云寺。','/page/xi/deedsDetail/538'],
+                [78,'天竺招婚',[1.69439, -15.29297],'http://www.sdmz.net/d/map/xy/81/78.jpg','话说唐僧师徒趁夜深悄悄地离开慈云寺，餐风宿水，行有半个多月，见座高山，山中一大寺“布金禅寺”，也就是舍卫国给孤独园寺。唐僧往后院看孤独基址，忽闻得有悲切之声，老僧道：旧年今日，一阵风后吹来一美貌女子啼哭，说是天竺国公主，赏花时被风刮来的。老僧进城打探，公主一事，全然无损。望圣僧辨明真假。原来天竺国公主在御花园月夜赏玩，惹动一妖邪，把真公主摄去，她变作一个假公主，知得唐僧今日到此，搭起彩楼，将绣球抛在唐僧头上，要与唐僧成亲。行者识出假公主，妖精跑到御花园土地庙取出短棍，跟大圣对打，战不过大圣，逃往西天门，大圣喝天神挡住，妖精化作金光，败回正南山上。行者正南唤出土地、山神，找到穴口，继续交战，危急之际，空中chu现太阴星君请大圣手下留情。太阴道：“这个妖邪是广寒宫的玉兔，公主也不是凡人，是蟾宫的素娥。十八年前，她曾打了玉兔儿一掌。思凡下界做了公主，玉兔儿怀恨那一掌之仇，出广寒宫抛素娥于荒野。”太阴星君收了玉兔，见国王说明原由，师徒辞别众人继续西行。','/page/xi/deedsDetail/539'],
+                [79,'铜台府监禁',[1.33197, -16.73218],'http://www.sdmz.net/d/map/xy/81/79.jpg','唐僧师徒使法力阻住布金寺僧众送行，西行半月之余，到达铜台府，此地寇员外许愿斋万僧，二十四年已斋九千九百九十六，不得圆满。唐僧四圣降临，员外要做功德，留圣僧住半月有余，唐僧取经心切，执意要走，员外挽留不住，即请鼓乐队送圣僧出城。师徒出城后，铜台府强盗将寇员外家洗劫一空，踢死员外。他妻子恨唐僧不受斋供，执意要走，员外铺张相送，招贼人惦记，指使儿子诬告唐僧师徒抢劫。县府将师徒绑了押在监狱中。行者知师父该有这一难，也不分辩，但受刑时不忍唐僧受苦，自己揽了，替师父受过。暗想师父该有一夜牢狱之灾，所以不辩解，不使法力，单等天亮出牢门。其间到幽冥地界，找阎君，延了员外十二年阳寿，带他回到阳间。员外从棺材爬出，对唐僧四众磕头称谢，安排筵宴款留三藏，三藏取经心切，辞别众人又往西行。地辟能存凶恶事，天高不负善心人。','/page/xi/deedsDetail/413'],
+
+                [80,'凌云渡脱胎',[1.92225, -16.56464],'http://www.sdmz.net/d/map/xy/81/80.jpg','到了灵山仙境玉真观金顶大仙之处。大仙接了圣僧，沐浴后去灵山见佛。唐僧拜别大仙，随大圣缓步蹬上灵山。走不到五六里，见有一道活水，滚滚飞流，上面有一独木桥“凌云渡”，实难通过。无奈之际，忽见一人撑一只无底船来。行者火眼金睛，认得是接应佛祖，把师父推上船。忽见一个人身飘过，长老见了大惊。行者三兄弟笑道，说那是师父，你已脱胎换骨。','/page/xi/deedsDetail/413'],
+                [81,'通天河遇鼋湿经书',[-4.49429, -12.42004],'http://www.sdmz.net/d/map/xy/81/81.jpg','揭谛飞云一昼夜赶上金刚，附耳低言。八大金刚刷的把风按下，将师徒坠落下地，乃陈家庄村边通天河。八戒说师父今已得道，凌云渡脱了凡胎，可驾云过河。行者说过不得，心里明白师父九九之数未完，还该有一难。正讲处，忽听有人叫道：“唐圣僧，这里来!”却是大白赖头鼋在叫。老鼋驮着他们乘风破浪，行经多半日，老鼋忽问：“老师父，我向年曾央你到西方见佛祖如来，与我问声归着之事，还有多少年寿，可曾问否?”原来唐僧到西天专心拜佛，他事一毫不理，老鼋问寿，无言可答。老鼋知他不曾替问，将身一幌，将师徒并经书通落水中。师徒一行急捞取经书上岸到大石头上晒晾。被陈家庄老头陈澄知道，急去请圣僧家住。《佛本行经》被沾住了几卷，至今不全，晒经石上犹有字迹。师徒收拾完毕，同陈澄赴庄。全庄人家轮流争抢请吃斋。三藏怕失大事，急回东土见大唐皇帝交旨。遂趁夜深人静，悄悄出了陈家庄，早有八大金刚等候，四众随金刚起在空中，望东土而去。','/page/xi/deedsDetail/413']
+            ];
+
+
+
+
+            for (var $j=list.length-1;$j>=0;$j--)
+            {
+                L.marker([list[$j][2][0],list[$j][2][1]],{icon: greenIcon}).addTo(map).bindPopup("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3><a  href='"+ list[$j][5] + "'  target=_blank><img style='width:150px;overflow:hidden;float:right;padding:5;'  src=" + list[$j][3] + " /></a>"+ list[$j][4]  + "</div>");
+            }
+
+            function getmap(picid)
+            {
+                $j=picid-1;
+                var popup = L.popup().setLatLng([list[$j][2][0],list[$j][2][1]]).setContent("<div class='Popupinfo'><h3><font color='#00a6ac'>" +list[$j][0] + ". " + list[$j][1] + "</font></h3><a  href='"+ list[$j][5] + "'  target=_blank><img style='width:150px;overflow:hidden;float:right;padding:5;'  src=" + list[$j][3] + " /></a>"+ list[$j][4]  + "</div>").openOn(map);
+            }
+
+
+            /*划线*/
+            for ($j=1;$j<list.length;$j++)
+            {
+                var latlngs =[
+                    [list
+                        [$j-1
+                        ]
+                        [
+                            2
+                        ]
+                        [
+                            0
+                        ],
+                        list[
+                            $j-1
+                            ]
+                            [
+                                2
+                            ]
+                            [
+                                1
+                            ]
+                    ],[
+                        list
+                            [
+                                $j
+                            ]
+                            [
+                                2
+                            ]
+                            [
+                                0
+                            ],
+                        list
+                            [
+                                $j
+                            ]
+                            [
+                                2
+                            ]
+                            [
+                                1
+                            ]
+                    ]
+                ]
+                var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+            }
+
+
+
+            /**/
+            var popup = new L.popup();
+            function onMapClick(e) {
+                popup.setLatLng(e.latlng).setContent("You clicked the map at " + e.latlng.toString()).openOn(map);
+            }
+            map.on('click', onMapClick);
+
+
+
+            if(top != self){
+                window.top.location.replace(self.location);
+            }
+
+
+
+            //弹出面板
+            /**/
+
+        </script>
+        <!--内容结束--></div>
+</section>
+<footer class="footer"><div class="container">
+    <p>Copyright © 2020 <a href="#">四大名著</a></p> <span class="tongji"><p>普及四大名著知识，传播四大名著文化，引领四大名著研究。</p></div></footer>
+</body>
+
+</body>
+
+<script>
+    var app = new Vue({
+        el: "#table",
+        data: {
+            originPicture: '../../common/statics/images/login_i.png',
+            userInfo: {
+                flag: true,
+                id: '',
+                nickName: '',
+                picture: '',
+            },
+            dialogFormVisible: false,
+            loading: 'false',
+            imgTemp: '',
+            personList: [],
+            linksNode:[],
+            personName:'',
+            dialogFormVisibleShowPerson:false,
+            dialogFormVisibleShare:false,
+            formLabelWidth:'120px',
+            showPersonDtail:'',
+            flag:true,
+            input:'',
+            flag:true,
+            type:'',
+            img:'',
+            linkUrl:'',
+            collectFlag:true,
+            _title:'',
+            saveUrl:'',
+
+        },
+        mounted() {
+        },
+        created() {
+            this.getParam();
+            this.getPageUser();
+            this.selectCollect();
+
+        },
+        methods: {
+
+            getPageUser() {
+                let _this = this;
+                var url = "/user/page/getPageUser";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    async:false,
+                    success: function (res) {
+                        if (res.code === "200") {
+                            console.log(_this.userInfo)
+                            _this.userInfo.id = res.data.id;
+                            _this.userInfo.nickName = _this.strFilter(res.data.nickName);
+                            _this.userInfo.picture = res.data.picture;
+                            _this.userInfo.flag = false;
+                        }
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            strFilter(str) {
+                // 1字符串转化成数组
+                let phoneArr = [...str];
+                let userName = '';
+
+                if (phoneArr.length === 3) {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 0 && index < 2) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                    return userName;
+                }
+
+                if (phoneArr.length === 4) {
+                    phoneArr.map((res, index) => {
+                        if (index > 0 && index < 3) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                } else {
+                    phoneArr.map((res, index) => {
+                        console.log(res);
+                        if (index > 1 && index < 5) {
+                            userName += '*';
+                            // return '*';
+                        } else {
+                            userName += res;
+                        }
+                    });
+                }
+
+                return userName;
+            },
+
+
+            handleAvatarSuccessEdit(res, file) {
+                console.log(res);
+                if (res.code !== "200") {
+                    this.$message.error('上传图片失败');
+                    return;
+                }
+                this.loading = false;
+                this.imgTemp = res.data;
+                console.log(this.userInfo.picture)
+                this.$message({
+                    type: 'success',
+                    message: '上传成功!'
+                });
+            },
+            beforeAvatarUploadEdit(file) {
+                const typeArr = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg'];
+                const isJPG = typeArr.indexOf(file.type) !== -1;
+                // image/png, image/jpeg, image/gif, image/jpg
+                const isLt3M = file.size / 1024 / 1024 < 1;
+                if (!isJPG) {
+                    this.$message.error('只能是图片!');
+                    this.files = null;
+                    return false;
+                }
+                if (!isLt3M) {
+                    this.$message.error('上传图片大小不能超过 1MB!');
+                    this.files = null;
+                    return false;
+                }
+                this.loading = true;
+                return true;
+            },
+            update() {
+                let _this = this;
+                console.log(_this.userInfo)
+                let postData = {
+                    id: _this.userInfo.id,
+                    imgUrl: _this.imgTemp,
+
+                };
+                var url = "/user/page/updatePicture";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res) {
+                        console.log(res)
+                        if (res.code !== "200") {
+                            _this.$message.error(res.data);
+                        }
+                        _this.$message({
+                            message: '修改成功！',
+                            type: 'success'
+                        });
+
+                        _this.dialogFormVisible = false;
+                        _this.userInfo.picture = _this.imgTemp;
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            },
+
+            handleCommand(command) {
+                if (command === 'loginOut') {
+                    let _this = this;
+
+                    let postData = {
+                        id: _this.userInfo.id,
+                    };
+                    var url = "/user/page/loginOut";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: postData,
+                        success: function (res) {
+                            console.log(res)
+                            if (res.code === "200") {
+                                _this.$message({
+                                    message: '退出成功！',
+                                    type: 'success'
+                                });
+                                window.location.href = '/';
+                            }
+
+                        },
+                        error: function () {
+                            _this.$message.error('服务器错误');
+                        }
+                    });
+                }
+
+                if (command === 'editUpload') {
+                    this.dialogFormVisible = true;
+                    var s= document.getElementsByClassName("v-modal");
+                    var index=0;
+                    var time= window.setInterval(function () {
+                        if (s.length!==0){
+                            document.body.removeChild(s[0]);
+                            clearInterval(time);
+                        }
+                        if (index===100000){
+                            clearInterval(time);
+                        }
+                        index++;
+                    },10)
+                }
+            },
+
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+
+            getParam() {
+                this.linkUrl= location.href;
+                this.linkUrl= decodeURI(this.linkUrl);
+                let url = location.search; //获取url中"?"符后的字串
+                this.saveUrl = location.pathname+url;
+                this.saveUrl= decodeURI(this.saveUrl);
+                console.log(this.saveUrl);
+                if (url.indexOf("?") != -1) {
+                    let str = url.substr(1);
+                    let strs = str.split("&");
+                    this.type = decodeURIComponent(strs[0].replace("type=", ""));
+
+                }
+            },
+
+            collect(){
+                var title ="西游记-"+"西行地图";
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                    title:title,
+                };
+                let _this =this;
+                var url = "/page/collect/add";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                            _this.$message({
+                                message: '添加收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('添加收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+            cancelCollect(){
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/cancel";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = true;
+                            _this.$message({
+                                message: '取消收藏成功！',
+                                type: 'success'
+                            });
+                            return;
+                        }
+                        _this.$message.error('取消收藏失败');
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+
+            },
+            selectCollect(){
+                this.saveUrl= decodeURI(this.saveUrl);
+                console.log(this.userInfo);
+                console.log(this.userInfo.id);
+                console.log(this.saveUrl);
+                if(this.userInfo.id===''){
+                    return;
+                }
+                let postData = {
+                    userId:this.userInfo.id,
+                    linkUrl:this.saveUrl,
+                };
+                let _this =this;
+                var url = "/page/collect/select";
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(postData),
+                    dataType:"json",
+                    contentType : "application/json",
+                    success: function(res){
+                        if(res.code==="200"){
+                            _this.collectFlag = false;
+                        }else {
+                            _this.collectFlag = true;
+                        }
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误！');
+                    }
+                });
+
+            },
+            handleCollect(command){
+                if (command==="add"){
+                    this.collect();
+                }
+                if (command==="cancel"){
+                    this.cancelCollect();
+                }
+                if (command==="share"){
+                    this.dialogFormVisibleShare=true;
+                }
+            },
+
+            shareToQzone(){
+                var _shareUrl = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?';
+                console.log(this.linkUrl);
+                var url = 'www.liaoyunfeng.top'
+                _shareUrl += 'url=' + encodeURIComponent(url || document.location);   //参数url设置分享的内容链接|默认当前页location
+                _shareUrl += '&title=' + encodeURIComponent( this._title || document.title);
+                window.open(_shareUrl);
+            },
+
+        }
+    })
+
+</script>
+<!--轮播结束-->
+
+<script src="../../common/statics/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/swiper.animate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../common/statics/js/main.js" type="text/javascript" charset="utf-8"></script>
+</html>

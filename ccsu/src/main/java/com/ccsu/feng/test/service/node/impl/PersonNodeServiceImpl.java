@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.ListUtils;
 
@@ -258,18 +259,14 @@ public class PersonNodeServiceImpl implements IPersonNodeService {
         return new PageResult<>(pageIndex, pageSize, personNodeRepository.getPersonNodeCountByName(type, name), list);
     }
 
+    @Cacheable(value = "PersonNode",key = "#type",unless = "#result==null")
     @Override
     public List<String> getPersonNodeByType(String type) {
-        List<String>  hget = (List<String>) redisUtil.hget("PersonNode:", type);
-        if (!ListUtils.isEmpty(hget)){
-            return  hget;
-        }
         List<PersonNode> listPersonNodeByType = personNodeRepository.getListPersonNodeByType(type);
         if (ListUtils.isEmpty(listPersonNodeByType)) {
             return null;
         }
         List<String> strings = listPersonNodeByType.stream().map(x -> x.getName()).collect(Collectors.toList());
-        redisUtil.hset("PersonNode:",type,strings, LoginTime.SAVE_LOGIN_TIME.getTime());
         return strings;
     }
 

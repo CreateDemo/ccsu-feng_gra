@@ -4,22 +4,35 @@ import com.ccsu.feng.test.utils.RedisUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
 
 /**
  * @author admin
  * @create 2020-02-11-11:06
  */
 @Configuration
+@EnableCaching
 public class RedisConfig {
+    @Autowired
+    private RedisConnectionFactory factory;
+
     @Bean
-    public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+    public RedisTemplate<Object,Object> redisTemplate() {
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -52,7 +65,7 @@ public class RedisConfig {
      * @date
      */
     @Bean(name = "redisUtil")
-    public RedisUtil redisUtil(RedisTemplate<String, Object> redisTemplate) {
+    public RedisUtil redisUtil(RedisTemplate<Object, Object> redisTemplate) {
         RedisUtil redisUtil = new RedisUtil();
         redisUtil.setRedisTemplate(redisTemplate);
         return redisUtil;

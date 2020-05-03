@@ -22,9 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 public class RedisUtil {
 
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<Object, Object> redisTemplate;
 
-    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+    public void setRedisTemplate(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
     //=============================common============================
@@ -492,7 +492,9 @@ public class RedisUtil {
     public boolean lSet(String key, Object value, long time) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
-            if (time > 0) expire(key, time);
+            if (time > 0) {
+                expire(key, time);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -528,7 +530,9 @@ public class RedisUtil {
     public boolean lSet(String key, List<Object> value, long time) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
-            if (time > 0) expire(key, time);
+            if (time > 0) {
+                expire(key, time);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -572,9 +576,9 @@ public class RedisUtil {
         }
     }
 
-    public Set<String> getKeys(String pattern){
+    public Set<Object> getKeys(String pattern){
         try {
-            Set<String> keys = redisTemplate.keys(pattern);
+            Set<Object> keys = redisTemplate.keys(pattern);
 
 
             return keys;

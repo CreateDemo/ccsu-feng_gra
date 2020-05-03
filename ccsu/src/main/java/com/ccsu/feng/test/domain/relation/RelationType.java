@@ -18,9 +18,5 @@ public interface RelationType {
     String REF = "Ref";
 
     String XI_REF="西游记";
-    String HONG_REF="红楼梦";
-    String SHUI_REF="水浒传";
-    String SAN_REF="三国演义";
-
 
 }

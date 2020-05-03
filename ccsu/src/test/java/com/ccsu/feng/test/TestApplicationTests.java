@@ -1,18 +1,34 @@
 package com.ccsu.feng.test;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.ccsu.feng.test.dao.DeedsDetailMapper;
 import com.ccsu.feng.test.dao.UserBasesMapper;
 import com.ccsu.feng.test.domain.node.DeedsNode;
+import com.ccsu.feng.test.domain.vo.DeedsVO;
 import com.ccsu.feng.test.domain.vo.NodeRelationsListVO;
 import com.ccsu.feng.test.entity.DeedsDetail;
 import com.ccsu.feng.test.entity.UserBases;
 import com.ccsu.feng.test.repository.DeedsNodeRepository;
 import com.ccsu.feng.test.service.node.IBaseRelationshipService;
+import com.ccsu.feng.test.service.node.IDeedsNodeService;
 import com.ccsu.feng.test.service.node.IPersonNodeService;
+import com.ccsu.feng.test.service.user.DeedsDetailService;
 import com.ccsu.feng.test.task.ReadNumScheduledTask;
 import com.ccsu.feng.test.utils.NumberUtils;
+import com.ccsu.feng.test.utils.PageResult;
 import com.ccsu.feng.test.utils.RedisUtil;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.hibernate.validator.internal.constraintvalidators.bv.time.futureorpresent.FutureOrPresentValidatorForReadableInstant;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +37,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.thymeleaf.util.ListUtils;
 
+import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,6 +63,9 @@ public class TestApplicationTests {
 
     @Autowired
     DeedsNodeRepository deedsNodeRepository;
+
+    @Autowired
+    IDeedsNodeService iDeedsNodeService;
     @Autowired
     IBaseRelationshipService iBaseRelationshipService;
     @Autowired
@@ -86,10 +106,165 @@ public class TestApplicationTests {
 
 
     @Test
-    public void T(){
-      readNumScheduledTask.syncPostViews();
+    public void T() throws IOException {
+        t();
+    }
+    private void  t() throws IOException {
+        String nowName = null;
+        String  preName = null;
+        String nextName=null;
+        int j=0;
+
+        for (int i=96731;i<=96804;i++) {
+            DeedsDetail deedsDetail =new DeedsDetail();
+            String strurl = "/page/xi/deedsDetail//" + i + ".htm";
+            nowName=getName(strurl);
+            if (i!=96804){
+                int k=i+1;
+                nextName=getName("/page/xi/deedsDetail//" + k + ".htm");
+            }else {
+                nextName="无";
+            }
+            DeedsNode deedsNodeByName = iDeedsNodeService.getDeedsNodeByName(nowName);
+            if (deedsNodeByName!=null){
+              deedsDetail.setDetailId(deedsDetail.getId());
+            }
+            if (j==0){
+                preName="第三难满月抛江";
+                j++;
+            }else {
+                int c=i-1;
+                preName=getName("/page/xi/deedsDetail//" + c+ ".htm");
+            }
+            deedsDetail.setName(nowName);
+            deedsDetail.setNextDeedsName(nextName);
+            deedsDetail.setPreDeedsName(preName);
+            deedsDetail.setContent(getConent(strurl));
+            deedsDetailMapper.insert(deedsDetail);
+        }
+
     }
 
+    private  String getName(String url) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = client.execute(get);
+        if (response.getStatusLine().getStatusCode() != 200) {
+            System.out.println("out!");
+        }
+        HttpEntity entity = response.getEntity();
+        String content = EntityUtils.toString(entity, "utf-8");
+        // 使用Jsoup解析网页
+        Document doc = Jsoup.parse(content);
+        Elements element3 = doc.select("h1[class=article-title]");
+        String title = element3.text();
+        title = title.replace("《道西游》", "").replace("篇 ", "难");
+        return  title;
+
+    };
+
+    private String getConent(String url) throws IOException {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url);
+        HttpResponse response = client.execute(get);
+        if (response.getStatusLine().getStatusCode() != 200) {
+            System.out.println("out!");
+        }
+        HttpEntity entity = response.getEntity();
+        String content = EntityUtils.toString(entity, "utf-8");
+        // 使用Jsoup解析网页
+        Document doc = Jsoup.parse(content);
+        Elements element2 = doc.select("article[class=article-content]").removeAttr("p[class=post-copyright]");
+        String article = element2.html();
+        String s = subRangeString(article, "<div", "</div>");
+        String s1 = subRangeString(s, "<a", "</a>");
+        s1 = s1.replace("<p class=\"post-copyright\">转载请注明出处 » </p>", "");
+        return s1;
+    }
+    private  String subRangeString(String body,String str1,String str2) {
+        while (true) {
+            int index1 = body.indexOf(str1);
+            if (index1 != -1) {
+                int index2 = body.indexOf(str2, index1);
+                if (index2 != -1) {
+                    String str3 = body.substring(0, index1) + body.substring(index2 +    str2.length(), body.length());
+                    body = str3;
+                }else {
+                    return body;
+                }
+            }else {
+                return body;
+            }
+        }
+    }
+
+    @Test
+    public void  tt(){
+
+
+        QueryWrapper<DeedsDetail> queryWrapper =new QueryWrapper<>();
+        List<DeedsDetail> deedsDetails = deedsDetailMapper.selectList(queryWrapper);
+        List<String> name = deedsDetails.stream().map(deedsDetail -> deedsDetail.getName()).collect(Collectors.toList());
+        List<String> strings = name.stream().sorted((o1, o2) -> {
+            String str1 = o1;
+            String str2 = o2;
+            str1 = NumberUtils.getNumberStr(str1);
+            str2 = NumberUtils.getNumberStr(str2);
+            return (int) (NumberUtils.chineseNumber2Int(str1) - NumberUtils.chineseNumber2Int(str2));
+        }).collect(Collectors.toList());
+
+        DeedsDetail deedsDetail =new DeedsDetail();
+        String pre = "/page/xi/deedsDetail/420";
+        String next="/page/xi/deedsDetail/420";
+        Long deId=420L;
+        for (int i=3;i<strings.size();i++){
+            DeedsNode deedsNodeByName = deedsNodeRepository.getDeedsNodeByName(strings.get(i));
+            if (deedsNodeByName!=null){
+                deId=deedsNodeByName.getId();
+                if (i!=3){
+                    DeedsNode deedsNodeByNamePre = deedsNodeRepository.getDeedsNodeByName(strings.get(i-1));
+                    if (deedsNodeByNamePre!=null){
+                        pre= "/page/xi/deedsDetail/"+deedsNodeByNamePre.getId();
+                    }else {
+                        pre= "/page/xi/deedsDetail/420";
+                    }
+                }
+                if (i==78){
+                    continue;
+                }
+                DeedsNode deedsNodeByNameNext = deedsNodeRepository.getDeedsNodeByName(strings.get(i+1));
+                if (deedsNodeByNameNext!=null){
+                    next="/page/xi/deedsDetail/"+deedsNodeByNameNext.getId();
+                }else {
+                    next= "/page/xi/deedsDetail/420";
+                }
+            }
+            deedsDetail.setDetailId(Math.toIntExact(deId));
+            deedsDetail.setName(strings.get(i));
+            deedsDetail.setPreDeedsUrl(pre);
+            deedsDetail.setNextDeedsUrl(next);
+            System.out.println(deedsDetail);
+
+            UpdateWrapper<DeedsDetail> userBasesMapper =new UpdateWrapper<>();
+            userBasesMapper.eq("name",deedsDetail.getName());
+            deedsDetailMapper.update(deedsDetail,userBasesMapper);
+        }
+
+
+
+        int j=0;
+
+//        System.out.println(j);
+//        List<DeedsNode> all = (List<DeedsNode>) deedsNodeRepository.findAll();
+//        List<DeedsNode> list = all.stream().filter(x ->
+//                "西游记".equals(x.getType())).collect(Collectors.toList());
+//
+//
+
+
+
+
+    }
 
 
 }

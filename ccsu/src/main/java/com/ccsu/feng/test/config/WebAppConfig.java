@@ -116,7 +116,7 @@ public class WebAppConfig  implements WebMvcConfigurer {
         registry.addViewController("/page/san/withPicture").setViewName("page/withPicture");
 
         registry.addViewController("/page/xi/deeds").setViewName("page/xi/deeds");
-        registry.addViewController("/page/xi/process").setViewName("page/xi/process");
+        registry.addViewController("/page/xi/xiMap").setViewName("page/xi/xiMap");
         registry.addViewController("/page/san/deeds").setViewName("page/san/deeds");
         registry.addViewController("/page/san/place").setViewName("page/san/place");
         registry.addViewController("/page/shui/108").setViewName("page/shui/108");

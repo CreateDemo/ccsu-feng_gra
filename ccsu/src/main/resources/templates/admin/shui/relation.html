@@ -174,7 +174,7 @@
     <el-dialog title="人物与武器之间的关系(例如孙悟空的武器是金箍棒 || 一对一) " :visible.sync="adddialogFormVisiblePersonToWeapon">
         <el-form :model="addDetailPersonToWeapon">
             <el-form-item label="人物前驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  v-model="addDetailPersonToWeapon.startName"
                                  :fetch-suggestions="querySearchAsyncPersonToPerson"
                                  placeholder="请输入人物前驱节点名称"
@@ -188,7 +188,7 @@
             </el-form-item>
 
             <el-form-item label="武器后驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  v-model="addDetailPersonToWeapon.endName"
                                  :fetch-suggestions="querySearchAsyncPersonToWeapon"
                                  placeholder="请输入武器后驱节点名称"
@@ -221,7 +221,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="人物前驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;;"
                                  v-model="addDetailPersonToPerson.startName"
                                  :fetch-suggestions="querySearchAsyncPersonToPerson"
                                  :disabled="myResult"
@@ -241,7 +241,7 @@
             </el-form-item>
 
             <el-form-item label="人物后驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;;"
                                  v-model="addDetailPersonToPerson.endName"
                                  :fetch-suggestions="querySearchAsyncPersonToPerson"
                                  :disabled="myResult"
@@ -265,7 +265,7 @@
     <el-dialog title="事件与人物之间的关系(例如大闹天空有孙悟空、哪吒等 || 一对多)" :visible.sync="adddialogFormVisibleDeedsToPerson">
         <el-form :model="addDetailDeedsToPerson">
             <el-form-item label="事件前驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  v-model="addDetailDeedsToPerson.startName"
                                  :fetch-suggestions="querySearchAsyncDeedsToPerson"
                                  placeholder="请输入事件前驱节点名称"
@@ -279,7 +279,7 @@
             </el-form-item>
 
             <el-form-item label="人物后驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  multiple
                                  v-model="addDetailDeedsToPerson.endName"
                                  :fetch-suggestions="querySearchAsyncPersonToPerson"
@@ -303,7 +303,7 @@
     <el-dialog title="事件与地点之间的关系(例如大闹天空在南天门等 || 一对一)" :visible.sync="adddialogFormVisibleDeedsToPlace">
         <el-form :model="addDetailDeedsToPlace">
             <el-form-item label="事件前驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  v-model="addDetailDeedsToPlace.startName"
                                  :fetch-suggestions="querySearchAsyncDeedsToPerson"
                                  placeholder="请输入事件前驱节点名称"
@@ -317,7 +317,7 @@
             </el-form-item>
 
             <el-form-item label="地点后驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  multiple
                                  v-model="addDetailDeedsToPlace.endName"
                                  :fetch-suggestions="querySearchAsyncDeedsToPlace"
@@ -342,7 +342,7 @@
     <el-dialog title="地点与事件之间的关系(例如天空大殿上发生过很多事等 || 一对多)" :visible.sync="adddialogFormVisiblePlaceToDeeds">
         <el-form :model="addDetailPlaceToDeeds">
             <el-form-item label="地点前驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  v-model="addDetailPlaceToDeeds.startName"
                                  :fetch-suggestions="querySearchAsyncDeedsToPlace"
                                  placeholder="请输入地点前驱节点名称"
@@ -356,7 +356,7 @@
             </el-form-item>
 
             <el-form-item label="事件后驱节点名" :label-width="formLabelWidth">
-                <el-autocomplete style="width: 682px;"
+                <el-autocomplete style="width: 100%;"
                                  multiple
                                  v-model="addDetailPlaceToDeeds.endName"
                                  :fetch-suggestions="querySearchAsyncDeedsToPerson"
