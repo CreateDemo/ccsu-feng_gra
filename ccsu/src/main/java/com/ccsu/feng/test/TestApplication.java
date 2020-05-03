@@ -29,7 +29,7 @@ public class TestApplication  {
     }
 
     /**
-     * 分页插件
+     * 分页插件123
      */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
