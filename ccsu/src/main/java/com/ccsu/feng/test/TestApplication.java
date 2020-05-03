@@ -17,6 +17,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 public class TestApplication  {
 
+    /**
+     * @Author xiaofeng
+     * @Description //TODO 
+     * @Date 11:55 2020/5/3
+     * @Param [args]
+     * @return void
+     **/
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
     }
