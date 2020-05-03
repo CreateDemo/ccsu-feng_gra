@@ -110,9 +110,9 @@ body {
 	line-height: 80px;
 	display: block;
 	height: 80px;
-	color: #fff;
+	color: black;
 	font-size: 19px;
-}
+}/*上方轮播图大文字*/
 
 .nav .menu ul li .sub_menu {
 	width: 1200px;
@@ -129,11 +129,11 @@ body {
 }
 
 .nav .menu ul li .sub_menu .sub_menu_list>h3 {
-	color: #666;
+	color: black;
 	font-weight: normal;
 	padding-bottom: 30px;
 	font-size: 19px;
-}
+}/*上层轮播图衍生文字*/
 
 .nav .menu ul li .sub_menu .sub_menu_list:nth-child(1) .list:before,.nav .menu ul li .sub_menu .sub_menu_list:nth-child(2) .list:before{
     content: "";

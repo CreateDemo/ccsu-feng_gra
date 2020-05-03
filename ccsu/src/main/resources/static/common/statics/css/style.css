@@ -1,26 +1,27 @@
 *{margin:0;padding:0;list-style-type:none;}
 .wrapper{
-  background: radial-gradient(#e8001c,#f22e45);
-  background: #252854;
-  height: 97vh;
-  border-radius: 5px;
+  height: 1000px;
+  border-radius: 5px;/*圆角边框（边角圆滑的程度）*/
   position: relative;  
 }
 .text{
-  flex: 0 0 100%;
+  flex: 0 0 100%;/*1.flex-grow（设置或检索弹性盒的扩展比率,根据弹性盒子元素所设置的扩展因子作为比率来分配剩余空间）
+                   2.flex-shrink（设置或检索弹性盒的收缩比率,根据弹性盒子元素所设置的收缩因子作为比率来收缩空间）
+                   3.flex-basis (设置或检索弹性盒伸缩基准值，如果所有子元素的基准值之和大于剩余空间，则会根据每项设置的基准值，按比率伸缩剩余空间)*/
   font-size: 10rem;
-  font-weight: 900;
-  color: #00000000;
-  text-align: center;
-  font-family: 'Lato', sans-serif;
-  position: absolute;
+  font-weight: 900;/*字体粗细*/
+  color: black;/*文本颜色*/
+  text-align: center;/*文本对齐方式：中央*/
+  font-family: 'Lato', sans-serif;/*字体设置*/
+  position: absolute;/*绝对定位文字，可置于任意位置*/
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  top: 30%;
+  transform: translate(-50%, -50%);/*居中*/
+  /*边框样式*/
   border-bottom: 1px solid #d4d7ff;
   border-top: 1px solid #d4d7ff;
   background: url(../images/banner/source.gif);
-  -webkit-background-clip: text;
+  -webkit-background-clip: text;/*使用了这个属性的意思是，以区块内的文字作为裁剪区域向外裁剪，文字的背景即为区块的背景，文字之外的区域都将被裁剪掉。*/
 }
   
  .text:after{
