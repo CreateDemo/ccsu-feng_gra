@@ -10,16 +10,16 @@
                    3.flex-basis (设置或检索弹性盒伸缩基准值，如果所有子元素的基准值之和大于剩余空间，则会根据每项设置的基准值，按比率伸缩剩余空间)*/
   font-size: 10rem;
   font-weight: 900;/*字体粗细*/
-  color: #d1dbe5;/*文本颜色*/
+  color: #00000000;/*文本颜色*/
   text-align: center;/*文本对齐方式：中央*/
   font-family: 'Lato', sans-serif;/*字体设置*/
   position: absolute;/*绝对定位文字，可置于任意位置*/
   left: 50%;
-  top: 30%;
+  top: 35%;
   transform: translate(-50%, -50%);/*居中*/
   /*边框样式*/
-  border-bottom: 1px solid #d4d7ff;
-  border-top: 1px solid #d4d7ff;
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
   background: url(../images/banner/source.gif);
   -webkit-background-clip: text;/*使用了这个属性的意思是，以区块内的文字作为裁剪区域向外裁剪，文字的背景即为区块的背景，文字之外的区域都将被裁剪掉。*/
 }
@@ -30,7 +30,7 @@
    position: absolute;
    left: 50%;
    top: 50%;
-   transform: translate(-50%, -48%);
+   transform: translate(-50%, -50%);
    background: url(../images/banner/source.gif);
    -webkit-background-clip: text;
    background-size: 43%;
