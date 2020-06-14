@@ -730,11 +730,10 @@
       <i  v-if="!collectFlag" title="取消收藏" class="el-icon-star-on"></i>
           <i class="el-icon-arrow-down el-icon--right"></i>
   </span>
-  <el-dropdown-menu slot="dropdown">
-       <el-dropdown-item  v-if="collectFlag" command="add">添加收藏</el-dropdown-item>
-       <el-dropdown-item  v-if="!collectFlag" command="cancel">已收藏(取消收藏)</el-dropdown-item>
-      <el-dropdown-item command="share">分享</el-dropdown-item>
-
+   <el-dropdown-menu slot="dropdown">
+       <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
+    <el-dropdown-item    command="toCollect">个人收藏</el-dropdown-item>
+      <el-dropdown-item command="loginOut">退出</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown></span>
 
@@ -1366,51 +1365,7 @@
                 });
             },
 
-            handleCommand(command) {
-                if (command === 'loginOut') {
-                    let _this = this;
 
-                    let postData = {
-                        id: _this.userInfo.id,
-                    };
-                    var url = "/user/page/loginOut";
-                    $.ajax({
-                        type: "get",
-                        url: url,
-                        data: postData,
-                        success: function (res) {
-                            console.log(res)
-                            if (res.code === "200") {
-                                _this.$message({
-                                    message: '退出成功！',
-                                    type: 'success'
-                                });
-                                window.location.href = '/';
-                            }
-
-                        },
-                        error: function () {
-                            _this.$message.error('服务器错误');
-                        }
-                    });
-                }
-
-                if (command === 'editUpload') {
-                    this.dialogFormVisible = true;
-                    var s= document.getElementsByClassName("v-modal");
-                    var index=0;
-                    var time= window.setInterval(function () {
-                        if (s.length!==0){
-                            document.body.removeChild(s[0]);
-                            clearInterval(time);
-                        }
-                        if (index===100000){
-                            clearInterval(time);
-                        }
-                        index++;
-                    },10)
-                }
-            },
             getParam() {
                 let url = location.search; //获取url中"?"符后的字串
                 this.saveUrl = location.pathname+location.search;
@@ -1786,6 +1741,54 @@
                 window.open(_shareUrl);
             }
 
+        },
+        handleCommand(command) {
+            if (command==='loginOut'){
+                let _this =this;
+
+                let postData = {
+                    id: _this.userInfo.id,
+                };
+                var url = "/user/page/loginOut";
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: postData,
+                    success: function (res){
+                        console.log(res)
+                        if (res.code==="200"){
+                            _this.$message({
+                                message: '退出成功！',
+                                type: 'success'
+                            });
+                            window.location.href='/';
+                        }
+
+                    },
+                    error: function () {
+                        _this.$message.error('服务器错误');
+                    }
+                });
+            }
+
+            if(command==='editUpload'){
+                this.dialogFormVisible=true;
+                var s= document.getElementsByClassName("v-modal");
+                var index=0;
+                var time= window.setInterval(function () {
+                    if (s.length!==0){
+                        document.body.removeChild(s[0]);
+                        clearInterval(time);
+                    }
+                    if (index===100000){
+                        clearInterval(time);
+                    }
+                    index++;
+                },10)
+            }
+            if (command==='toCollect'){
+                window.open("/page/collect");
+            }
         },
 
     })

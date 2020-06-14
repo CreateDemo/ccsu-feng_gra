@@ -3,6 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <title>三国编年史</title>
     <link rel="icon" type="image/x-icon" href="/log_favicon.ico">
     <link rel="stylesheet" type="text/css" href="../../common/statics/css/navperson.css"/>
@@ -1681,8 +1684,8 @@
             },
 
             handleCommand(command) {
-                if (command === 'loginOut') {
-                    let _this = this;
+                if (command==='loginOut'){
+                    let _this =this;
 
                     let postData = {
                         id: _this.userInfo.id,
@@ -1692,14 +1695,14 @@
                         type: "get",
                         url: url,
                         data: postData,
-                        success: function (res) {
+                        success: function (res){
                             console.log(res)
-                            if (res.code === "200") {
+                            if (res.code==="200"){
                                 _this.$message({
                                     message: '退出成功！',
                                     type: 'success'
                                 });
-                                window.location.href = '/';
+                                window.location.href='/';
                             }
 
                         },
@@ -1709,8 +1712,8 @@
                     });
                 }
 
-                if (command === 'editUpload') {
-                    this.dialogFormVisible = true;
+                if(command==='editUpload'){
+                    this.dialogFormVisible=true;
                     var s= document.getElementsByClassName("v-modal");
                     var index=0;
                     var time= window.setInterval(function () {
@@ -1723,6 +1726,9 @@
                         }
                         index++;
                     },10)
+                }
+                if (command==='toCollect'){
+                    window.open("/page/collect");
                 }
             },
             getParam() {

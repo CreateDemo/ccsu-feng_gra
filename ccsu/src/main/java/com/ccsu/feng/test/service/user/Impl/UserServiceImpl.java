@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
         UserAuths userAuths = userAuthsMapper.selectOne(queryWrapper);
         UserBases userBases = userBasesMapper.selectById(userAuths.getUserId());
         //登录成功删除 key
-//        redisUtil.del(phone);   测试环境先不浪费
+        redisUtil.del(phone);
         //登录成功2小时过期;
         redisUtil.hset(PAGE_USER_KEY, String.valueOf(userBases.getId()), userBases, LoginTime.SAVE_LOGIN_TIME.getTime());
         return String.valueOf(userBases.getId());
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
         }
         String message = MsgUtil.sendMessage(phone);
         //5分钟过期
-//        redisUtil.set(phone, message, 60 * 5);
+        redisUtil.set(phone, message, 60 * 5);
         redisUtil.set(phone, message);   //测试环境不过期
         return true;
     }
@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
             throw new BaseException(ResultEnum.PHONE_CODE_FAIL.getMsg());
         }
         //登录成功删除 key
-//        redisUtil.del(phone); 测试环境不删除
+        redisUtil.del(phone);
         return true;
     }
 

@@ -5,7 +5,7 @@ package com.ccsu.feng.test.enums;
  * @create 2020-03-11-13:47
  */
 public enum  LoginTime {
-    SAVE_LOGIN_TIME(60*60*24);
+    SAVE_LOGIN_TIME(60*60*24*60);
 
     int time;
 

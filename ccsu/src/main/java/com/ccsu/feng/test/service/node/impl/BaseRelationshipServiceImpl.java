@@ -176,37 +176,52 @@ public class BaseRelationshipServiceImpl implements IBaseRelationshipService {
 
     }
 
-    @Cacheable(value = "PersonRelation",key = "#type",unless = "#result==null")
+
     @Override
     public List<NodeRelationsListVO> getPersonNodRelationByType(String type) {
+        List<NodeRelationsListVO> listVOSRedis = (List<NodeRelationsListVO>) redisUtil.hget("PersonRelation:", type);
+        if (!ListUtils.isEmpty(listVOSRedis)){
+            return  listVOSRedis;
+        }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
                 (x.getStart() instanceof PersonNode) && ( x.getEnd() instanceof PersonNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
+        redisUtil.hset("PersonRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
         return listVOS;
     }
 
-    @Cacheable(value = "WeaponRelation",key = "#type",unless = "#result==null")
+
     @Override
     public List<NodeRelationsListVO> getWeaponNodRelationByType(String type) {
+        List<NodeRelationsListVO> listVOSRedis = (List<NodeRelationsListVO>) redisUtil.hget("WeaponRelation:", type);
+        if (!ListUtils.isEmpty(listVOSRedis)){
+            return  listVOSRedis;
+        }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
                 (x.getStart() instanceof WeaponNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
+        redisUtil.hset("WeaponRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
         return listVOS;
     }
 
 
-    @Cacheable(value = "PlaceRelation",key = "#type",unless = "#result==null")
+
     @Override
     public List<NodeRelationsListVO> getPlaceNodRelationByType(String type) {
+        List<NodeRelationsListVO> listVOSRedis = (List<NodeRelationsListVO>) redisUtil.hget("PlaceRelation:", type);
+        if (!ListUtils.isEmpty(listVOSRedis)){
+            return  listVOSRedis;
+        }
         List<BaseRelationship> all = (List<BaseRelationship>) relationshipRepository.findAll();
         List<BaseRelationship> collect = all.stream().filter(x -> type.equals(x.getType()) &&
                 (x.getStart() instanceof PlaceNode)).limit(50)
                 .collect(Collectors.toList());
         List<NodeRelationsListVO> listVOS =getResult(collect);
+        redisUtil.hset("PlaceRelation:",type,listVOS, LoginTime.SAVE_LOGIN_TIME.getTime());
         return listVOS;
     }
 

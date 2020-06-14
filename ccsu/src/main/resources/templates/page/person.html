@@ -702,9 +702,9 @@
         font-size: 19px;" class="el-dropdown-link">
      {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
-  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-menu slot="dropdown">
        <el-dropdown-item command="editUpload">更换头像</el-dropdown-item>
-    <el-dropdown-item>个人收藏</el-dropdown-item>
+    <el-dropdown-item    command="toCollect">个人收藏</el-dropdown-item>
       <el-dropdown-item command="loginOut">退出</el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown></span>
@@ -1372,8 +1372,8 @@
             },
 
             handleCommand(command) {
-                if (command === 'loginOut') {
-                    let _this = this;
+                if (command==='loginOut'){
+                    let _this =this;
 
                     let postData = {
                         id: _this.userInfo.id,
@@ -1383,14 +1383,14 @@
                         type: "get",
                         url: url,
                         data: postData,
-                        success: function (res) {
+                        success: function (res){
                             console.log(res)
-                            if (res.code === "200") {
+                            if (res.code==="200"){
                                 _this.$message({
                                     message: '退出成功！',
                                     type: 'success'
                                 });
-                                window.location.href = '/';
+                                window.location.href='/';
                             }
 
                         },
@@ -1400,8 +1400,8 @@
                     });
                 }
 
-                if (command === 'editUpload') {
-                    this.dialogFormVisible = true;
+                if(command==='editUpload'){
+                    this.dialogFormVisible=true;
                     var s= document.getElementsByClassName("v-modal");
                     var index=0;
                     var time= window.setInterval(function () {
@@ -1414,6 +1414,9 @@
                         }
                         index++;
                     },10)
+                }
+                if (command==='toCollect'){
+                    window.open("/page/collect");
                 }
             },
             getParam() {
