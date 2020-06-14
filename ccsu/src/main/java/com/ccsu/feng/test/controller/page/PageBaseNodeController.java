@@ -1,5 +1,7 @@
 package com.ccsu.feng.test.controller.page;
 
+import com.ccsu.feng.test.annotation.AccessLimit;
+import com.ccsu.feng.test.enums.AccessLimitType;
 import com.ccsu.feng.test.enums.ResultEnum;
 import com.ccsu.feng.test.service.node.IBaseNodeService;
 import com.ccsu.feng.test.utils.Result;
@@ -22,7 +24,7 @@ public class PageBaseNodeController {
     @Autowired
     IBaseNodeService baseNodeService;
 
-
+    @AccessLimit(seconds = 60*2,maxCount = 10,type = 3)
     @GetMapping("/findBaseNodeByName")
     public Result<Object> findBaseNodeByName(String name) {
         Object node = baseNodeService.getShowBaseNodeByName(name);

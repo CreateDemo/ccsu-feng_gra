@@ -1,5 +1,7 @@
 package com.ccsu.feng.test.annotation;
 
+import com.ccsu.feng.test.enums.AccessLimitType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,5 +30,5 @@ public @interface AccessLimit {
     /**
      * 这个判断有两个含义：一 ：默认是判断登录限制次数，二：判断接口限制
      */
-    boolean needLogin() default true;
+    int  type () default  1;
 }

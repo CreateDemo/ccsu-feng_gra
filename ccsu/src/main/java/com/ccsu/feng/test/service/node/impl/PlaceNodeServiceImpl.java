@@ -8,6 +8,7 @@ import com.ccsu.feng.test.domain.vo.NodeRelationsListVO;
 import com.ccsu.feng.test.domain.vo.PlaceVO;
 import com.ccsu.feng.test.enums.LoginTime;
 import com.ccsu.feng.test.enums.RelationsType;
+import com.ccsu.feng.test.exception.BaseException;
 import com.ccsu.feng.test.repository.PlaceNodeRepository;
 import com.ccsu.feng.test.service.node.IBaseRelationshipService;
 import com.ccsu.feng.test.service.node.IDeedsNodeService;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.ListUtils;
 
 import java.util.*;
@@ -46,6 +48,7 @@ public class PlaceNodeServiceImpl implements IPlaceNodeService {
     RedisUtil redisUtil;
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public PlaceNode addPlaceNode(PlaceNode placeNode) {
         log.info("placeNode 对象为->{}", placeNode);
@@ -110,6 +113,7 @@ public class PlaceNodeServiceImpl implements IPlaceNodeService {
     }
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public List<BaseRelationship> addPlaceNodeDeedsNodeRelationship(String startName, Set<String> names,String type) {
         List<BaseRelationship> list = new ArrayList<>();

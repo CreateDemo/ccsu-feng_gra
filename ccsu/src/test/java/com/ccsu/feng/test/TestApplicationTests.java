@@ -15,6 +15,7 @@ import com.ccsu.feng.test.service.node.IBaseRelationshipService;
 import com.ccsu.feng.test.service.node.IDeedsNodeService;
 import com.ccsu.feng.test.service.node.IPersonNodeService;
 import com.ccsu.feng.test.service.user.DeedsDetailService;
+import com.ccsu.feng.test.service.user.UserService;
 import com.ccsu.feng.test.task.ReadNumScheduledTask;
 import com.ccsu.feng.test.utils.NumberUtils;
 import com.ccsu.feng.test.utils.PageResult;
@@ -71,7 +72,8 @@ public class TestApplicationTests {
     @Autowired
     DeedsDetailMapper deedsDetailMapper;
 
-
+    @Autowired
+    UserService userService;
 
     private final static Comparator<Object> CHINA_COMPARE = Collator.getInstance(java.util.Locale.CHINA);
 
@@ -261,10 +263,14 @@ public class TestApplicationTests {
 //
 //
 
-
-
-
     }
+    @Test
+    public void test1(){
+        String s = userService.pageLogin("111", "2222");
+    }
+
+
+
 
 
 }

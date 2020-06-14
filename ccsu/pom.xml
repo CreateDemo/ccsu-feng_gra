@@ -59,7 +59,6 @@
         </dependency>
 
 
-
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -76,26 +75,26 @@
 
         <!--&lt;!&ndash;neo4j-jdbc-driver&ndash;&gt;-->
         <!--<dependency>-->
-            <!--<groupId>org.neo4j</groupId>-->
-            <!--<artifactId>neo4j-jdbc-driver</artifactId>-->
-            <!--<version>3.4.0</version>-->
+        <!--<groupId>org.neo4j</groupId>-->
+        <!--<artifactId>neo4j-jdbc-driver</artifactId>-->
+        <!--<version>3.4.0</version>-->
         <!--</dependency>-->
 
         <!-- mybatisplus与springboot整合 -->
         <!--mybatis-plus-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.0.3</version>
-        </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.0.3</version>
+            </dependency>
 
 
-        <!--阿里 JSON-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.47</version>
-        </dependency>
+            <!--阿里 JSON-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.47</version>
+            </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -113,7 +112,6 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.10</version>
         </dependency>
-
 
 
         <!-- mysql驱动 -->
@@ -145,11 +143,11 @@
             <version>2.9.2</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-            <scope>true</scope>
-        </dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <optional>true</optional>
+        <scope>true</scope>
+    </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -195,7 +193,15 @@
                     <fork>true</fork>
                     <addResources>true</addResources>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.boot.experimental</groupId>
+                        <artifactId>spring-boot-thin-layout</artifactId>
+                        <version>1.0.21.RELEASE</version>
+                    </dependency>
+                </dependencies>
             </plugin>
+
         </plugins>
     </build>
 

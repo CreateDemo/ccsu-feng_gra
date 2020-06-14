@@ -8,6 +8,7 @@ import com.ccsu.feng.test.domain.node.PlaceNode;
 import com.ccsu.feng.test.domain.vo.DeedsVO;
 import com.ccsu.feng.test.enums.LoginTime;
 import com.ccsu.feng.test.enums.RelationsType;
+import com.ccsu.feng.test.exception.BaseException;
 import com.ccsu.feng.test.repository.DeedsNodeRepository;
 import com.ccsu.feng.test.repository.PlaceNodeRepository;
 import com.ccsu.feng.test.service.node.IBaseRelationshipService;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.ListUtils;
 
 import java.util.*;
@@ -54,6 +56,7 @@ public class DeedsNodeServiceImpl implements IDeedsNodeService {
     RedisUtil redisUtil;
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public DeedsNode addDeedsNode(DeedsNode deedsNode) {
         if (deedsNode == null) {
@@ -100,6 +103,7 @@ public class DeedsNodeServiceImpl implements IDeedsNodeService {
     }
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public List<BaseRelationship> addDeedsPersonRelationship(String startName, Set<String> names,String type) {
         List<BaseRelationship> list = new ArrayList<>();
@@ -109,12 +113,12 @@ public class DeedsNodeServiceImpl implements IDeedsNodeService {
         }
 
         for (String name : names) {
-            list.add(addaddDeedsPersonRelationship(startDeedsNode, name,type));
+            list.add(addDeedsPersonRelationship(startDeedsNode, name,type));
         }
         return list;
     }
 
-
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public List<BaseRelationship> addDeedsPlaceRelationship(String startName, Set<String> names,String type) {
         List<BaseRelationship> list = new ArrayList<>();
@@ -123,7 +127,7 @@ public class DeedsNodeServiceImpl implements IDeedsNodeService {
             startDeedsNode = addDeedsNodeByName(startName,type);
         }
         for (String name : names) {
-            list.add(addaddDeedsPlaceRelationship(startDeedsNode, name,type));
+            list.add(addDeedsPlaceRelationship(startDeedsNode, name,type));
         }
 
         return list;
@@ -230,7 +234,7 @@ public class DeedsNodeServiceImpl implements IDeedsNodeService {
     }
 
 
-    private BaseRelationship addaddDeedsPlaceRelationship(DeedsNode startDeedsNode, String endName,String  type) {
+    private BaseRelationship addDeedsPlaceRelationship(DeedsNode startDeedsNode, String endName,String  type) {
         PlaceNode endPlaceNode = placeNodeService.getPlaceNodeByName(endName);
         if (endPlaceNode != null) { // 1.地点节点存在
             BaseRelationship relationship = relationshipService
@@ -254,7 +258,7 @@ public class DeedsNodeServiceImpl implements IDeedsNodeService {
     }
 
 
-    private BaseRelationship addaddDeedsPersonRelationship(DeedsNode startDeedsNode, String endName,String type) {
+    private BaseRelationship addDeedsPersonRelationship(DeedsNode startDeedsNode, String endName,String type) {
         PersonNode endPersonNode = personNodeService.getPersonNodeByName(endName);
         if (endPersonNode != null) { // 1.人物节点存在
             BaseRelationship relationship = relationshipService

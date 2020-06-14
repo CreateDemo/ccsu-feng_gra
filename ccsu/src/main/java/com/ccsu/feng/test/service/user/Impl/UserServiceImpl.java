@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
                 .eq("credential", EncryptUtil.getInstance().MD5(password, PASSWORD_KEY));
         UserAuths userAuths = userAuthsMapper.selectOne(queryWrapper);
         if (userAuths == null) {
-            throw new BaseException(ResultEnum.PASSWORD_ERROR.getMsg());
+                throw new BaseException(ResultEnum.PASSWORD_ERROR.getMsg());
         }
         UserBases userBases = userBasesMapper.selectById(userAuths.getUserId());
         //用户信息保存

@@ -7,6 +7,7 @@ import com.ccsu.feng.test.domain.vo.NodeRelationsListVO;
 import com.ccsu.feng.test.domain.vo.PersonVO;
 import com.ccsu.feng.test.enums.LoginTime;
 import com.ccsu.feng.test.enums.RelationsType;
+import com.ccsu.feng.test.exception.BaseException;
 import com.ccsu.feng.test.repository.PersonNodeRepository;
 import com.ccsu.feng.test.repository.WeaponNodeRepository;
 import com.ccsu.feng.test.service.node.IBaseRelationshipService;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.ListUtils;
 
 import java.util.*;
@@ -45,6 +47,7 @@ public class PersonNodeServiceImpl implements IPersonNodeService {
     RedisUtil redisUtil;
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public PersonVO addPersonNode(PersonNode person) {
         PersonNode personNode = personNodeRepository.save(person);
@@ -114,6 +117,7 @@ public class PersonNodeServiceImpl implements IPersonNodeService {
     }
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public BaseRelationship addPersonNodeRelationship(String name, String startName, String endName, String type) {
         //获取人物节点
@@ -155,6 +159,7 @@ public class PersonNodeServiceImpl implements IPersonNodeService {
     }
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public List<BaseRelationship> addTwoPersonNodeRelationship(String preName, String sufName, String startName, String endName, String type) {
         List<BaseRelationship> list = new ArrayList<>();
@@ -174,6 +179,7 @@ public class PersonNodeServiceImpl implements IPersonNodeService {
     }
 
 
+    @Transactional(rollbackFor = BaseException.class)
     @Override
     public List<BaseRelationship> addPersonNodeWeapon(String startName, String endName, String type) {
         List<BaseRelationship> list = new ArrayList<>();

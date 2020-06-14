@@ -59,7 +59,7 @@ public class UserController {
         return "redirect:/admin/login";
     }
 
-
+    @AccessLimit(seconds = 60,maxCount = 20)
     @ResponseBody
     @RequestMapping(value = "/page/register",method = RequestMethod.POST)
     public  Result<Boolean> pageRegister(@Valid @RequestBody UserVO userVO, BindingResult bindingResult)  {
